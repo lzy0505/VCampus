@@ -3,6 +3,7 @@
  */
 package test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import server.DataBase;
@@ -24,8 +25,11 @@ public class testMain {
 		HashMap<String,String> i = new HashMap<String,String>();
 		i.put("username", "zihousb");
 		i.put("password", "12345");
-		i.put("identity","1");
+		i.put("identity","student");
 		db.insert("user", i);
+		ArrayList<HashMap<String,String>> result =db.selectWhere("user", "username=\'zihousb\'");
+		System.out.println(result.get(0).get("password"));
+		
 	}
 
 }

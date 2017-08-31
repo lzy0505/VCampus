@@ -11,14 +11,14 @@ import utils.Message;
 
 import java.io.*;
 
-public class MyServer{
+public class Server{
 	
 	private ServerSocket server=null; //监听端口
 	private ObjectInputStream sin; //对象输入流
 	private ObjectOutputStream sout;//对象输出流
 	
 	//构造函数，用于与端口绑定
-	public MyServer() throws IOException
+	public Server() throws IOException
 	{
 		try{
 			//与一个窗口绑定
@@ -32,7 +32,7 @@ public class MyServer{
 	
 
 	public static void main(String args[])throws IOException{	
-		new MyServer().serviceThread();
+		new Server().serviceThread();
 	}
 	
 	

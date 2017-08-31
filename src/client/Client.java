@@ -9,11 +9,11 @@ import java.io.*;
  * 客户端，用于与服务端连接并接发数据
  * @author
  */
-public class MyClient{
+public class Client{
 	private ObjectInputStream cin;//对象输入流
 	private ObjectOutputStream cout;//对象输出流
 	
-	public MyClient()throws IOException {
+	public Client()throws IOException {
 		Socket clientSocket=new Socket("192.168.1.12",8080);
 		System.out.println("链接建立成功");
 		OutputStream os=clientSocket.getOutputStream();

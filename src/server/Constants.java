@@ -10,6 +10,10 @@ import java.util.HashMap;
  *
  */
 class Constants {
-	public final static HashMap<String,String[]> constructionOfTables= {"user" : new String[]{"username","password","idnetity"}};
+	public final static HashMap<String,String[]> constructionOfTables=new HashMap<String,String[]>() {
+		{
+			put("user",new String[]{"username","password","identity"});
+		}
+	};
 	
 }

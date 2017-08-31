@@ -48,7 +48,7 @@ public class DataBase {
 			stmt.execute("CREATE TABLE "+tableName+
 					" (username VARCHAR(10) NOT NULL,"
 					+ "password VARCHAR(20) NOT NULL,"
-					+ "identity TINYINT NOT NULL"
+					+ "identity VARCHAR(10) NOT NULL"
 					+ ");");
 			System.out.println("DataBase -Initalize Table- "+"Successfull!");
 		}catch(SQLException e) {
@@ -59,14 +59,14 @@ public class DataBase {
 
 	public ArrayList<HashMap<String,String>> selectWhere(String tableName,String condition){
 		try {
-			System.out.println("DataBase -Excute select- "+"Excuting:"+"SELECT * FROM"+ tableName+" WHERE "+condition );
-			rs=stmt.executeQuery("SELECT * FROM"+ tableName+" WHERE "+condition );
+			System.out.println("DataBase -Excute select- "+"Excuting:"+"SELECT * FROM "+ tableName+" WHERE "+condition +";");
+			rs=stmt.executeQuery("SELECT * FROM "+ tableName+" WHERE "+condition +";");
 			ArrayList<HashMap<String,String>> result=new ArrayList<HashMap<String,String>>();
 			String[] keywords=Constants.constructionOfTables.get(tableName);
 			while(rs.next()) {
 				HashMap<String,String> inst=new HashMap<String,String>();
 				for(int i=0;i<keywords.length;i++) {
-					inst.put(keywords[i], rs.getString(i));
+					inst.put(keywords[i], rs.getString(i+1));
 				}
 				result.add(inst);
 			}
@@ -81,20 +81,24 @@ public class DataBase {
 	
 	public void insert(String tableName,HashMap<String,String> content) {
 		try {
-			String command="INSERT INTO " + tableName + " values(";
 			String[] keywords=Constants.constructionOfTables.get(tableName);
+			String command="INSERT INTO " + tableName +" (";
 			for(int i=0;i<keywords.length;i++) {
-				command+=content.get(keywords[i])+",";
+				command+=keywords[i]+",";
+			}
+			command=command.substring(0, command.length()-1);		
+			command+=") VALUES(\'";
+			for(int i=0;i<keywords.length;i++) {
+				command+=content.get(keywords[i])+"\',\'";
 			}
 			command=command.substring(0, command.length()-2);
 			command+=");";
 			System.out.println("DataBase -Excute insert- "+"Excuting:"+command);
-			rs=stmt.executeQuery(command);
-			
-			System.out.println("DataBase -Excute select- "+"Successfull!");
+			stmt.execute(command);
+			System.out.println("DataBase -Excute insert- "+"Successfull!");
 			
 		} catch (SQLException e) {
-			System.out.println("DataBase -Excute select- "+"Error:");
+			System.out.println("DataBase -Excute insert- "+"Error:");
 			e.printStackTrace();
 		}
 	}
