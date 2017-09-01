@@ -2,7 +2,10 @@
  * 
  */
 package test;
+import client.*;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,17 +22,40 @@ public class testMain {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DataBase db = new DataBase();
-		db.connectToDB();
-		db.initTable("user");
-		HashMap<String,String> i = new HashMap<String,String>();
-		i.put("username", "zihousb");
-		i.put("password", "12345");
-		i.put("identity","student");
-		db.insert("user", i);
-		ArrayList<HashMap<String,String>> result =db.selectWhere("user", "username=\'zihousb\'");
-		System.out.println(result.get(0).get("password"));
+		HashMap<String,String> a = new HashMap<String,String>();
+		HashMap<String,String> b = new HashMap<String,String>();
+		HashMap<String,String> c = new HashMap<String,String>();
+		HashMap<String,String> d = new HashMap<String,String>();
+		a.put("zihou","SB");
+		a.put("op", "login");
+		b.put("zongyuan","sb");
+		b.put("op", "reg");
+		try {
+			Client client1 = new Client();
+			client1.clientSocket = new Socket("localhost",8080);
+			System.out.println("链接1建立成功");
+			client1.SendMessage(a);
+			c = client1.GetMessage();
+			String cs = c.get("result");
+			System.out.println("c :" +cs);
+			
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		try {	
+			Client client2 = new Client();
+			client2.clientSocket = new Socket("localhost",8080);
+			System.out.println("链接2建立成功");
+			client2.SendMessage(b);
+			d = client2.GetMessage();
+			String ds = d.get("result");
+			System.out.println("d :" +ds);
+		} catch (IOException e) {
+			e.printStackTrace();// TODO: handle exception
+		}
 		
 	}
 
 }
+

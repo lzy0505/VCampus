@@ -4,38 +4,35 @@
 package server;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-/**
+import java.net.*;
+/*
  * @author storm
  *
  */
-public class Server {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		try {
-			ServerSocket serverSocket = new ServerSocket(8080);
-			Socket socket = null;
-			System.out.println("服务器启动，等待连接，端口："+ serverSocket.getLocalPort());;
-			while (true) {
-				//开始等待
-				socket=serverSocket.accept();
-				System.out.println("服务器开始监听");
-				//创建一个工作线程
-				Thread workThread = new Thread(new ServerThread(socket));
-				//线程开始工作
-				workThread.start();			
-			}			
-		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
+public class Server{
+	private int port = 8080;
+	private ServerSocket serverSocket;
+	private Socket socket=null;
+	private int count=1;
+	
+	public void starServer() throws IOException{
+		serverSocket = new ServerSocket(port);
+		System.out.println("Listen to " + serverSocket.getLocalPort());
+		while(true) {
+			socket = null;
+			socket = serverSocket.accept();
+			System.out.println("accept port numbers:" + count);
+			Thread thread = new Thread(new ServerThread(socket));
+			thread.start();
+			count++;
 		}
-
 	}
-
+	
+	
+	public static void main(String args[])throws IOException
+	{
+		new Server().starServer();
+	}
+	
 }
+
