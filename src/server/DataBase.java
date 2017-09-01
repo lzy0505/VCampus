@@ -45,11 +45,7 @@ public class DataBase {
 		}
 		try {
 			System.out.println("DataBase -Initalize Table- "+"Creating table "+tableName);
-			stmt.execute("CREATE TABLE "+tableName+
-					" (username VARCHAR(10) NOT NULL,"
-					+ "password VARCHAR(20) NOT NULL,"
-					+ "identity VARCHAR(10) NOT NULL"
-					+ ");");
+			stmt.execute(Constants.constructionCommands.get(tableName));
 			System.out.println("DataBase -Initalize Table- "+"Successfull!");
 		}catch(SQLException e) {
 			System.out.println("DataBase -Initalize Table- "+"Error:");

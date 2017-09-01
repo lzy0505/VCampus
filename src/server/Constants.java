@@ -15,5 +15,13 @@ class Constants {
 			put("user",new String[]{"username","password","identity"});
 		}
 	};
+	public final static HashMap<String,String> constructionCommands= new HashMap<String,String >(){
+		{
+			put("user","CREATE TABLE user (username VARCHAR(10) NOT NULL," + 
+					"password VARCHAR(20) NOT NULL," + 
+					"identity VARCHAR(10) NOT NULL," + 
+					");");
+		}
+	};
 	
 }

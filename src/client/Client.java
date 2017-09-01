@@ -1,8 +1,6 @@
 package client;
 import java.net.*;
-
-import utils.Message;
-
+import utils.*;
 import java.io.*;
 /*
  * <p>MyClient</p>
@@ -14,7 +12,7 @@ public class Client{
 	private ObjectOutputStream cout;//对象输出流
 	
 	public Client()throws IOException {
-		Socket clientSocket=new Socket("192.168.1.12",8080);
+		Socket clientSocket=new Socket("localhost",8080);
 		System.out.println("链接建立成功");
 		OutputStream os=clientSocket.getOutputStream();
 		//包装一个输出流
@@ -26,27 +24,33 @@ public class Client{
 	
 	
 	//发送数据包
-	public void SendMessage(Message sendmes) throws IOException 
+	public void SendMessage(User sendmes) throws IOException 
 	{	 
 		cout.writeObject(sendmes);
+		cout.close();
 	}
 	//获取数据包
-	public Message GetMessage()throws IOException 
+	public User GetMessage()throws IOException 
 	{
 		
-		Message getmes = null;
+		User getmes = null;
 		try {
-			getmes = (Message)cin.readObject();
+			getmes = (User)cin.readObject();
 		} catch (ClassNotFoundException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
 		return getmes;
 	}
+	public static void main(String[] args) {
+		User a = new User("lizi","12");
+		try {
+			new Client().SendMessage(a);
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
 	
-	
-	
-	
-	
+	}
 	
 }
