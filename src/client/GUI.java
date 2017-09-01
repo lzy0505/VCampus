@@ -94,7 +94,7 @@ public class GUI extends JFrame
 		p11 = new JPanel();
 		p11.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
-		profession1 = new JLabel("��ݣ�");
+		profession1 = new JLabel("Identity");
 		p11.add(profession1);
 		
 		pro1 = new JComboBox();
@@ -105,7 +105,7 @@ public class GUI extends JFrame
 		
 		p21 = new JPanel();
 		p21.setLayout(new FlowLayout(FlowLayout.CENTER));
-		id1 = new JLabel("�û���");
+		id1 = new JLabel("Username");
 		p21.add(id1);
 		
 		i1 = new JTextField("",8);
@@ -114,7 +114,7 @@ public class GUI extends JFrame
 		
 		p31 = new JPanel();
 		p31.setLayout(new FlowLayout(FlowLayout.CENTER));
-		password1 = new JLabel("���룺");
+		password1 = new JLabel("Password");
 		p31.add(password1);
 		pass1 = new JPasswordField("",8);
 		p31.add(pass1);
@@ -122,8 +122,8 @@ public class GUI extends JFrame
 		
 		p41 = new JPanel();
 		p41.setLayout(new FlowLayout(FlowLayout.CENTER));
-		reg1 = new JButton("ע��");
-		sign1 = new JButton("��½");
+		reg1 = new JButton("Sign Up");
+		sign1 = new JButton("Sign In");
 		p41.add(reg1);
 		p41.add(sign1);	
 		G1.add(p41);
@@ -142,37 +142,37 @@ public class GUI extends JFrame
 		
 		p12 = new JPanel();
 		p12.setLayout(new FlowLayout(FlowLayout.CENTER));
-		id2 = new JLabel("�û���");
+		id2 = new JLabel("Username");
 		p12.add(id2);
 		i2 = new JTextField("",8);
 		p12.add(i2);
-		l1 = new JLabel("(һ��ͨ��)");
+		l1 = new JLabel("(less than 10 characters)");
 		p12.add(l1);
 		G2.add(p12);
 		
 		p22 = new JPanel();
 		p22.setLayout(new FlowLayout(FlowLayout.CENTER));
-		password2 = new JLabel("���룺");
+		password2 = new JLabel("Password");
 		pass2 = new JPasswordField("",8);
 		p22.add(password2);
 		p22.add(pass2);
-		l2 = new JLabel("(6��16λ)");
+		l2 = new JLabel("(6 to 16 characters)");
 		p22.add(l2);
 		G2.add(p22);
 		
 		p32 = new JPanel();
 		p32.setLayout(new FlowLayout(FlowLayout.CENTER));
-		ipassword2 = new JLabel("����ȷ�ϣ�");
+		ipassword2 = new JLabel("Comfirm password");
 		ipass2 = new JPasswordField("",8);
 		p32.add(ipassword2);
 		p32.add(ipass2);
-		l3 = new JLabel("(6��16λ)");
+		l3 = new JLabel("(6 to 16 characters)");
 		p32.add(l3);
 		G2.add(p32);
 		
 		p42 = new JPanel();
 		p42.setLayout(new FlowLayout(FlowLayout.CENTER));
-		reg2 = new JButton("ע��");
+		reg2 = new JButton("Sign Up");
 		p42.add(reg2);
 		G2.add(p42);
 		
@@ -212,6 +212,7 @@ public class GUI extends JFrame
 		reg2.addActionListener(new MyActLister2());
 		return4.addActionListener(new MyActLister3());
 		close3.addActionListener(new MyActLister4());
+		pro1.addActionListener(new MyActLister5());
 	}
 	
 	
@@ -287,6 +288,24 @@ public class GUI extends JFrame
 		}
 		
 	}
+	
+	class MyActLister5 implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			if(pro1.getSelectedIndex()==1){
+				reg1.setEnabled(false);
+			}else {
+				reg1.setEnabled(true);
+			}
+			/*if()//�����½��ť��ȥ��ݿ������Ƿ��д��û����ڣ����У���򿪵�½��ķ������
+			{}*/
+			//TODO
+			
+		}
+		
+	}
+	
+	
 	
 	/*static class MyActLister4 implements ActionListener
 	{
