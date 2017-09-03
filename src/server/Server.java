@@ -10,12 +10,12 @@ import java.net.*;
  *
  */
 public class Server{
-	private int port = 8080;
+	private int port = 8080;   //端口号
 	private ServerSocket serverSocket;
 	private Socket socket=null;
 	private int count=1;
 	
-	public void starServer() throws IOException{
+	public void startServer() throws IOException{
 		serverSocket = new ServerSocket(port);
 		System.out.println("Listen to " + serverSocket.getLocalPort());
 		while(true) {
@@ -31,7 +31,7 @@ public class Server{
 	
 	public static void main(String args[])throws IOException
 	{
-		new Server().starServer();
+		new Server().startServer();
 	}
 	
 }
