@@ -48,7 +48,7 @@ public class ServerThread implements Runnable{
 				case "sign in":
 					
 					//get a array of HashMap whose username equal to b'username
-					aList=db.selectWhere("user", "username = "+"\'"+b.get("username")+"\'");
+					aList=db.selectWhere("users", "username = "+"\'"+b.get("username")+"\'");
 					if(aList.size()==0) {
 						a.put("result", "fail");
 						a.put("reason", "Username or Password is false!");
@@ -67,12 +67,12 @@ public class ServerThread implements Runnable{
 					
 				case "sign up":
 					
-					aList=db.selectWhere("user", "username = "+"\'"+b.get("username")+"\'");
+					aList=db.selectWhere("users", "username = "+"\'"+b.get("username")+"\'");
 					// if there's no username same as b'username,which means sing up is allowable;
 					if(aList.size()==0) {
 						b.remove("op");
 						
-						db.insert("user",b );
+						db.insert("users",b );
 						a.put("result", "success");
 						break;
 					}

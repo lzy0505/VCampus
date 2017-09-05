@@ -56,9 +56,9 @@ public class testMain {
 			Client client1 = new Client();
 			client1.clientSocket = new Socket("localhost",8080);
 			System.out.println("链接1建立成功");
-			client1.SendMessage(a);
+			client1.sendMessage(a);
 			
-			c = client1.GetMessage();
+			c = client1.getMessage();
 			
 			String cs = c.get("result");
 			System.out.println("c :" +cs);
@@ -73,8 +73,8 @@ public class testMain {
 			Client client2 = new Client();
 			client2.clientSocket = new Socket("localhost",8080);
 			System.out.println("链接2建立成功");
-			client2.SendMessage(f);
-			d = client2.GetMessage();
+			client2.sendMessage(f);
+			d = client2.getMessage();
 			String ds = d.get("result");
 			System.out.println("d :" +ds);
 			String re = d.get("reason");
@@ -89,9 +89,9 @@ public class testMain {
 			Client client3 = new Client();
 			client3.clientSocket = new Socket("localhost",8080);
 			System.out.println("链接3建立成功");
-			client3.SendMessage(b);
+			client3.sendMessage(b);
 			
-			g = client3.GetMessage();
+			g = client3.getMessage();
 			
 			String cs = g.get("result");
 			System.out.println("g :" +cs);
@@ -108,9 +108,9 @@ public class testMain {
 			Client client4 = new Client();
 			client4.clientSocket = new Socket("localhost",8080);
 			System.out.println("链接4建立成功");
-			client4.SendMessage(i);
+			client4.sendMessage(i);
 			
-			h= client4.GetMessage();
+			h= client4.getMessage();
 			
 			String cs = h.get("result");
 			System.out.println("h :" +cs);

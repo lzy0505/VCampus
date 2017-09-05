@@ -92,7 +92,7 @@ public class GUI extends JFrame
 		try {
 			Client client = new Client();
 			client.clientSocket = new Socket("localhost",8080);
-			client.SendMessage(sendmes);
+			client.sendMessage(sendmes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,8 +104,8 @@ public class GUI extends JFrame
 		try {
 			Client client = new Client();
 			client.clientSocket = new Socket("localhost",8080);
-			client.SendMessage(sendmes);
-			getmes = client.GetMessage();
+			client.sendMessage(sendmes);
+			getmes = client.getMessage();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

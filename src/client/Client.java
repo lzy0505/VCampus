@@ -20,7 +20,7 @@ public class Client{
 	}
 	
 	//发送数据包
-	public void SendMessage(HashMap<String,String> sendmes) throws IOException 
+	public void sendMessage(HashMap<String,String> sendmes) throws IOException 
 	{	 
 		OutputStream os=clientSocket.getOutputStream();
 		//包装一个输出流
@@ -28,7 +28,7 @@ public class Client{
 		cout.writeObject(sendmes);
 	}
 	//获取数据包
-	public HashMap<String,String> GetMessage()throws IOException 
+	public HashMap<String,String> getMessage()throws IOException 
 	{		
 		InputStream is=clientSocket.getInputStream();
 		cin=new ObjectInputStream(is);
