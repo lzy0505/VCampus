@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class GUI extends JFrame 
 {
 	private Client client;
-
+	private String un=null;
 	//the elements of G1
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
@@ -62,6 +62,13 @@ public class GUI extends JFrame
 	JLabel la7;
 	static JButton close7;
 	
+	static JFrame G8;
+ 	JPanel p18,p28;
+ 	JLabel l18,l28;
+ 	JComboBox ways;
+ 	JTextField t18;
+ 	JButton b18,b28;
+	
 	public void init(){
 		
 		try {
@@ -99,7 +106,7 @@ public class GUI extends JFrame
 	}
 	
 	
-	public GUI(String title1,String title2,String title3,String title4,String title5,String title6,String title7)
+	public GUI(String title1,String title2,String title3,String title4,String title5,String title6,String title7,String title8)
 	{
 		//the part of G1
 		G1 = new JFrame(title1);
@@ -313,6 +320,30 @@ public class GUI extends JFrame
 		p27.add(close7);
 		G7.add(p27);
 		
+		//the part of G8
+				G8 = new JFrame(title8);
+				G8.setSize(300, 150);
+				G8.setLayout(new FlowLayout());
+				
+				ways = new JComboBox();
+				ways.addItem("Author");
+				ways.addItem("BookName");
+				p18 = new JPanel();
+				p18.setLayout(new FlowLayout(FlowLayout.CENTER));
+				p18.add(ways);
+				
+				t18 = new JTextField("",8);
+				p18.add(t18);
+				G8.add(p18);
+				
+				b18 = new JButton("Search");
+				b28 = new JButton("Return Book");
+				p28 = new JPanel();
+				p28.setLayout(new FlowLayout(FlowLayout.CENTER));
+				p28.add(b18);
+				p28.add(b28);
+				G8.add(p28);
+		
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());
 		reg2.addActionListener(new MyActLister2());
@@ -320,18 +351,58 @@ public class GUI extends JFrame
 		close3.addActionListener(new MyActLister4());
 		close7.addActionListener(new MyActLister4());
 		sign1.addActionListener(new MyActLister5());
-
+		b18.addActionListener(new MyActLister6());
+		 		l36.addMouseListener(new MyMouLister1());
+		 		/*l46.addActionListener(new MyActLister7());
+		 		l56.addActionListener(new MyActLister8());
+		 		l66.addActionListener(new MyActLister5());*/
 		pro1.addItemListener(new MyItemLister1());
 	}
 	
 	
 	public static void main(String[] args) 
 	{
-		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher","Sign in failed");
+		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher","Sign in failed","Library");
 		//gui.init();
 	
 	}
 
+	
+	class MyMouLister1 implements MouseListener
+	 	{
+	 
+	 		@Override
+	 		public void mouseClicked(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mouseEntered(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mouseExited(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mousePressed(MouseEvent arg0) {
+	 			
+	 			G8.setVisible(true);
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mouseReleased(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 		
+	 	}
 
 	class MyActLister1 implements ActionListener
 	{
@@ -467,7 +538,16 @@ public class GUI extends JFrame
 		
 	}
 	
-	
+	class MyActLister6 implements ActionListener
+	 	{
+	 
+	 		public void actionPerformed(ActionEvent arg0) {
+	 			/*if() find whether there is a book that client searching for in the database
+	 			*if yes,G9.setVisable(true),or G10.setVisable(true)*/
+	 			
+	 		}
+	 		
+	 	}
 	
 	
 	

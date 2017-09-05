@@ -54,14 +54,14 @@ public class ServerThread implements Runnable{
 						a.put("reason", "Username or Password is false!");
 						break;
 					}
-					else if (aList.get(0).get("password").equals(b.get("password"))) {
+					else if (aList.get(0).get("password").equals(b.get("password"))&&aList.get(0).get("identity").equals(b.get("identity"))) {
 						
 						a.put("result", "success");
 						break;
 					}
 					else {
 						a.put("result", "fail");
-						a.put("reason", "Username or Password is false!");
+						
 						break;
 					}
 					
@@ -71,6 +71,7 @@ public class ServerThread implements Runnable{
 					// if there's no username same as b'username,which means sing up is allowable;
 					if(aList.size()==0) {
 						b.remove("op");
+						
 						db.insert("user",b );
 						a.put("result", "success");
 						break;
