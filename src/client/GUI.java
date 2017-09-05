@@ -62,12 +62,21 @@ public class GUI extends JFrame
 	JLabel la7;
 	static JButton close7;
 	
+	//the elements of G8
 	static JFrame G8;
  	JPanel p18,p28;
  	JLabel l18,l28;
  	JComboBox ways;
  	JTextField t18;
  	JButton b18,b28;
+ 	
+ 	//the elements of SearchBook9th
+ 	static JFrame SearchBook9th;
+ 	JPanel p19,p29,p39,p49,p59,p69;//mostly 5 messages at present
+ 	JLabel bookName1,bookName2,bookName3,bookName4,bookName5,press1,press2,press3,press4,press5;//press is publishing house
+ 	JLabel bookNumber1,bookNumber2,bookNumber3,bookNumber4,bookNumber5;
+ 	JCheckBox check1,check2,check3,check4,check5;//which book to choose
+ 	JButton borrow;
 	
 	public void init(){
 		
@@ -321,28 +330,29 @@ public class GUI extends JFrame
 		G7.add(p27);
 		
 		//the part of G8
-				G8 = new JFrame(title8);
-				G8.setSize(300, 150);
-				G8.setLayout(new FlowLayout());
+		G8 = new JFrame(title8);
+		G8.setSize(300, 150);
+		G8.setLayout(new FlowLayout());
+		
+		ways = new JComboBox();
+		ways.addItem("Author");
+		ways.addItem("BookName");
+		p18 = new JPanel();
+		p18.setLayout(new FlowLayout(FlowLayout.CENTER));
+		p18.add(ways);
+		
+		t18 = new JTextField("",8);
+		p18.add(t18);
+		G8.add(p18);
 				
-				ways = new JComboBox();
-				ways.addItem("Author");
-				ways.addItem("BookName");
-				p18 = new JPanel();
-				p18.setLayout(new FlowLayout(FlowLayout.CENTER));
-				p18.add(ways);
-				
-				t18 = new JTextField("",8);
-				p18.add(t18);
-				G8.add(p18);
-				
-				b18 = new JButton("Search");
-				b28 = new JButton("Return Book");
-				p28 = new JPanel();
-				p28.setLayout(new FlowLayout(FlowLayout.CENTER));
-				p28.add(b18);
-				p28.add(b28);
-				G8.add(p28);
+		b18 = new JButton("Search");
+		b28 = new JButton("Return Book");
+		p28 = new JPanel();
+		p28.setLayout(new FlowLayout(FlowLayout.CENTER));
+		p28.add(b18);
+		p28.add(b28);
+		G8.add(p28);
+		
 		
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());
@@ -352,13 +362,124 @@ public class GUI extends JFrame
 		close7.addActionListener(new MyActLister4());
 		sign1.addActionListener(new MyActLister5());
 		b18.addActionListener(new MyActLister6());
-		 		l36.addMouseListener(new MyMouLister1());
-		 		/*l46.addActionListener(new MyActLister7());
-		 		l56.addActionListener(new MyActLister8());
-		 		l66.addActionListener(new MyActLister5());*/
+		l36.addMouseListener(new MyMouLister1());
+		b18.addActionListener(new SearchBookFromDB());
+		
 		pro1.addItemListener(new MyItemLister1());
 	}
 	
+	//the method of creating SearchBook9th
+	public void searchBook9th(String bN1,String pre1,int n1,
+			String bN2,String pre2,int n2,
+			String bN3,String pre3,int n3,
+			String bN4,String pre4,int n4,
+			String bN5,String pre5,int n5)
+	{
+		SearchBook9th = new JFrame("Search book");
+		SearchBook9th.setSize(200, 300);
+		SearchBook9th.setLayout(new FlowLayout());
+		
+		p19 = new JPanel();
+		p19.setLayout(new FlowLayout());
+		bookName1 = new JLabel(bN1);
+		press1 = new JLabel(pre1);	
+		if(n1>0)
+		{
+			bookNumber1 = new JLabel(""+n1);
+			p19.add(bookNumber1);
+		}
+		if(!bN1.equals(""))
+		{
+			check1 = new JCheckBox();
+			p19.add(check1);
+		}//if the bookName is not empty,then show the checkbox
+		p19.add(bookName1);
+		p19.add(press1);
+		SearchBook9th.add(p19);
+		
+		
+		p29 = new JPanel();
+		p29.setLayout(new FlowLayout());
+		bookName2 = new JLabel(bN2);
+		press2 = new JLabel(pre2);
+		if(n2>0)
+		{
+			bookNumber2 = new JLabel(""+n2);
+			p29.add(bookNumber2);
+		}
+		if(!bN2.equals(""))
+		{
+			check2 = new JCheckBox();
+			p29.add(check2);
+		}
+		p29.add(bookName2);
+		p29.add(press2);
+		SearchBook9th.add(p29);
+				
+		p39 = new JPanel();
+		p39.setLayout(new FlowLayout());
+		bookName3 = new JLabel(bN3);
+		press3 = new JLabel(pre3);
+		if(n3>0)
+		{
+			bookNumber3 = new JLabel(""+n3);
+			p39.add(bookNumber3);
+		}
+		if(!bN3.equals(null))
+		{
+			check3 = new JCheckBox();
+			p39.add(check3);
+		}
+		p39.add(bookName3);
+		p39.add(press3);
+		SearchBook9th.add(p39);
+			
+		p49 = new JPanel();
+		p49.setLayout(new FlowLayout());
+		bookName4 = new JLabel(bN4);
+		press4 = new JLabel(pre4);
+		if(n4>0)
+		{
+			bookNumber4 = new JLabel(""+n4);
+			p49.add(bookNumber4);
+		}
+		if(!bN4.equals(null))
+		{
+			check4 = new JCheckBox();
+			p49.add(check4);
+		}
+		p49.add(bookName4);
+		p49.add(press4);
+		SearchBook9th.add(p49);
+		
+		p59 = new JPanel();
+		p59.setLayout(new FlowLayout());
+		bookName5 = new JLabel(bN5);
+		press5 = new JLabel(pre5);
+		if(n5>0)
+		{
+			bookNumber5 = new JLabel(""+n5);
+			p59.add(bookNumber5);
+		}
+		if(!bN5.equals(null))
+		{
+			check5 = new JCheckBox();
+			p59.add(check5);
+		}
+		p59.add(bookName5);
+		p59.add(press5);
+		SearchBook9th.add(p59);
+		
+		
+		p69 = new JPanel();
+		p69.setLayout(new FlowLayout(FlowLayout.CENTER));
+		borrow = new JButton("Borrow");
+		p69.add(borrow);
+		SearchBook9th.add(p69);
+		
+		SearchBook9th.setVisible(true);
+		
+	}
 	
 	public static void main(String[] args) 
 	{
@@ -539,17 +660,53 @@ public class GUI extends JFrame
 	}
 	
 	class MyActLister6 implements ActionListener
-	 	{
+	{
 	 
-	 		public void actionPerformed(ActionEvent arg0) {
-	 			/*if() find whether there is a book that client searching for in the database
+	 	public void actionPerformed(ActionEvent arg0) 
+	 	{
+	 		/*if() find whether there is a book that client searching for in the database
 	 			*if yes,G9.setVisable(true),or G10.setVisable(true)*/
 	 			
-	 		}
-	 		
 	 	}
+	 		
+	 }
 	
-	
+	class SearchBookFromDB implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0)
+		{
+			String bN1 = "",bN2 = "",bN3 = "",bN4 = "",bN5 = "",
+					pre1 = "",pre2 = "",pre3 = "",pre4 = "",pre5 = "";//bookName and press
+			
+			int n1 = 0,n2 = 0,n3 = 0,n4 = 0,n5 = 0;//n is bookNumber
+			
+			/*String bN1 = "bookTest1",bN2 = "bookTest2",bN3 = "bookTest3",bN4 = "bookTest4",
+					bN5 = "bookTest5",pre1 = "pressTest1",pre2 = "pressTest2",pre3 = "pressTest3",
+					pre4 = "pressTest4",pre5 = "pressTest5";
+			
+			int n1 = 10,n2 = 2,n3 = 3,n4 = 4,n5 = 5;*/
+			//just test bookName and press,IF YOU WANT TO see this GUI's effect,undefined this
+			//part of code
+			
+			/*search book from database,if there is a book in the database,return the book's message,which contains bN,pre and n
+			 * attention: for there are at most 5 messages, if the messages can't be fullfiled,retun empty string or integer
+			 *///TODO
+			
+			if(!(bN1.equals("")))
+			{
+				searchBook9th(bN1,pre1,n1,bN2,pre2,n2,bN3,pre3,n3,bN4,pre4,n4,bN5,pre5,n5);
+			}//if the first book is not a null,then show all the message of this book
+			else 
+			{
+				//show the GUI of searching unsuccessfully
+				//TODO
+			}
+			
+		}
+		
+	}
 	
 
 }
