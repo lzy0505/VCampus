@@ -77,6 +77,13 @@ public class GUI extends JFrame
  	JLabel bookNumber1,bookNumber2,bookNumber3,bookNumber4,bookNumber5;
  	JCheckBox check1,check2,check3,check4,check5;//which book to choose
  	JButton borrow;
+ 	
+ 	//the elements of SearchUnSuccessful
+ 	static JFrame SearchUnSuccessful;
+ 	JPanel p110,p210;
+ 	JLabel la10;
+ 	static JButton return10;
+ 		
 	
 	public void init(){
 		
@@ -115,7 +122,8 @@ public class GUI extends JFrame
 	}
 	
 	
-	public GUI(String title1,String title2,String title3,String title4,String title5,String title6,String title7,String title8)
+	public GUI(String title1,String title2,String title3,String title4,String title5,String title6,
+			String title7,String title8,String title10)
 	{
 		//the part of G1
 		G1 = new JFrame(title1);
@@ -353,17 +361,38 @@ public class GUI extends JFrame
 		p28.add(b28);
 		G8.add(p28);
 		
+		/*/the part of searchUnsuccessful
+		 JOptionPane.showMessageDialog(null, "The book that you searched is not found!",
+				 "search unsuccessful",JOptionPane.WARNING_MESSAGE);*/
+		
+		//the part of searchUnsuccessful
+		SearchUnSuccessful = new JFrame(title10);
+		SearchUnSuccessful.setSize(200,130);
+		SearchUnSuccessful.setLayout(new GridLayout(2,1));
+		la10 = new JLabel("Search unsuccessful!");
+		p110 = new JPanel();
+		p110.setLayout(new FlowLayout(FlowLayout.CENTER));
+		p110.add(la10);
+		SearchUnSuccessful.add(p110);
+		
+		return10 = new JButton("Return");
+		p210 = new JPanel();
+		p210.setLayout(new FlowLayout(FlowLayout.CENTER));
+		p210.add(return10);
+		SearchUnSuccessful.add(p210);
+		
 		
 		//events and reaction
-		reg1.addActionListener(new MyActLister1());
-		reg2.addActionListener(new MyActLister2());
-		return4.addActionListener(new MyActLister3());
-		close3.addActionListener(new MyActLister4());
-		close7.addActionListener(new MyActLister4());
-		sign1.addActionListener(new MyActLister5());
-		b18.addActionListener(new MyActLister6());
-		l36.addMouseListener(new MyMouLister1());
-		b18.addActionListener(new SearchBookFromDB());
+		reg1.addActionListener(new MyActLister1());//sign up int the first GUI
+		reg2.addActionListener(new MyActLister2());//the GUI of sign up
+		return4.addActionListener(new MyActLister3());//return to the first GUI
+		close3.addActionListener(new MyActLister4());//close this GUI's window
+		close7.addActionListener(new MyActLister4());//close this GUI's window
+		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
+		l35.addMouseListener(new MyMouLister1());//open library(student)
+		l36.addMouseListener(new MyMouLister1());//open library(teacher)
+		b18.addActionListener(new SearchBookFromDB());//search book
+		return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
@@ -483,8 +512,9 @@ public class GUI extends JFrame
 	
 	public static void main(String[] args) 
 	{
-		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher","Sign in failed","Library");
-		//gui.init();
+		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher",
+				"Sign in failed","Library","Search unsuccessful");
+		gui.init();
 	
 	}
 
@@ -574,8 +604,8 @@ public class GUI extends JFrame
 				//System.out.println(hm.get("result"));
 				if(hm.get("result").equals("success"))
 				{
-				G3.setVisible(true);
-				G3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					G3.setVisible(true);
+					G3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				}
 				else if(hm.get("result").equals("fail"))
 				{
@@ -664,9 +694,8 @@ public class GUI extends JFrame
 	 
 	 	public void actionPerformed(ActionEvent arg0) 
 	 	{
-	 		/*if() find whether there is a book that client searching for in the database
-	 			*if yes,G9.setVisable(true),or G10.setVisable(true)*/
-	 			
+	 		SearchUnSuccessful.setVisible(false);
+	 		G8.setVisible(true);
 	 	}
 	 		
 	 }
@@ -687,12 +716,24 @@ public class GUI extends JFrame
 					pre4 = "pressTest4",pre5 = "pressTest5";
 			
 			int n1 = 10,n2 = 2,n3 = 3,n4 = 4,n5 = 5;*/
-			//just test bookName and press,IF YOU WANT TO see this GUI's effect,undefined this
+			//just to test bookName and press,IF YOU WANT TO see this GUI's effect,undefined this
 			//part of code
+			//Not TODO
+			
 			
 			/*search book from database,if there is a book in the database,return the book's message,which contains bN,pre and n
 			 * attention: for there are at most 5 messages, if the messages can't be fullfiled,retun empty string or integer
-			 *///TODO
+			 
+			 *if(ways.getSelectedItem() == "Author")
+			{
+				//search book according to Author
+			}
+			else
+			{
+				//search book according to BookName
+			}
+			 //TODO*/
+			
 			
 			if(!(bN1.equals("")))
 			{
@@ -700,6 +741,7 @@ public class GUI extends JFrame
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
+				SearchUnSuccessful.setVisible(true);
 				//show the GUI of searching unsuccessfully
 				//TODO
 			}
