@@ -38,6 +38,7 @@ public class ServerThread implements Runnable{
 				//a is used to send message 
 				HashMap<String,String> a =new HashMap<String,String>();
 				//b is used to get message
+				
 				HashMap<String,String> b =new HashMap<String,String>();
 				b = (HashMap<String,String>) sois.readObject();
 				String op = b.get("op");
@@ -45,14 +46,16 @@ public class ServerThread implements Runnable{
 				ArrayList<HashMap<String,String>> aList=null;
 				switch (op) {
 				case "sign in":
+					
 					//get a array of HashMap whose username equal to b'username
-					aList=db.selectWhere("user", "username = "+b.get("username"));
+					aList=db.selectWhere("user", "username = "+"\'"+b.get("username")+"\'");
 					if(aList.size()==0) {
 						a.put("result", "fail");
 						a.put("reason", "Username or Password is false!");
 						break;
 					}
 					else if (aList.get(0).get("password").equals(b.get("password"))) {
+						
 						a.put("result", "success");
 						break;
 					}
@@ -63,7 +66,8 @@ public class ServerThread implements Runnable{
 					}
 					
 				case "sign up":
-					aList=db.selectWhere("user", "username = "+b.get("username"));
+					
+					aList=db.selectWhere("user", "username = "+"\'"+b.get("username")+"\'");
 					// if there's no username same as b'username,which means sing up is allowable;
 					if(aList.size()==0) {
 						b.remove("op");

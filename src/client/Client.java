@@ -32,7 +32,7 @@ public class Client{
 	{		
 		InputStream is=clientSocket.getInputStream();
 		cin=new ObjectInputStream(is);
-		HashMap<String,String> getmes = null;
+		HashMap<String,String> getmes = new HashMap<String,String>();
 		try {
 			getmes = (HashMap<String,String>)cin.readObject();
 		} catch (ClassNotFoundException e) {
@@ -41,6 +41,14 @@ public class Client{
 		}
 		return getmes;
 	}
-	
+	protected void finalize()
+	{
+		try {
+			clientSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }

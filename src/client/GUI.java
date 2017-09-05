@@ -84,7 +84,7 @@ public class GUI extends JFrame
 	}
 	
 	public HashMap<String, String> get(HashMap<String,String> sendmes){
-		HashMap<String, String> getmes=null;
+		HashMap<String, String> getmes=new HashMap<String,String>();
 		try {
 			Client client = new Client();
 			client.clientSocket = new Socket("localhost",8080);
@@ -209,7 +209,7 @@ public class GUI extends JFrame
 		G4 = new JFrame(title4);
 		G4.setSize(200,130);
 		G4.setLayout(new GridLayout(2,1));
-		la4 = new JLabel("User's name or password is illegal!");
+		la4 = new JLabel("Register failed!");
 		p14 = new JPanel();
 		p14.setLayout(new FlowLayout(FlowLayout.CENTER));
 		p14.add(la4);
@@ -301,7 +301,7 @@ public class GUI extends JFrame
 		G7 = new JFrame(title7);
 		G7.setSize(200,130);
 		G7.setLayout(new GridLayout(2,1));
-		la7 = new JLabel("Registered successfully!");
+		la7 = new JLabel("Sign in failed!");
 		p17 = new JPanel();
 		p17.setLayout(new FlowLayout(FlowLayout.CENTER));
 		p17.add(la7);
@@ -328,7 +328,7 @@ public class GUI extends JFrame
 	public static void main(String[] args) 
 	{
 		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher","Sign in failed");
-		gui.init();
+		//gui.init();
 	
 	}
 
@@ -346,36 +346,50 @@ public class GUI extends JFrame
 	{
 		public void itemStateChanged(ItemEvent e) {
 			//if the person is a teacher,then the sign up button is not able to be pressed
-			if(e.getSource() == pro1 && e.getStateChange()==ItemEvent.SELECTED)
+			if(e.getSource() == pro1 && pro1.getSelectedIndex()==1)
 			{
 				reg1.setEnabled(false);
+			}
+			if(e.getSource() == pro1 && pro1.getSelectedIndex()==0)
+			{
+				reg1.setEnabled(true);
 			}
 		}
 		
 	}
-	
+	//注册界面
 	class MyActLister2 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
 			
 			if(i2.getText().length()<11 & (pass2.getText().length()>5) & (pass2.getText().length()<17)& (pass2.getText().equals(ipass2.getText())))
 			{
-				G3.setVisible(true);
-				G3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
 				HashMap<String,String> hm=new HashMap<String,String>();
 					
 				hm.put("username",i2.getText());
 				hm.put("password",pass2.getText());
+				hm.put("op", "sign up");
 				if(pro1.getSelectedIndex()==0){
 					hm.put("identity","student");
 				}else{
 					hm.put("identity","teacher");
 				}
-			
+			    
 				System.out.println(hm.get("username"));
-				System.out.println(hm.get("password"));
+				System.out.println(hm.get("password"));	
 				hm=get(hm);
-				System.out.println(hm.get("result"));
+				//System.out.println(hm.get("result"));
+				if(hm.get("result").equals("success"))
+				{
+				G3.setVisible(true);
+				G3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				}
+				else if(hm.get("result").equals("fail"))
+				{
+					G4.setVisible(true);
+					G4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				}
 			}
 			else
 			{
@@ -406,25 +420,47 @@ public class GUI extends JFrame
 		}
 		
 	}
-	
+	//点击登录按钮
 	class MyActLister5 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
 			
 			/*if() go to find whether there is a person(student/teacher) in our database,if 
 			 * yes,it will turn to G5(student)/G6(teacher),or it will turn to G7(Failed sign in)
-			{
-				if(pro.getSelectedItem() == "student")
-					G5.setVisable(true);
-				else
-					G6.setVisable(true);
 			
-			}
-			else
-			{
-				G7.setVisable(true);
-			}
 	*/
+			HashMap<String,String> hm=new HashMap<String,String>();
+			
+			hm.put("username",i1.getText());
+			hm.put("password",pass1.getText());
+			hm.put("op", "sign in");
+			if(pro1.getSelectedIndex()==0){
+				hm.put("identity","student");
+			}else{
+				hm.put("identity","teacher");
+			}
+		    hm=get(hm);
+		    if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==0)
+		    {
+		    	G5.setVisible(true);
+		    	G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    	
+		    }
+		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==1)
+		    {
+		    	G6.setVisible(true);
+		    	G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    		
+		    }
+		    else if(hm.get("result").equals("fail"))
+		    {
+		    	G7.setVisible(true);
+		    	G7.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    		
+		    	
+		    }
+			
+			
 	//TODO
 			
 		}
