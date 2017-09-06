@@ -68,12 +68,12 @@ public class GUI extends JFrame
  	
  	//the elements of SearchBook9th
  	static JFrame SearchBook9th;
- 	JPanel[] bookPanel=new JPanel[6];//mostly 5 messages at present
- 	JLabel[] bookNameLabel=new JLabel[5];
- 	JLabel[] authorLabel=new JLabel[5];
- 	JLabel[] publisherLabel=new JLabel[5];
- 	JLabel[] quantityLabel=new JLabel[5];//press is publishing house
- 	JCheckBox[] bookCheckBox=new JCheckBox[5];//which book to choose
+ 	JPanel[] bookPanel=null;//mostly 5 messages at present
+ 	JLabel[] bookNameLabel=null;
+ 	JLabel[] authorLabel=null;
+ 	JLabel[] publisherLabel=null;
+ 	JLabel[] quantityLabel=null;//press is publishing house
+ 	JCheckBox[] bookCheckBox=null;//which book to choose
  	JButton borrow;
  		
 	
@@ -369,7 +369,6 @@ public class GUI extends JFrame
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		b18.addActionListener(new SearchBookFromDB());//search book
-		borrow.addActionListener(new SearchBookFromDB());
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
@@ -382,6 +381,13 @@ public class GUI extends JFrame
 		SearchBook9th = new JFrame("Search book");
 		SearchBook9th.setSize(300, 350);
 		SearchBook9th.setLayout(new FlowLayout());
+		
+		bookPanel=new JPanel[size+1];
+		 bookNameLabel=new JLabel[size];
+		 authorLabel=new JLabel[size];
+		 publisherLabel=new JLabel[size];
+		 quantityLabel=new JLabel[size];
+		 bookCheckBox=new JCheckBox[size];
 		
 		
 		for(int i=0;i<size;i++) {
@@ -410,7 +416,7 @@ public class GUI extends JFrame
 		borrow = new JButton("Borrow");
 		bookPanel[size].add(borrow);
 		SearchBook9th.add(bookPanel[size]);
-		
+		borrow.addActionListener(new BorrowBookFromDB());
 		SearchBook9th.setLocation(getWidth(SearchBook9th.getWidth()),getHeight(SearchBook9th.getHeight()));
 		
 		SearchBook9th.setVisible(true);
@@ -612,6 +618,7 @@ public class GUI extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
+			
 			String[] bookName=new String[5];
 			String[] publisher=new String[5];//bookName and press
 			String[] quantity=new String[5];
@@ -660,12 +667,26 @@ public class GUI extends JFrame
 						"search unsuccessful",JOptionPane.WARNING_MESSAGE);
 							  
 			}
-			
+			t18.setText("");
 		}
 		
 	}
-	
-
+	class BorrowBookFromDB implements ActionListener
+	{
+		public void actionPerformed(ActionEvent arg0)
+		{
+			HashMap<String,String> hmlib=null;
+			for (int i = 0;i < bookCheckBox.length;i++) {
+				 hmlib=new HashMap<String,String>();
+				 if(bookCheckBox[i].isSelected()==true) {
+				 	hmlib.put("book_name", bookNameLabel[i].getText());
+				 	hmlib.put("op", "borrow");
+				 	hmlib.put("user_name", un);
+				 	send(hmlib);
+				 	}
+			}
+		}
+	}
 }
 
 
