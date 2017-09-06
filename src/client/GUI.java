@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class GUI extends JFrame 
 {
 	private Client client;
+	//!!!!un is used to identify a user 
 	private String un=null;
 	//the elements of G1
 	static JFrame G1;
@@ -75,6 +76,7 @@ public class GUI extends JFrame
  	JPanel p19,p29,p39,p49,p59,p69;//mostly 5 messages at present
  	JLabel bookName1,bookName2,bookName3,bookName4,bookName5,press1,press2,press3,press4,press5;//press is publishing house
  	JLabel bookNumber1,bookNumber2,bookNumber3,bookNumber4,bookNumber5;
+ 	JLabel authorName1,authorName2,authorName3,authorName4,authorName5;
  	JCheckBox check1,check2,check3,check4,check5;//which book to choose
  	JButton borrow;
  	
@@ -94,7 +96,7 @@ public class GUI extends JFrame
 			e.printStackTrace();
 		}
 	}
-	
+	//send message
 	public void send(HashMap<String,String> sendmes){
 		try {
 			Client client = new Client();
@@ -105,7 +107,7 @@ public class GUI extends JFrame
 			e.printStackTrace();
 		}
 	}
-	
+	//send and get message
 	public HashMap<String, String> get(HashMap<String,String> sendmes){
 		HashMap<String, String> getmes=new HashMap<String,String>();
 		try {
@@ -398,20 +400,21 @@ public class GUI extends JFrame
 	}
 	
 	//the method of creating SearchBook9th
-	public void searchBook9th(String bN1,String pre1,int n1,
-			String bN2,String pre2,int n2,
-			String bN3,String pre3,int n3,
-			String bN4,String pre4,int n4,
-			String bN5,String pre5,int n5)
+	public void searchBook9th(String bN1,String pre1,int n1,String aN1,
+			String bN2,String pre2,int n2,String aN2,
+			String bN3,String pre3,int n3,String aN3,
+			String bN4,String pre4,int n4,String aN4,
+			String bN5,String pre5,int n5,String aN5)
 	{
 		SearchBook9th = new JFrame("Search book");
-		SearchBook9th.setSize(200, 300);
+		SearchBook9th.setSize(300, 350);
 		SearchBook9th.setLayout(new FlowLayout());
 		
 		p19 = new JPanel();
 		p19.setLayout(new FlowLayout());
 		bookName1 = new JLabel(bN1);
-		press1 = new JLabel(pre1);	
+		press1 = new JLabel(pre1);
+		authorName1 = new JLabel(aN1);
 		if(n1>0)
 		{
 			bookNumber1 = new JLabel(""+n1);
@@ -423,6 +426,7 @@ public class GUI extends JFrame
 			p19.add(check1);
 		}//if the bookName is not empty,then show the checkbox
 		p19.add(bookName1);
+		p19.add(authorName1);
 		p19.add(press1);
 		SearchBook9th.add(p19);
 		
@@ -431,6 +435,7 @@ public class GUI extends JFrame
 		p29.setLayout(new FlowLayout());
 		bookName2 = new JLabel(bN2);
 		press2 = new JLabel(pre2);
+		authorName2 = new JLabel(aN2);
 		if(n2>0)
 		{
 			bookNumber2 = new JLabel(""+n2);
@@ -442,6 +447,7 @@ public class GUI extends JFrame
 			p29.add(check2);
 		}
 		p29.add(bookName2);
+		p29.add(authorName2);
 		p29.add(press2);
 		SearchBook9th.add(p29);
 				
@@ -449,6 +455,7 @@ public class GUI extends JFrame
 		p39.setLayout(new FlowLayout());
 		bookName3 = new JLabel(bN3);
 		press3 = new JLabel(pre3);
+		authorName3 = new JLabel(aN3);
 		if(n3>0)
 		{
 			bookNumber3 = new JLabel(""+n3);
@@ -460,6 +467,7 @@ public class GUI extends JFrame
 			p39.add(check3);
 		}
 		p39.add(bookName3);
+		p39.add(authorName3);
 		p39.add(press3);
 		SearchBook9th.add(p39);
 			
@@ -467,6 +475,7 @@ public class GUI extends JFrame
 		p49.setLayout(new FlowLayout());
 		bookName4 = new JLabel(bN4);
 		press4 = new JLabel(pre4);
+		authorName4 = new JLabel(aN4);
 		if(n4>0)
 		{
 			bookNumber4 = new JLabel(""+n4);
@@ -478,6 +487,7 @@ public class GUI extends JFrame
 			p49.add(check4);
 		}
 		p49.add(bookName4);
+		p49.add(authorName4);
 		p49.add(press4);
 		SearchBook9th.add(p49);
 		
@@ -485,6 +495,7 @@ public class GUI extends JFrame
 		p59.setLayout(new FlowLayout());
 		bookName5 = new JLabel(bN5);
 		press5 = new JLabel(pre5);
+		authorName5 = new JLabel(aN5);
 		if(n5>0)
 		{
 			bookNumber5 = new JLabel(""+n5);
@@ -496,6 +507,7 @@ public class GUI extends JFrame
 			p59.add(check5);
 		}
 		p59.add(bookName5);
+		p59.add(authorName5);
 		p59.add(press5);
 		SearchBook9th.add(p59);
 		
@@ -642,7 +654,7 @@ public class GUI extends JFrame
 		}
 		
 	}
-	//点击登录按钮
+	//点击登录按钮, sign in
 	class MyActLister5 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
@@ -661,15 +673,18 @@ public class GUI extends JFrame
 			}else{
 				hm.put("identity","teacher");
 			}
+			//send hm to server and get it back, check the result 
 		    hm=get(hm);
 		    if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==0)
 		    {
+		    	un = hm.get("username");//un is used to identify user,a global variable
 		    	G5.setVisible(true);
 		    	G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	
 		    }
 		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==1)
 		    {
+		    	un = hm.get("username");//un is used to identify user,a global variable
 		    	G6.setVisible(true);
 		    	G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		
@@ -699,7 +714,7 @@ public class GUI extends JFrame
 	 	}
 	 		
 	 }
-	
+	// 
 	class SearchBookFromDB implements ActionListener
 	{
 
@@ -710,12 +725,14 @@ public class GUI extends JFrame
 					pre1 = "",pre2 = "",pre3 = "",pre4 = "",pre5 = "";//bookName and press
 			
 			int n1 = 0,n2 = 0,n3 = 0,n4 = 0,n5 = 0;//n is bookNumber
-			
+			String aN1 = "",aN2 = "",aN3 = "",aN4 = "",aN5 = "";
 			/*String bN1 = "bookTest1",bN2 = "bookTest2",bN3 = "bookTest3",bN4 = "bookTest4",
 					bN5 = "bookTest5",pre1 = "pressTest1",pre2 = "pressTest2",pre3 = "pressTest3",
 					pre4 = "pressTest4",pre5 = "pressTest5";
 			
-			int n1 = 10,n2 = 2,n3 = 3,n4 = 4,n5 = 5;*/
+			int n1 = 10,n2 = 2,n3 = 3,n4 = 4,n5 = 5;
+			String aN1="authorTest1",aN2="authorTest1",aN3="authorTest1",aN4="authorTest4",aN5="authorTest1";
+			*/
 			//just to test bookName and press,IF YOU WANT TO see this GUI's effect,undefined this
 			//part of code
 			//Not TODO
@@ -724,20 +741,56 @@ public class GUI extends JFrame
 			/*search book from database,if there is a book in the database,return the book's message,which contains bN,pre and n
 			 * attention: for there are at most 5 messages, if the messages can't be fullfiled,retun empty string or integer
 			 
-			 *if(ways.getSelectedItem() == "Author")
+			 */
+			HashMap<String,String> hmlib=new HashMap<String,String>();
+			if(ways.getSelectedItem() == "Author")
 			{
 				//search book according to Author
+				hmlib.put("username", un);
+				hmlib.put("op", "searchbook");
+				hmlib.put("search_type", "author");
+				hmlib.put("keyword", t18.getText());					
 			}
 			else
 			{
 				//search book according to BookName
+				
+				hmlib.put("username", un);
+				hmlib.put("op", "searchbook");
+				hmlib.put("search_type", "name");
+				hmlib.put("keyword", t18.getText());
 			}
+			hmlib = get(hmlib);
+			bN1 = hmlib.get("book_name1");
+			bN2 = hmlib.get("book_name2");
+			bN3 = hmlib.get("book_name3");
+			bN4 = hmlib.get("book_name4");
+			bN5 = hmlib.get("book_name5");
+			
+			aN1 = hmlib.get("author1");
+			aN2 = hmlib.get("author2");
+			aN3 = hmlib.get("author3");
+			aN4 = hmlib.get("author4");
+			aN5 = hmlib.get("author5");
+			
+			n1 =Integer.parseInt(hmlib.get("quantity1"));
+			n2 =Integer.parseInt(hmlib.get("quantity2"));
+			n3 =Integer.parseInt(hmlib.get("quantity3"));
+			n4 =Integer.parseInt(hmlib.get("quantity4"));
+			n5 =Integer.parseInt(hmlib.get("quantity5"));
+			
+			pre1 = hmlib.get("publish1");
+			pre2 = hmlib.get("publish2");
+			pre3 = hmlib.get("publish3");
+			pre4 = hmlib.get("publish4");
+			pre5 = hmlib.get("publish5");
+			
 			 //TODO*/
 			
 			
 			if(!(bN1.equals("")))
 			{
-				searchBook9th(bN1,pre1,n1,bN2,pre2,n2,bN3,pre3,n3,bN4,pre4,n4,bN5,pre5,n5);
+				searchBook9th(bN1,pre1,n1,aN1,bN2,pre2,n2,aN2,bN3,pre3,n3,aN3,bN4,pre4,n4,aN4,bN5,pre5,n5,aN5);
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{

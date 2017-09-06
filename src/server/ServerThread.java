@@ -9,6 +9,8 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import utils.User;
 
 
@@ -37,10 +39,11 @@ public class ServerThread implements Runnable{
 				soos = new ObjectOutputStream(socket.getOutputStream());
 				//a is used to send message 
 				HashMap<String,String> a =new HashMap<String,String>();
-				//b is used to get message
-				
+				//b is used to get message	
 				HashMap<String,String> b =new HashMap<String,String>();
 				b = (HashMap<String,String>) sois.readObject();
+				
+				//op is used to decide what user will do 
 				String op = b.get("op");
 				//a HashMap array
 				ArrayList<HashMap<String,String>> aList=null;
@@ -55,13 +58,12 @@ public class ServerThread implements Runnable{
 						break;
 					}
 					else if (aList.get(0).get("password").equals(b.get("password"))&&aList.get(0).get("identity").equals(b.get("identity"))) {
-						
+						a.put("username",b.get("username") );
 						a.put("result", "success");
 						break;
 					}
 					else {
 						a.put("result", "fail");
-						
 						break;
 					}
 					
@@ -81,6 +83,48 @@ public class ServerThread implements Runnable{
 						a.put("reason","Username has been used!");
 						break;
 					}
+				case "searchbook":
+					if(b.get("search_type").equals("author")) 
+					{
+						aList=db.selectWhere("book_info", "author LIKE \'%"+b.get("keyword")+"%\'");	
+					}
+					else 
+					{
+						aList=db.selectWhere("book_info", "book_name LIKE \'%"+b.get("keyword")+"%\'");					
+					}
+					
+					if(aList.size()>=1) {
+					a.put("book_name1", aList.get(0).get("book_name"));
+					a.put("author1", aList.get(0).get("author"));
+					a.put("quantity1", aList.get(0).get("quantity"));
+					a.put("publish1", aList.get(0).get("publish"));
+					}
+					if(aList.size()>=2) {
+					a.put("book_name2", aList.get(1).get("book_name"));
+					a.put("author2", aList.get(1).get("author"));
+					a.put("quantity2", aList.get(1).get("quantity"));
+					a.put("publish2", aList.get(1).get("publish"));
+					}
+					if(aList.size()>=3) {
+					a.put("book_name3", aList.get(2).get("book_name"));
+					a.put("author3", aList.get(2).get("author"));
+					a.put("quantity3", aList.get(2).get("quantity"));
+					a.put("publish3", aList.get(2).get("publish"));
+					}
+					if(aList.size()>=4) {
+					a.put("book_name4", aList.get(3).get("book_name"));
+					a.put("author4", aList.get(3).get("author"));
+					a.put("quantity4", aList.get(3).get("quantity"));
+					a.put("publish4", aList.get(3).get("publish"));
+					}
+					if(aList.size()>=5) {
+					a.put("book_name5", aList.get(4).get("book_name"));
+					a.put("author5", aList.get(4).get("author"));
+					a.put("quantity5", aList.get(4).get("quantity"));
+					a.put("publish5", aList.get(4).get("publish"));
+					}
+				
+					break;
 				}
 				soos.writeObject(a);
 				

@@ -23,7 +23,7 @@ public class DataBase {
 	public void connectToDB() {
 		String filePath=System.getProperty("user.dir");
 		System.out.println("DataBase -Connect to DB- "+"File Path:"+filePath);
-	    String url="jdbc:ucanaccess://"+filePath.replace('\\', '/')+"/DataBase.accdb;memory=true";
+	    String url="jdbc:ucanaccess://"+filePath.replace('\\', '/')+"/Database.accdb;memory=true";
 	    System.out.println("DataBase -Connect to DB- "+"Connecting...");
 	    try {
 	    	conn = DriverManager.getConnection(url);
@@ -63,6 +63,7 @@ public class DataBase {
 				HashMap<String,String> inst=new HashMap<String,String>();
 				for(int i=0;i<keywords.length;i++) {
 					inst.put(keywords[i], rs.getString(i+1));
+					//System.out.println(rs.getString(i+1));
 				}
 				result.add(inst);
 			}
