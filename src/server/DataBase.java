@@ -57,6 +57,7 @@ public class DataBase {
 		try {
 			System.out.println("DataBase -Excute select- "+"Excuting:"+"SELECT * FROM "+ tableName+" WHERE "+condition+";" );
 			rs=stmt.executeQuery("SELECT * FROM "+ tableName+" WHERE "+condition);
+			conn.commit();
 			ArrayList<HashMap<String,String>> result=new ArrayList<HashMap<String,String>>();
 			String[] keywords=Constants.constructionOfTables.get(tableName);
 			while(rs.next()) {
@@ -92,6 +93,7 @@ public class DataBase {
 			command+=");";
 			System.out.println("DataBase -Excute insert- "+"Excuting:"+command);
 			stmt.execute(command);
+			conn.commit();
 			System.out.println("DataBase -Excute insert- "+"Successfull!");
 			
 		} catch (SQLException e) {
@@ -104,7 +106,8 @@ public class DataBase {
 		try {
 			String command="UPDATE " + tableName +" SET "+setValue+" WHERE "+condition+";";
 			System.out.println("DataBase -Excute update- "+"Excuting:"+command);
-			stmt.execute(command);
+			stmt.executeUpdate(command);
+			conn.commit(); 
 			System.out.println("DataBase -Excute update- "+"Successfull!");
 		} catch (SQLException e) {
 			System.out.println("DataBase -Excute update- "+"Error:");

@@ -24,7 +24,6 @@ public class ServerThread implements Runnable{
 	private ObjectInputStream sois = null;
 	private ObjectOutputStream soos = null;
 	private DataBase db=null;
-	public SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	public ServerThread(Socket socket) {
 		this.socket = socket;
 				
@@ -94,7 +93,7 @@ public class ServerThread implements Runnable{
 					}
 					else 
 					{
-						aList=db.selectWhere("book_info", "book_name LIKE \'%"+b.get("keyword")+"%\'");					
+						aList=db.selectWhere("book_info", "book_name LIKE \'%"+b.get("keyword")+"%\'");
 					}
 					soos.writeObject(aList);				
 					break;
@@ -104,18 +103,20 @@ public class ServerThread implements Runnable{
 					System.out.println(bookname);
 					aList=db.selectWhere("book_info", "book_name = "+"\'"+bookname+"\'");
 					ArrayList<HashMap<String,String>> bList=null;
-					bList = db.selectWhere("book", "book_info_id = " + "\'"+aList.get(0).get("book_info_id")+"\'" );
-					System.out.println(bList.get(0).get("is_borrowed"));
+					bList = db.selectWhere("book", "book_info_id ="+aList.get(0).get("book_info_id"));
+					System.out.println(bList.get(0).get("book_id"));
+					System.out.println(bList.get(0).get("book_info_id"));
 					for(int i =0;i<aList.size();i++)
 					{
 						if(bList.get(i).get("is_borrowed").equals("FALSE"))
 						{
-							db.setWhere("book", "reader=\'"+ b.get("user_name")+"\'","book_id="+bList.get(i).get("book_id"));
-							db.setWhere("book", "borrow_date=#"+ "11/22/2003 10:42:58 PM" +"#","book_id="+bList.get(i).get("book_id"));
-							db.setWhere("book", "is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
+							Date date =new Date();
+							SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+							String sdf = df.format(date);
+							db.setWhere("book", "reader=\'"+ b.get("user_name")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
 							String q=b.get("quantity");
 							int qi=Integer.parseInt(q)-1;
-							db.setWhere("book_info", "quantity="+qi+"","book_info_id="+bList.get(i).get("book_info_id"));
+							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
 							break;
 						}
 					}
