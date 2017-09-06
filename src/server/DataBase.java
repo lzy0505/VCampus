@@ -35,23 +35,23 @@ public class DataBase {
 	    }
 	}
 	
-	public void initTable(String tableName) {
-		try {
-			System.out.println("DataBase -Initalize Table- "+"Drop table "+tableName);
-			stmt.execute("DROP TABLE "+tableName+";");
-		}catch(Exception e) {
-			System.out.println("DataBase -Initalize Table- "+"Error:");
-			e.printStackTrace();
-		}
-		try {
-			System.out.println("DataBase -Initalize Table- "+"Creating table "+tableName);
-			stmt.execute(Constants.constructionCommands.get(tableName));
-			System.out.println("DataBase -Initalize Table- "+"Successfull!");
-		}catch(SQLException e) {
-			System.out.println("DataBase -Initalize Table- "+"Error:");
-			e.printStackTrace();
-		}
-	}
+//	public void initTable(String tableName) {
+//		try {
+//			System.out.println("DataBase -Initalize Table- "+"Drop table "+tableName);
+//			stmt.execute("DROP TABLE "+tableName+";");
+//		}catch(Exception e) {
+//			System.out.println("DataBase -Initalize Table- "+"Error:");
+//			e.printStackTrace();
+//		}
+//		try {
+//			System.out.println("DataBase -Initalize Table- "+"Creating table "+tableName);
+//			stmt.execute(Constants.constructionCommands.get(tableName));
+//			System.out.println("DataBase -Initalize Table- "+"Successfull!");
+//		}catch(SQLException e) {
+//			System.out.println("DataBase -Initalize Table- "+"Error:");
+//			e.printStackTrace();
+//		}
+//	}
 
 	public ArrayList<HashMap<String,String>> selectWhere(String tableName,String condition){
 		try {
@@ -99,6 +99,19 @@ public class DataBase {
 			e.printStackTrace();
 		}
 	}
+	
+	public void setWhere(String tableName,String setValue,String condition) {
+		try {
+			String command="UPDATE " + tableName +" SET "+setValue+" WHERE "+condition+";";
+			System.out.println("DataBase -Excute update- "+"Excuting:"+command);
+			stmt.execute(command);
+			System.out.println("DataBase -Excute update- "+"Successfull!");
+		} catch (SQLException e) {
+			System.out.println("DataBase -Excute update- "+"Error:");
+			e.printStackTrace();
+		}
+	}
+	
 	
 	protected void finalize(){
 		System.out.println("DataBase -Disconnect to DB- "+"Disconnecting...");
