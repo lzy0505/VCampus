@@ -1,5 +1,6 @@
 package client;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.sun.swing.internal.plaf.basic.resources.basic;
@@ -41,6 +42,21 @@ public class Client{
 		}
 		return getmes;
 	}
+	public ArrayList<HashMap<String,String>> getMessages()throws IOException 
+	{		
+		InputStream is=clientSocket.getInputStream();
+		cin=new ObjectInputStream(is);
+		ArrayList<HashMap<String,String>> getmes = null;
+		try {
+			getmes = (ArrayList<HashMap<String,String>>)cin.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		return getmes;
+	}
+	
+	
 	protected void finalize()
 	{
 		try {
