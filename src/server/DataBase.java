@@ -55,7 +55,7 @@ public class DataBase {
 
 	public ArrayList<HashMap<String,String>> selectWhere(String tableName,String condition){
 		try {
-			System.out.println("DataBase -Excute select- "+"Excuting:"+"SELECT * FROM "+ tableName+" WHERE "+condition );
+			System.out.println("DataBase -Excute select- "+"Excuting:"+"SELECT * FROM "+ tableName+" WHERE "+condition+";" );
 			rs=stmt.executeQuery("SELECT * FROM "+ tableName+" WHERE "+condition);
 			ArrayList<HashMap<String,String>> result=new ArrayList<HashMap<String,String>>();
 			String[] keywords=Constants.constructionOfTables.get(tableName);
