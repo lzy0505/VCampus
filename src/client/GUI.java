@@ -46,11 +46,6 @@ public class GUI extends JFrame
 	JLabel la3;
 	static JButton close3;
 	
-	//the elements of G4
-	static JFrame G4;
-	JPanel p14,p24;
-	JLabel la4;
-	static JButton return4;
 	
 	//the elements of G5
 	static JFrame G5;
@@ -62,11 +57,6 @@ public class GUI extends JFrame
 	JPanel p16,p26,p36;
 	JLabel l16,l26,l36,l46,l56,l66;
 	
-	//the elements of G7
-	static JFrame G7;
-	JPanel p17,p27;
-	JLabel la7;
-	static JButton close7;
 	
 	//the elements of G8
 	static JFrame G8;
@@ -85,12 +75,6 @@ public class GUI extends JFrame
  	JLabel[] quantityLabel=new JLabel[5];//press is publishing house
  	JCheckBox[] bookCheckBox=new JCheckBox[5];//which book to choose
  	JButton borrow;
- 	
- 	//the elements of SearchUnSuccessful
- 	static JFrame SearchUnSuccessful;
- 	JPanel p110,p210;
- 	JLabel la10;
- 	static JButton return10;
  		
 	
 	public void init(){
@@ -143,6 +127,16 @@ public class GUI extends JFrame
 		return getmes;
 	}
 	
+	public int getWidth(int frameWidth)
+	{
+		return(Toolkit.getDefaultToolkit().getScreenSize().width - frameWidth) / 2;
+	}
+	
+	public int getHeight(int frameHeight)
+	{
+		return(Toolkit.getDefaultToolkit().getScreenSize().height - frameHeight) / 2;
+	}
+	
 	
 	public GUI(String title1,String title2,String title3,String title4,String title5,String title6,
 			String title7,String title8,String title10)
@@ -152,7 +146,7 @@ public class GUI extends JFrame
 		Container c1 = G1.getContentPane();
 		c1.setLayout(new BoxLayout(c1,BoxLayout.Y_AXIS));
 		
-		G1.setSize(250, 250);
+		G1.setSize(360, 270);
 		p11 = new JPanel();
 		p11.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
@@ -190,8 +184,11 @@ public class GUI extends JFrame
 		p41.add(sign1);	
 		G1.add(p41);
 		
+		G1.setLocation(getWidth(G1.getWidth()),getHeight(G1.getHeight()));
+		//put this frame into the center of the screen
+		
 		G1.setVisible(true);
-		G1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		//G1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		
 		//the part of G2
 		G2 = new JFrame(title2);
@@ -235,6 +232,8 @@ public class GUI extends JFrame
 		p42.add(reg2);
 		G2.add(p42);
 		
+		G2.setLocation(getWidth(G2.getWidth()),getHeight(G2.getHeight()));
+		
 		//the part of G3
 		G3 = new JFrame(title3);
 		G3.setSize(200,130);
@@ -251,21 +250,8 @@ public class GUI extends JFrame
 		p23.add(close3);
 		G3.add(p23);
 		
-		//the part of G4
-		G4 = new JFrame(title4);
-		G4.setSize(200,130);
-		G4.setLayout(new GridLayout(2,1));
-		la4 = new JLabel("Register failed!");
-		p14 = new JPanel();
-		p14.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p14.add(la4);
-		G4.add(p14);
-		
-		return4 = new JButton("Return");
-		p24 = new JPanel();
-		p24.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p24.add(return4);
-		G4.add(p24);
+		G3.setLocation(getWidth(G3.getWidth()),getHeight(G3.getHeight()));
+
 		
 		//the part of G5
 		G5 = new JFrame(title5);
@@ -305,6 +291,8 @@ public class GUI extends JFrame
 		p35.add(l65);
 		G5.add(p35);
 		
+		G5.setLocation(getWidth(G5.getWidth()),getHeight(G5.getHeight()));
+		
 		//the part of G6
 		G6 = new JFrame(title6);
 		G6.setSize(300,300);
@@ -343,21 +331,8 @@ public class GUI extends JFrame
 		p36.add(l66);
 		G6.add(p36);
 		
-		//the part of G7
-		G7 = new JFrame(title7);
-		G7.setSize(200,130);
-		G7.setLayout(new GridLayout(2,1));
-		la7 = new JLabel("Sign in failed!");
-		p17 = new JPanel();
-		p17.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p17.add(la7);
-		G7.add(p17);
-				
-		close7 = new JButton("Close");
-		p27 = new JPanel();
-		p27.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p27.add(close7);
-		G7.add(p27);
+		G6.setLocation(getWidth(G6.getWidth()),getHeight(G6.getHeight()));
+		
 		
 		//the part of G8
 		G8 = new JFrame(title8);
@@ -383,39 +358,20 @@ public class GUI extends JFrame
 		p28.add(b28);
 		G8.add(p28);
 		
-		/*/the part of searchUnsuccessful
-		 JOptionPane.showMessageDialog(null, "The book that you searched is not found!",
-				 "search unsuccessful",JOptionPane.WARNING_MESSAGE);*/
-		
-		//the part of searchUnsuccessful
-		SearchUnSuccessful = new JFrame(title10);
-		SearchUnSuccessful.setSize(200,130);
-		SearchUnSuccessful.setLayout(new GridLayout(2,1));
-		la10 = new JLabel("Search unsuccessful!");
-		p110 = new JPanel();
-		p110.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p110.add(la10);
-		SearchUnSuccessful.add(p110);
-		
-		return10 = new JButton("Return");
-		p210 = new JPanel();
-		p210.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p210.add(return10);
-		SearchUnSuccessful.add(p210);
+		G8.setLocation(getWidth(G8.getWidth()),getHeight(G8.getHeight()));
 		
 		
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());//sign up int the first GUI
 		reg2.addActionListener(new MyActLister2());//the GUI of sign up
-		return4.addActionListener(new MyActLister3());//return to the first GUI
 		close3.addActionListener(new MyActLister4());//close this GUI's window
-		close7.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		b18.addActionListener(new SearchBookFromDB());//search book
 		borrow.addActionListener(new SearchBookFromDB());
-		return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
+		
+		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
@@ -439,11 +395,12 @@ public class GUI extends JFrame
 			if(quantity[i].equals("0")) {
 				bookCheckBox[i].setEnabled(false);
 			}
-			bookPanel[i].add(quantityLabel[i]);
-			bookPanel[i].add(bookCheckBox[i]);
 			bookPanel[i].add(bookNameLabel[i]);
 			bookPanel[i].add(authorLabel[i]);
 			bookPanel[i].add(publisherLabel[i]);
+			bookPanel[i].add(quantityLabel[i]);
+			bookPanel[i].add(bookCheckBox[i]);
+
 			SearchBook9th.add(bookPanel[i]);
 		}
 		
@@ -453,6 +410,8 @@ public class GUI extends JFrame
 		borrow = new JButton("Borrow");
 		bookPanel[size].add(borrow);
 		SearchBook9th.add(bookPanel[size]);
+		
+		SearchBook9th.setLocation(getWidth(SearchBook9th.getWidth()),getHeight(SearchBook9th.getHeight()));
 		
 		SearchBook9th.setVisible(true);
 		
@@ -507,8 +466,8 @@ public class GUI extends JFrame
 	{
 		public void actionPerformed(ActionEvent e) {
 			G2.setVisible(true);
-			G2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
+			//G2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//*************
 		}
 	}
 	
@@ -553,18 +512,19 @@ public class GUI extends JFrame
 				if(hm.get("result").equals("success"))
 				{
 					G3.setVisible(true);
-					G3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				}
 				else if(hm.get("result").equals("fail"))
 				{
-					G4.setVisible(true);
-					G4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					JOptionPane.showMessageDialog(G1,"User's name or password is unvalid!",
+							"Sign up unsuccessfully",JOptionPane.ERROR_MESSAGE);
+
 				}
 			}
 			else
 			{
-				G4.setVisible(true);
-				G4.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				JOptionPane.showMessageDialog(G1,"User's name or password is unvalid!",
+						"Sign up unsuccessfully",JOptionPane.ERROR_MESSAGE);
+
 			}
 		}
 		
@@ -574,8 +534,6 @@ public class GUI extends JFrame
 	{
 		public void actionPerformed(ActionEvent e) 
 		{
-			G2.setVisible(true);
-			G2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 		
 	}
@@ -586,7 +544,7 @@ public class GUI extends JFrame
 		{
 			G3.setVisible(false);
 			G2.setVisible(false);
-			G7.setVisible(false);
+			//G7.setVisible(false);
 		}
 		
 	}
@@ -615,21 +573,20 @@ public class GUI extends JFrame
 		    {
 		    	un = hm.get("username");//un is used to identify user,a global variable
 		    	G5.setVisible(true);
-		    	G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	
 		    }
 		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==1)
 		    {
 		    	un = hm.get("username");//un is used to identify user,a global variable
 		    	G6.setVisible(true);
-		    	G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		
 		    }
 		    else if(hm.get("result").equals("fail"))
 		    {
-		    	G7.setVisible(true);
-		    	G7.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		    		
+		    	JOptionPane.showMessageDialog(null,"User's name or password is incorrect!",
+						"Sign in unsuccessfully",JOptionPane.ERROR_MESSAGE);
 		    	
 		    }
 			
@@ -645,8 +602,7 @@ public class GUI extends JFrame
 	 
 	 	public void actionPerformed(ActionEvent arg0) 
 	 	{
-	 		SearchUnSuccessful.setVisible(false);
-	 		G8.setVisible(true);
+	 		
 	 	}
 	 		
 	 }
@@ -721,14 +677,21 @@ public class GUI extends JFrame
 						*will decrease,and the data of borrowed book in this student or 
 						*teacher's database will increase*/
 						//TODO
+
+						 
+			
+
 					}
 				}
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
-				SearchUnSuccessful.setVisible(true);
+				//SearchUnSuccessful.setVisible(true);
 				//show the GUI of searching unsuccessfully
 				//TODO
+				JOptionPane.showMessageDialog(null,"The book that you searched is not found!",
+						"search unsuccessful",JOptionPane.WARNING_MESSAGE);
+							  
 			}
 			
 		}
