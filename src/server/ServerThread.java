@@ -55,15 +55,18 @@ public class ServerThread implements Runnable{
 					if(aList.size()==0) {
 						a.put("result", "fail");
 						a.put("reason", "Username or Password is false!");
+						soos.writeObject(a);
 						break;
 					}
 					else if (aList.get(0).get("password").equals(b.get("password"))&&aList.get(0).get("identity").equals(b.get("identity"))) {
 						a.put("username",b.get("username") );
 						a.put("result", "success");
+						soos.writeObject(a);
 						break;
 					}
 					else {
 						a.put("result", "fail");
+						soos.writeObject(a);
 						break;
 					}
 					
@@ -76,11 +79,13 @@ public class ServerThread implements Runnable{
 						
 						db.insert("users",b );
 						a.put("result", "success");
+						soos.writeObject(a);
 						break;
 					}
 					else {
 						a.put("result","fail");
 						a.put("reason","Username has been used!");
+						soos.writeObject(a);
 						break;
 					}
 				case "searchbook":
@@ -92,41 +97,12 @@ public class ServerThread implements Runnable{
 					{
 						aList=db.selectWhere("book_info", "book_name LIKE \'%"+b.get("keyword")+"%\'");					
 					}
+					soos.writeObject(aList);
 					
-					if(aList.size()>=1) {
-					a.put("book_name1", aList.get(0).get("book_name"));
-					a.put("author1", aList.get(0).get("author"));
-					a.put("quantity1", aList.get(0).get("quantity"));
-					a.put("publish1", aList.get(0).get("publish"));
-					}
-					if(aList.size()>=2) {
-					a.put("book_name2", aList.get(1).get("book_name"));
-					a.put("author2", aList.get(1).get("author"));
-					a.put("quantity2", aList.get(1).get("quantity"));
-					a.put("publish2", aList.get(1).get("publish"));
-					}
-					if(aList.size()>=3) {
-					a.put("book_name3", aList.get(2).get("book_name"));
-					a.put("author3", aList.get(2).get("author"));
-					a.put("quantity3", aList.get(2).get("quantity"));
-					a.put("publish3", aList.get(2).get("publish"));
-					}
-					if(aList.size()>=4) {
-					a.put("book_name4", aList.get(3).get("book_name"));
-					a.put("author4", aList.get(3).get("author"));
-					a.put("quantity4", aList.get(3).get("quantity"));
-					a.put("publish4", aList.get(3).get("publish"));
-					}
-					if(aList.size()>=5) {
-					a.put("book_name5", aList.get(4).get("book_name"));
-					a.put("author5", aList.get(4).get("author"));
-					a.put("quantity5", aList.get(4).get("quantity"));
-					a.put("publish5", aList.get(4).get("publish"));
-					}
 				
 					break;
 				}
-				soos.writeObject(a);
+				
 				
 			} catch (IOException e) {
 				// TODO 自动生成的 catch 块
