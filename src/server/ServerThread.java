@@ -114,8 +114,6 @@ public class ServerThread implements Runnable{
 							SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 							String sdf = df.format(date);
 							db.setWhere("book", "reader=\'"+ b.get("user_name")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
-							String q=b.get("quantity");
-							int qi=Integer.parseInt(q)-1;
 							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
 							break;
 						}
