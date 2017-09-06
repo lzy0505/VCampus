@@ -414,6 +414,7 @@ public class GUI extends JFrame
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		b18.addActionListener(new SearchBookFromDB());//search book
+		borrow.addActionListener(new SearchBookFromDB());
 		return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
 		pro1.addItemListener(new MyItemLister1());
@@ -446,7 +447,6 @@ public class GUI extends JFrame
 			SearchBook9th.add(bookPanel[i]);
 		}
 		
-
 		
 		bookPanel[size] = new JPanel();
 		bookPanel[size].setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -696,6 +696,7 @@ public class GUI extends JFrame
 			}
 			
 			ArrayList<HashMap<String,String>> alist = getList(hmlib);
+			
 			for(int i=0;i<alist.size();i++) {
 				bookName[i]=alist.get(i).get("book_name");
 				author[i]=alist.get(i).get("author");
@@ -711,6 +712,17 @@ public class GUI extends JFrame
 			if(alist.size()>=1)
 			{
 				searchBook9th(bookName,author,publisher,quantity,alist.size());
+				
+				for(int i = 0;i<alist.size();i++)
+				{
+					if(bookCheckBox[i].isSelected())
+					{
+						/*this book will be borrowed, so the data in the library database
+						*will decrease,and the data of borrowed book in this student or 
+						*teacher's database will increase*/
+						//TODO
+					}
+				}
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
