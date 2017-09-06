@@ -28,6 +28,7 @@ public class Client{
 		cout=new ObjectOutputStream(os);
 		cout.writeObject(sendmes);
 	}
+	
 	//获取数据包
 	public HashMap<String,String> getMessage()throws IOException 
 	{		

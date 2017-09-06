@@ -616,27 +616,11 @@ public class GUI extends JFrame
 			String[] publisher=new String[5];//bookName and press
 			String[] quantity=new String[5];
 			String[] author=new String[5];
-			/*String bN1 = "bookTest1",bN2 = "bookTest2",bN3 = "bookTest3",bN4 = "bookTest4",
-					bN5 = "bookTest5",pre1 = "pressTest1",pre2 = "pressTest2",pre3 = "pressTest3",
-					pre4 = "pressTest4",pre5 = "pressTest5";
 			
-			int n1 = 10,n2 = 2,n3 = 3,n4 = 4,n5 = 5;
-			String aN1="authorTest1",aN2="authorTest1",aN3="authorTest1",aN4="authorTest4",aN5="authorTest1";
-			*/
-			//just to test bookName and press,IF YOU WANT TO see this GUI's effect,undefined this
-			//part of code
-			//Not TODO
-			
-			
-			/*search book from database,if there is a book in the database,return the book's message,which contains bN,pre and n
-			 * attention: for there are at most 5 messages, if the messages can't be fullfiled,retun empty string or integer
-			 
-			 */
 			HashMap<String,String> hmlib=new HashMap<String,String>();
 			if(ways.getSelectedItem() == "Author")
 			{
 				//search book according to Author
-				hmlib.put("username", un);
 				hmlib.put("op", "searchbook");
 				hmlib.put("search_type", "author");
 				hmlib.put("keyword", t18.getText());					
@@ -644,8 +628,6 @@ public class GUI extends JFrame
 			else
 			{
 				//search book according to BookName
-				
-				hmlib.put("username", un);
 				hmlib.put("op", "searchbook");
 				hmlib.put("search_type", "name");
 				hmlib.put("keyword", t18.getText());
@@ -668,21 +650,6 @@ public class GUI extends JFrame
 			if(alist.size()>=1)
 			{
 				searchBook9th(bookName,author,publisher,quantity,alist.size());
-				
-				for(int i = 0;i<alist.size();i++)
-				{
-					if(bookCheckBox[i].isSelected())
-					{
-						/*this book will be borrowed, so the data in the library database
-						*will decrease,and the data of borrowed book in this student or 
-						*teacher's database will increase*/
-						//TODO
-
-						 
-			
-
-					}
-				}
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
