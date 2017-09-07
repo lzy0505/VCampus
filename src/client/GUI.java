@@ -457,10 +457,6 @@ public class GUI extends JFrame
 			publisherLabelR[i] = new JLabel(publisher[i]);
 			quantityLabelR[i] = new JLabel(quantity[i]);
 			bookCheckBoxR[i] = new JCheckBox();
-			if(quantity[i].equals("0"))
-			{
-				bookCheckBoxR[i].setEnabled(false);
-			}
 			bookPanelR[i].add(bookNameLabelR[i]);
 			bookPanelR[i].add(authorLabelR[i]);
 			bookPanelR[i].add(publisherLabelR[i]);
@@ -820,7 +816,6 @@ public class GUI extends JFrame
 				 	hmlib.put("book_id", book_id[i]);
 				 	hmlib=getOne(hmlib);
 				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
-				 		
 				 }
 			}
 			String[] booknames=new String[hmbook.size()];

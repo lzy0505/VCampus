@@ -53,7 +53,7 @@ public class ServerThread implements Runnable{
 						break;
 					}
 					else if (sendList.get(0).get("password").equals(getOne.get("password"))&&sendList.get(0).get("identity").equals(getOne.get("identity"))) {
-						getOne.put("username",getOne.get("username") );
+						send.put("username",getOne.get("username") );
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
@@ -109,6 +109,7 @@ public class ServerThread implements Runnable{
 							Date date =new Date();
 							SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 							String sdf = df.format(date);
+							System.out.println(getOne.get("user_name"));
 							db.setWhere("book", "reader=\'"+ getOne.get("user_name")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
 							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
 							send.put("result", "successfully");
@@ -130,7 +131,7 @@ public class ServerThread implements Runnable{
 						break;
 					}
 					else{
-						ArrayList<HashMap<String,String>> cList=null;
+						ArrayList<HashMap<String,String>> cList=new ArrayList<HashMap<String,String>>();
 						for(int i =0;i<sendList.size();i++)
 						{
 							ArrayList<HashMap<String,String>> idList = db.selectWhere("book_info", "book_info_id ="+sendList.get(i).get("book_info_id"));
@@ -141,8 +142,10 @@ public class ServerThread implements Runnable{
 						break;
 					}
 				case "return":
-					sendList=db.selectWhere("book", "book_id = "+"\'"+getOne.get("book_id")+"\'");
-					db.setWhere("book", "reader=\'"+ ""+"\',"+"borrow_date=#"+ "" +"#,"+"is_borrowed="+ "FALSE","book_id="+getOne.get("book_id"));
+					sendList=db.selectWhere("book", "book_id = "+getOne.get("book_id"));
+					db.setWhere("book", "reader=null,"+"is_borrowed="+ "FALSE","book_id="+getOne.get("book_id"));
+					db.setWhere("book_info", "quantity=quantity+1","book_info_id="+sendList.get(0).get("book_info_id"));
+					sendList=db.selectWhere("book", "book_id = "+getOne.get("book_id"));
 					if(sendList.get(0).get("is_borrowed").equals("FALSE")) {
 						send.put("result", "successfully");
 						send.put("book_name", getOne.get("book_name"));
