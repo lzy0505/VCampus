@@ -435,7 +435,7 @@ public class GUI extends JFrame
 		
 	}
 	
-	public void returnBook(String[] bookName,String[] author,String[] publisher,String[] quantity,String[] bookId,int size)
+	public void returnBook(String[] bookName,String[] author,String[] publisher,String[] bookId,int size)
 	{
 		ReturnBook = new JFrame("Return book");
 		ReturnBook.setSize(300, 350);
@@ -445,7 +445,7 @@ public class GUI extends JFrame
 		bookNameLabelR = new JLabel[size];
 		authorLabelR = new JLabel[size];
 		publisherLabelR = new JLabel[size];
-		quantityLabelR = new JLabel[size];
+		
 		bookCheckBoxR = new JCheckBox[size];
 		book_id = new String[size];
 		for(int i=0;i<size;i++) 
@@ -455,12 +455,11 @@ public class GUI extends JFrame
 			bookNameLabelR[i] = new JLabel(bookName[i]);
 			authorLabelR[i] = new JLabel(author[i]);
 			publisherLabelR[i] = new JLabel(publisher[i]);
-			quantityLabelR[i] = new JLabel(quantity[i]);
+			
 			bookCheckBoxR[i] = new JCheckBox();
 			bookPanelR[i].add(bookNameLabelR[i]);
 			bookPanelR[i].add(authorLabelR[i]);
 			bookPanelR[i].add(publisherLabelR[i]);
-			bookPanelR[i].add(quantityLabelR[i]);
 			bookPanelR[i].add(bookCheckBoxR[i]);
 			book_id[i] = bookId[i];
 			ReturnBook.add(bookPanelR[i]);
@@ -607,21 +606,19 @@ public class GUI extends JFrame
 		 	ArrayList<HashMap<String,String>> alist = getList(hmlib);	
 			String[] bookNameR = new String[alist.size()];
 			String[] publisherR = new String[alist.size()];
-			String[] quantityR = new String[alist.size()];
 			String[] authorR = new String[alist.size()];//R means to return 
 			String[] book_idR = new String[alist.size()];
 			
 			for(int i=0;i<alist.size();i++) {
 				bookNameR[i]=alist.get(i).get("book_name");
 				authorR[i]=alist.get(i).get("author");
-				publisherR[i]=alist.get(i).get("publisher");
-				quantityR[i]=alist.get(i).get("quantity");
+				publisherR[i]=alist.get(i).get("publisher");	
 				book_idR[i] = alist.get(i).get("book_id");
 			}
 		 	
 			if(alist.size()>=1)
 			{
-				returnBook(bookNameR,authorR,publisherR,quantityR,book_idR,alist.size());
+				returnBook(bookNameR,authorR,publisherR,book_idR,alist.size());
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
