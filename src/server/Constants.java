@@ -14,7 +14,7 @@ class Constants {
 		{
 			put("users",new String[]{"username","password","identity"});
 			put("book_info",new String[]{"book_name","author","publisher","quantity","book_info_id"});
-			put("book",new String[]{"book_id","book_info_id","reader","borrow_date","is_borrowed"});
+			put("book",new String[]{"book_info_id","book_id","reader","borrow_date","is_borrowed"});
 		}
 	};
 	

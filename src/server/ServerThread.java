@@ -6,10 +6,10 @@ package server;
 import java.awt.Choice;
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.swing.text.StyledEditorKit.ForegroundAction;
+import java.util.Date;
 
 import utils.User;
 
@@ -24,7 +24,6 @@ public class ServerThread implements Runnable{
 	private ObjectInputStream sois = null;
 	private ObjectOutputStream soos = null;
 	private DataBase db=null;
-	
 	public ServerThread(Socket socket) {
 		this.socket = socket;
 				
@@ -42,14 +41,13 @@ public class ServerThread implements Runnable{
 				//b is used to get message	
 				HashMap<String,String> b =new HashMap<String,String>();
 				b = (HashMap<String,String>) sois.readObject();
-				
+			
 				//op is used to decide what user will do 
 				String op = b.get("op");
 				//a HashMap array
 				ArrayList<HashMap<String,String>> aList=null;
 				switch (op) {
 				case "sign in":
-					
 					//get a array of HashMap whose username equal to b'username
 					aList=db.selectWhere("users", "username = "+"\'"+b.get("username")+"\'");
 					if(aList.size()==0) {
@@ -95,15 +93,39 @@ public class ServerThread implements Runnable{
 					}
 					else 
 					{
-						aList=db.selectWhere("book_info", "book_name LIKE \'%"+b.get("keyword")+"%\'");					
+						aList=db.selectWhere("book_info", "book_name LIKE \'%"+b.get("keyword")+"%\'");
 					}
-					soos.writeObject(aList);
+					soos.writeObject(aList);				
+					break;
+				case "borrow":
+					String bookname=b.get("book_name");
+					bookname=bookname.replaceAll("[']", "\'\'");
+					System.out.println(bookname);
+					aList=db.selectWhere("book_info", "book_name = "+"\'"+bookname+"\'");
+					ArrayList<HashMap<String,String>> bList=null;
+					bList = db.selectWhere("book", "book_info_id ="+aList.get(0).get("book_info_id"));
+					System.out.println(bList.get(0).get("book_id"));
+					System.out.println(bList.get(0).get("book_info_id"));
+					for(int i =0;i<aList.size();i++)
+					{
+						if(bList.get(i).get("is_borrowed").equals("FALSE"))
+						{
+							Date date =new Date();
+							SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+							String sdf = df.format(date);
+							db.setWhere("book", "reader=\'"+ b.get("user_name")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
+							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
+							break;
+						}
+					}
+					
+					break;
 					
 				
-					break;
 				}
+				db.finalize();	
 				
-				
+					
 			} catch (IOException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();

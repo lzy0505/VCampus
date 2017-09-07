@@ -68,13 +68,23 @@ public class GUI extends JFrame
  	
  	//the elements of SearchBook9th
  	static JFrame SearchBook9th;
- 	JPanel[] bookPanel=new JPanel[6];//mostly 5 messages at present
- 	JLabel[] bookNameLabel=new JLabel[5];
- 	JLabel[] authorLabel=new JLabel[5];
- 	JLabel[] publisherLabel=new JLabel[5];
- 	JLabel[] quantityLabel=new JLabel[5];//press is publishing house
- 	JCheckBox[] bookCheckBox=new JCheckBox[5];//which book to choose
+ 	JPanel[] bookPanel=null;//mostly 5 messages at present
+ 	JLabel[] bookNameLabel=null;
+ 	JLabel[] authorLabel=null;
+ 	JLabel[] publisherLabel=null;
+ 	JLabel[] quantityLabel=null;
+ 	JCheckBox[] bookCheckBox=null;//which book to choose
  	JButton borrow;
+ 	
+ 	//the elements of ReturnBook
+ 	static JFrame ReturnBook;
+ 	JPanel[] bookPanelR = null;
+ 	JLabel[] bookNameLabelR = null;
+ 	JLabel[] authorLabelR = null;
+ 	JLabel[] publisherLabelR = null;
+ 	JLabel[] quantityLabelR = null;
+ 	JCheckBox[] bookCheckBoxR = null;//which book to choose
+ 	JButton returnBook;
  		
 	
 	public void init(){
@@ -364,12 +374,12 @@ public class GUI extends JFrame
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());//sign up int the first GUI
 		reg2.addActionListener(new MyActLister2());//the GUI of sign up
+		b28.addActionListener(new MyActLister3());//turn to the GUI ReturnBook
 		close3.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		b18.addActionListener(new SearchBookFromDB());//search book
-		borrow.addActionListener(new SearchBookFromDB());
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
@@ -382,6 +392,13 @@ public class GUI extends JFrame
 		SearchBook9th = new JFrame("Search book");
 		SearchBook9th.setSize(300, 350);
 		SearchBook9th.setLayout(new FlowLayout());
+		
+		bookPanel=new JPanel[size+1];
+		 bookNameLabel=new JLabel[size];
+		 authorLabel=new JLabel[size];
+		 publisherLabel=new JLabel[size];
+		 quantityLabel=new JLabel[size];
+		 bookCheckBox=new JCheckBox[size];
 		
 		
 		for(int i=0;i<size;i++) {
@@ -410,11 +427,58 @@ public class GUI extends JFrame
 		borrow = new JButton("Borrow");
 		bookPanel[size].add(borrow);
 		SearchBook9th.add(bookPanel[size]);
-		
+		borrow.addActionListener(new BorrowBookFromDB());
 		SearchBook9th.setLocation(getWidth(SearchBook9th.getWidth()),getHeight(SearchBook9th.getHeight()));
 		
 		SearchBook9th.setVisible(true);
 		
+	}
+	
+	public void returnBook(String[] bookName,String[] author,String[] publisher,String[] quantity,int size)
+	{
+		ReturnBook = new JFrame("Return book");
+		ReturnBook.setSize(300, 350);
+		ReturnBook.setLayout(new FlowLayout());
+		
+		bookPanelR = new JPanel[size+1];
+		bookNameLabelR = new JLabel[size];
+		authorLabelR = new JLabel[size];
+		publisherLabelR = new JLabel[size];
+		quantityLabelR = new JLabel[size];
+		bookCheckBoxR = new JCheckBox[size];
+		
+		for(int i=0;i<size;i++) 
+		{
+			bookPanelR[i] = new JPanel();
+			bookPanelR[i].setLayout(new FlowLayout());
+			bookNameLabelR[i] = new JLabel(bookName[i]);
+			authorLabelR[i] = new JLabel(author[i]);
+			publisherLabelR[i] = new JLabel(publisher[i]);
+			quantityLabelR[i] = new JLabel(quantity[i]);
+			bookCheckBoxR[i] = new JCheckBox();
+			if(quantity[i].equals("0"))
+			{
+				bookCheckBox[i].setEnabled(false);
+			}
+			bookPanelR[i].add(bookNameLabelR[i]);
+			bookPanelR[i].add(authorLabelR[i]);
+			bookPanelR[i].add(publisherLabelR[i]);
+			bookPanelR[i].add(quantityLabelR[i]);
+			bookPanelR[i].add(bookCheckBoxR[i]);
+
+			ReturnBook.add(bookPanelR[i]);
+		}
+		
+			bookPanelR[size] = new JPanel();
+			bookPanelR[size].setLayout(new FlowLayout(FlowLayout.CENTER));
+			returnBook = new JButton("ReturnBook");
+			bookPanelR[size].add(returnBook);
+			ReturnBook.add(bookPanelR[size]);
+			returnBook.addActionListener(new ReturnBookFromDB());
+			//TODO
+			ReturnBook.setLocation(getWidth(ReturnBook.getWidth()),getHeight(ReturnBook.getHeight()));
+			
+			ReturnBook.setVisible(true);
 	}
 	
 	public static void main(String[] args) 
@@ -534,6 +598,28 @@ public class GUI extends JFrame
 	{
 		public void actionPerformed(ActionEvent e) 
 		{
+			String[] bookNameR = new String[5];
+			String[] publisherR = new String[5];
+			String[] quantityR = new String[5];
+			String[] authorR = new String[5];//R means to return 
+			
+			//get information form this person's borrowed book database,and then turn
+			//to the method returnBook(...) to create the ReturnBook GUI and show it
+			//TODO
+			
+			//ReturnBook(bookNameR,authorR,publisherR,quantityR,alist.size)
+			
+			/*if(alist.size()>=1)
+			{
+				ReturnBook(bookNameR,authorR,publisherR,quantityR,alist.size());
+			}//if the first book is not a null,then show all the message of this book
+			else 
+			{
+				JOptionPane.showMessageDialog(null,"You haven't borrowed any book!",
+						"Return book unsuccessfully",JOptionPane.WARNING_MESSAGE);
+							  
+			}*/
+			
 		}
 		
 	}
@@ -612,31 +698,16 @@ public class GUI extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
+			
 			String[] bookName=new String[5];
 			String[] publisher=new String[5];//bookName and press
 			String[] quantity=new String[5];
 			String[] author=new String[5];
-			/*String bN1 = "bookTest1",bN2 = "bookTest2",bN3 = "bookTest3",bN4 = "bookTest4",
-					bN5 = "bookTest5",pre1 = "pressTest1",pre2 = "pressTest2",pre3 = "pressTest3",
-					pre4 = "pressTest4",pre5 = "pressTest5";
 			
-			int n1 = 10,n2 = 2,n3 = 3,n4 = 4,n5 = 5;
-			String aN1="authorTest1",aN2="authorTest1",aN3="authorTest1",aN4="authorTest4",aN5="authorTest1";
-			*/
-			//just to test bookName and press,IF YOU WANT TO see this GUI's effect,undefined this
-			//part of code
-			//Not TODO
-			
-			
-			/*search book from database,if there is a book in the database,return the book's message,which contains bN,pre and n
-			 * attention: for there are at most 5 messages, if the messages can't be fullfiled,retun empty string or integer
-			 
-			 */
 			HashMap<String,String> hmlib=new HashMap<String,String>();
 			if(ways.getSelectedItem() == "Author")
 			{
 				//search book according to Author
-				hmlib.put("username", un);
 				hmlib.put("op", "searchbook");
 				hmlib.put("search_type", "author");
 				hmlib.put("keyword", t18.getText());					
@@ -644,8 +715,6 @@ public class GUI extends JFrame
 			else
 			{
 				//search book according to BookName
-				
-				hmlib.put("username", un);
 				hmlib.put("op", "searchbook");
 				hmlib.put("search_type", "name");
 				hmlib.put("keyword", t18.getText());
@@ -668,21 +737,6 @@ public class GUI extends JFrame
 			if(alist.size()>=1)
 			{
 				searchBook9th(bookName,author,publisher,quantity,alist.size());
-				
-				for(int i = 0;i<alist.size();i++)
-				{
-					if(bookCheckBox[i].isSelected())
-					{
-						/*this book will be borrowed, so the data in the library database
-						*will decrease,and the data of borrowed book in this student or 
-						*teacher's database will increase*/
-						//TODO
-
-						 
-			
-
-					}
-				}
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
@@ -693,12 +747,38 @@ public class GUI extends JFrame
 						"search unsuccessful",JOptionPane.WARNING_MESSAGE);
 							  
 			}
+			t18.setText("");
+		}
+		
+	}
+	class BorrowBookFromDB implements ActionListener
+	{
+		public void actionPerformed(ActionEvent arg0)
+		{
+			HashMap<String,String> hmlib=null;
+			for (int i = 0;i < bookCheckBox.length;i++) {
+				 hmlib=new HashMap<String,String>();
+				 if(bookCheckBox[i].isSelected()==true) {
+				 	hmlib.put("book_name", bookNameLabel[i].getText());
+				 	hmlib.put("op", "borrow");
+				 	hmlib.put("user_name", un);
+				 	send(hmlib);
+				 	}
+			}
+		}
+	}
+	
+	class ReturnBookFromDB implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO decrease some message from library database and add the same message
+			//from this person's Borrowed book library
 			
 		}
 		
 	}
-	
-
 }
 
 
