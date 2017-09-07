@@ -22,6 +22,7 @@ public class GUI extends JFrame
 	//!!!!un is used to identify a user 
 	private String un=null;
 	//the elements of G1
+	private String[] book_id = null;
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
 	JLabel profession1,id1,password1;
@@ -115,7 +116,6 @@ public class GUI extends JFrame
 			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 			getmes = client.getMessage();
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -409,6 +409,7 @@ public class GUI extends JFrame
 			publisherLabel[i]=new JLabel(publisher[i]);
 			quantityLabel[i]=new JLabel(quantity[i]);
 			bookCheckBox[i]=new JCheckBox();
+			
 			if(quantity[i].equals("0")) {
 				bookCheckBox[i].setEnabled(false);
 			}
@@ -434,7 +435,7 @@ public class GUI extends JFrame
 		
 	}
 	
-	public void returnBook(String[] bookName,String[] author,String[] publisher,String[] quantity,int size)
+	public void returnBook(String[] bookName,String[] author,String[] publisher,String[] quantity,String[] bookId,int size)
 	{
 		ReturnBook = new JFrame("Return book");
 		ReturnBook.setSize(300, 350);
@@ -446,7 +447,7 @@ public class GUI extends JFrame
 		publisherLabelR = new JLabel[size];
 		quantityLabelR = new JLabel[size];
 		bookCheckBoxR = new JCheckBox[size];
-		
+		book_id = new String[size];
 		for(int i=0;i<size;i++) 
 		{
 			bookPanelR[i] = new JPanel();
@@ -458,14 +459,14 @@ public class GUI extends JFrame
 			bookCheckBoxR[i] = new JCheckBox();
 			if(quantity[i].equals("0"))
 			{
-				bookCheckBox[i].setEnabled(false);
+				bookCheckBoxR[i].setEnabled(false);
 			}
 			bookPanelR[i].add(bookNameLabelR[i]);
 			bookPanelR[i].add(authorLabelR[i]);
 			bookPanelR[i].add(publisherLabelR[i]);
 			bookPanelR[i].add(quantityLabelR[i]);
 			bookPanelR[i].add(bookCheckBoxR[i]);
-
+			book_id[i] = bookId[i];
 			ReturnBook.add(bookPanelR[i]);
 		}
 		
@@ -598,27 +599,40 @@ public class GUI extends JFrame
 	{
 		public void actionPerformed(ActionEvent e) 
 		{
-			String[] bookNameR = new String[5];
-			String[] publisherR = new String[5];
-			String[] quantityR = new String[5];
-			String[] authorR = new String[5];//R means to return 
+		
 			
 			//get information form this person's borrowed book database,and then turn
 			//to the method returnBook(...) to create the ReturnBook GUI and show it
 			//TODO
-			
+			HashMap<String,String> hmlib=new HashMap<String,String>();
+			hmlib.put("op", "search_unreturn");
+		 	hmlib.put("user_name", un);
 			//ReturnBook(bookNameR,authorR,publisherR,quantityR,alist.size)
+		 	ArrayList<HashMap<String,String>> alist = getList(hmlib);	
+			String[] bookNameR = new String[alist.size()];
+			String[] publisherR = new String[alist.size()];
+			String[] quantityR = new String[alist.size()];
+			String[] authorR = new String[alist.size()];//R means to return 
+			String[] book_idR = new String[alist.size()];
 			
-			/*if(alist.size()>=1)
+			for(int i=0;i<alist.size();i++) {
+				bookNameR[i]=alist.get(i).get("book_name");
+				authorR[i]=alist.get(i).get("author");
+				publisherR[i]=alist.get(i).get("publisher");
+				quantityR[i]=alist.get(i).get("quantity");
+				book_idR[i] = alist.get(i).get("book_id");
+			}
+		 	
+			if(alist.size()>=1)
 			{
-				ReturnBook(bookNameR,authorR,publisherR,quantityR,alist.size());
+				returnBook(bookNameR,authorR,publisherR,quantityR,book_idR,alist.size());
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
 				JOptionPane.showMessageDialog(null,"You haven't borrowed any book!",
 						"Return book unsuccessfully",JOptionPane.WARNING_MESSAGE);
 							  
-			}*/
+			}
 			
 		}
 		
@@ -659,6 +673,7 @@ public class GUI extends JFrame
 		    {
 		    	un = hm.get("username");//un is used to identify user,a global variable
 		    	G5.setVisible(true);
+		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	
 		    }
@@ -666,6 +681,7 @@ public class GUI extends JFrame
 		    {
 		    	un = hm.get("username");//un is used to identify user,a global variable
 		    	G6.setVisible(true);
+		    	G1.setVisible(false);
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		
 		    }
@@ -756,16 +772,32 @@ public class GUI extends JFrame
 		public void actionPerformed(ActionEvent arg0)
 		{
 			HashMap<String,String> hmlib=null;
+			boolean flag=false;
+
+			HashMap<String,String> hmbook=new HashMap<String,String>();
 			for (int i = 0;i < bookCheckBox.length;i++) {
 				 hmlib=new HashMap<String,String>();
 				 if(bookCheckBox[i].isSelected()==true) {
+					 flag=true;
 				 	hmlib.put("book_name", bookNameLabel[i].getText());
 				 	hmlib.put("op", "borrow");
 				 	hmlib.put("user_name", un);
-				 	send(hmlib);
-				 	}
+				 	hmlib=getOne(hmlib);
+				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
+				 }
 			}
+			
+			String[] booknames=new String[hmbook.size()];
+			System.out.println(hmbook.size());
+			booknames= hmbook.keySet().toArray(booknames);
+			String result="";
+
+			for(int i=0;i<hmbook.size();i++){
+				result+=(booknames[i]+ " is borrowed "+hmbook.get(booknames[i])+"!\n");
+			}
+			if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
 		}
+		
 	}
 	
 	class ReturnBookFromDB implements ActionListener
@@ -775,10 +807,31 @@ public class GUI extends JFrame
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO decrease some message from library database and add the same message
 			//from this person's Borrowed book library
-			
+			HashMap<String,String> hmlib=null;
+			boolean flag=false;
+			HashMap<String,String> hmbook=new HashMap<String,String>();
+			for (int i = 0;i < bookCheckBoxR.length;i++) {
+				 hmlib=new HashMap<String,String>();
+				 if(bookCheckBoxR[i].isSelected()==true) {
+					flag=true;
+				 	hmlib.put("book_name", bookNameLabelR[i].getText());
+				 	hmlib.put("op", "return");
+				 	hmlib.put("user_name", un);
+				 	hmlib.put("book_id", book_id[i]);
+				 	hmlib=getOne(hmlib);
+				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
+				 		
+				 }
+			}
+			String[] booknames=new String[hmbook.size()];
+			booknames= hmbook.keySet().toArray(booknames);
+			String result="";
+			for(int i=0;i<hmbook.size();i++){
+				result+=(booknames[i]+ " is returned "+hmbook.get(booknames[i])+"!\n");
+			}
+			if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
 		}
 		
 	}
 }
-
 
