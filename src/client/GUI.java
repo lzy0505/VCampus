@@ -517,39 +517,13 @@ public class GUI extends JFrame
 	class MyMouLister2 implements MouseListener
 	 	{
 	 		public void mouseClicked(MouseEvent arg0) {
-	 			//cs is course select
-	 			String[] csCourseName = null;String[] csCredit = null;String[] details= null;int csSize = 0;
-	 			//si is score inquery
-	 			String[] siCourseName = null;String[] siCredit = null;String[] score= null;int siSize = 0;
-	 			//ea is exam arrangement
-	 			String[] eaCourseName = null;String[] place = null;String[] examTime= null;int eaSize = 0;
+	 			
 	 			
 	 			HashMap<String,String> hm = new HashMap<>();
 	 	 	 	hm.put("card_id", ci);
 	 	 	 	hm.put("op", "search_course");
-	 	 	 	ArrayList<HashMap<String,String>> csList=getList(hm);
-	 	 	 	csSize = csList.size();
-	 	 	 	csCourseName = new String[csSize];
-	 	 	 	csCredit = new String[csSize];
-	 	 	 	details= new String[csSize];
-	 	 	 	String[] courseInfoId = new String[csSize];
-	 	 	 	for(int i=0;i<csSize;i++) {
-	 	 	 		csCourseName[i] = csList.get(i).get("course_name");
-	 	 	 		csCredit[i] = csList.get(i).get("course_credits");
-	 	 	 		courseInfoId[i] = csList.get(i).get("course_info_id");
-	 	 	 		if(csList.get(i).get("select_status").equals("TRUE")) {
-	 	 	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
-	 	 	 		}
-	 	 	 		else {
-						details[i] = "Unselected";
-					}
-	 	 	 	}
-	 	 	 	System.out.println("MouseList" + csList.get(0).get("course_record_id"));
 	 			//get information from database and give value to this above parameters
-	  			StudentAffairs student;
-	  			student = new StudentAffairs(csCourseName,csCredit,details,csSize,
-	  					siCourseName,siCredit,score,siSize,
-	  					eaCourseName,place,examTime,eaSize,courseInfoId,csList);
+	  			StudentAffairs student= new StudentAffairs(hm);
 	  		}
 	 
 	 		@Override

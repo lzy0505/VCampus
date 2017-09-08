@@ -39,6 +39,20 @@ import javax.swing.JOptionPane;
  	private ArrayList<HashMap<String,String>> csList =new ArrayList<HashMap<String,String>>();
  	private ArrayList<HashMap<String,String>> coList =new ArrayList<HashMap<String,String>>();
  	JLabel courseNameLabel[] = null;
+ 	JFrame CourseDetails=null;
+	JLabel creditLabel[] = null;
+	JLabel detailsLabel[] = null;
+	JButton chooseButton[] = null; 
+		
+		//the elements of CourseSelecting
+	JLabel courseNameSILabel[] = null;
+	JLabel creditSILabel[] = null;
+	JLabel scoreLabel[] = null;
+		
+		//the elements of ExamArrangement
+	JLabel courseNameEALabel[] = null;
+	JLabel placeLabel[] = null;
+	JLabel examTimeLabel[] = null;
  	/*public static void main(String[] args) {
  		EventQueue.invokeLater(new Runnable() {
  			public void run() {
@@ -123,18 +137,34 @@ import javax.swing.JOptionPane;
  	{
  		return(Toolkit.getDefaultToolkit().getScreenSize().height - frameHeight) / 2;
  	}
- 	
- 	
- 	
- 	public StudentAffairs(String courseName[],String credit[],String details[],int csSize,
- 			String siCourseName[],String siCredit[],String score[],int siSize,
- 			String eaCourseName[],String place[],String examTime[],int eaSize,String[] courseInfoId,ArrayList<HashMap<String,String>> csList) {
- 		
- 		
- 		initialize(courseName,credit,details,csSize,
+ 	public StudentAffairs(HashMap<String,String> hm) {
+ 		ArrayList<HashMap<String,String>> csList=getList(hm);
+		//si is score inquery
+		String[] siCourseName = null;String[] siCredit = null;String[] score= null;int siSize = 0;
+		//ea is exam arrangement
+		String[] eaCourseName = null;String[] place = null;String[] examTime= null;int eaSize = 0;
+		
+		int csSize = csList.size();
+		String[] csCourseName = new String[csSize];
+		String[] csCredit = new String[csSize];
+		String[] details= new String[csSize];
+ 	 	String[] courseInfoId = new String[csSize];
+ 	 	for(int i=0;i<csSize;i++) {
+ 	 		csCourseName[i] = csList.get(i).get("course_name");
+ 	 		csCredit[i] = csList.get(i).get("course_credits");
+ 	 		courseInfoId[i] = csList.get(i).get("course_info_id");
+ 	 		if(csList.get(i).get("select_status").equals("TRUE")) {
+ 	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
+ 	 		}
+ 	 		else {
+ 	 			details[i] = "Unselected";
+ 	 		}
+ 	 	}
+ 	 	initialize(csCourseName,csCredit,details,csSize,
  				siCourseName,siCredit,score,siSize,
  				eaCourseName,place,examTime,eaSize,courseInfoId,csList);
  	}
+ 	
  
  	/**
  	 * Initialize the contents of the frame.
@@ -145,20 +175,20 @@ import javax.swing.JOptionPane;
  		//the elements of CourseSelecting
  		this.courseInfoId = courseInfoId;
  		this.csList = csList;
- 		JLabel courseNameLabel[] = new JLabel[csSize];
- 		JLabel creditLabel[] = new JLabel[csSize];
- 		JLabel detailsLabel[] = new JLabel[csSize];
- 		JButton chooseButton[] = new JButton[csSize]; 
+ 		courseNameLabel= new JLabel[csSize];
+ 		creditLabel= new JLabel[csSize];
+ 		detailsLabel= new JLabel[csSize];
+ 		chooseButton= new JButton[csSize]; 
  		
  		//the elements of CourseSelecting
- 		JLabel courseNameSILabel[] = new JLabel[siSize];
- 		JLabel creditSILabel[] = new JLabel[siSize];
- 		JLabel scoreLabel[] = new JLabel[siSize];
+ 		courseNameSILabel = new JLabel[siSize];
+ 		creditSILabel = new JLabel[siSize];
+ 		scoreLabel = new JLabel[siSize];
  		
  		//the elements of ExamArrangement
- 		JLabel courseNameEALabel[] = new JLabel[eaSize];
- 		JLabel placeLabel[] = new JLabel[eaSize];
- 		JLabel examTimeLabel[] = new JLabel[eaSize];
+ 		courseNameEALabel = new JLabel[eaSize];
+ 		placeLabel = new JLabel[eaSize];
+ 		examTimeLabel= new JLabel[eaSize];
  		
  		Welcome = new JFrame();
  		Welcome.setBounds(100, 100, 470, 300);
@@ -366,10 +396,42 @@ import javax.swing.JOptionPane;
  	 	
  	 	
  	}
+ 	/**
+ 	 * Update the contents of the frame.
+ 	 */
+ 	private void updateStudentCourse() {
+ 		HashMap<String,String> hm = new HashMap<String,String>();
+	 	hm.put("card_id", ci);
+	 	hm.put("op", "search_course");
+ 		ArrayList<HashMap<String,String>> csList=getList(hm);
+		int csSize = csList.size();
+		String[] csCourseName = new String[csSize];
+		String[] csCredit = new String[csSize];
+		String[] details= new String[csSize];
+ 	 	String[] courseInfoId = new String[csSize];
+ 	 	for(int i=0;i<csSize;i++) {
+ 	 		csCourseName[i] = csList.get(i).get("course_name");
+ 	 		csCredit[i] = csList.get(i).get("course_credits");
+ 	 		courseInfoId[i] = csList.get(i).get("course_info_id");
+ 	 		if(csList.get(i).get("select_status").equals("TRUE")) {
+ 	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
+ 	 		}
+ 	 		else {
+ 	 			details[i] = "Unselected";
+ 	 		}
+ 	 	}
+ 	 	for(int i=0;i<csSize;i++)
+ 		{
+ 			courseNameLabel[i] .setText(csCourseName[i]);
+ 			creditLabel[i].setText(csCredit[i]);
+ 			detailsLabel[i].setText(details[i]);
+ 		}
+ 	}
+ 	
  	//tow
  	public void courseSelect(String teacherName[],String time[],String state[],int size)
  	{
- 		JFrame CourseDetails = new JFrame();
+ 		CourseDetails = new JFrame();
  		CourseDetails.setSize(360,360);
  		CourseDetails.setLayout(new FlowLayout());
  		
@@ -464,7 +526,9 @@ import javax.swing.JOptionPane;
  			cohm.put("course_record_id", coList.get(i).get("course_record_id"));
  			cohm.put("op", "choose_ok");
  			cohm = getOne(cohm);
- 			String result=cohm.get("course_name")+" is chosen "+cohm.get("result")+"!";
+ 			String result="Choosing course"+cohm.get("result")+"!";
+ 			CourseDetails.dispose();
+ 			updateStudentCourse();
 			JOptionPane.showMessageDialog(null, result,
  					"Results",JOptionPane.INFORMATION_MESSAGE);
 			
