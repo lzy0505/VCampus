@@ -44,16 +44,16 @@ public class ServerThread implements Runnable{
 				String op = getOne.get("op");	
 				switch (op) {
 				case "sign in":
-					//get a array of HashMap whose username equal to b'username
-					sendList=db.selectWhere("users", "username = "+"\'"+getOne.get("username")+"\'");
+					//get a array of HashMap whose card_id equal to b'card_id
+					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
 					if(sendList.size()==0) {
 						send.put("result", "fail");
-						send.put("reason", "Username or Password is false!");
+						send.put("reason", "card_id or Password is false!");
 						soos.writeObject(send);
 						break;
 					}
 					else if (sendList.get(0).get("password").equals(getOne.get("password"))&&sendList.get(0).get("identity").equals(getOne.get("identity"))) {
-						send.put("username",getOne.get("username") );
+						send.put("card_id",getOne.get("card_id") );
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
@@ -66,8 +66,8 @@ public class ServerThread implements Runnable{
 					
 				case "sign up":
 					
-					sendList=db.selectWhere("users", "username = "+"\'"+getOne.get("username")+"\'");
-					// if there's no username same as b'username,which means sing up is allowable;
+					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
+					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(sendList.size()==0) {
 						getOne.remove("op");
 						
@@ -78,7 +78,7 @@ public class ServerThread implements Runnable{
 					}
 					else {
 						send.put("result","fail");
-						send.put("reason","Username has been used!");
+						send.put("reason","card_id has been used!");
 						soos.writeObject(send);
 						break;
 					}
@@ -109,8 +109,8 @@ public class ServerThread implements Runnable{
 							Date date =new Date();
 							SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 							String sdf = df.format(date);
-							System.out.println(getOne.get("user_name"));
-							db.setWhere("book", "reader=\'"+ getOne.get("user_name")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
+							System.out.println(getOne.get("card_id"));
+							db.setWhere("book", "reader=\'"+ getOne.get("card_id")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
 							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
 							send.put("result", "successfully");
 							send.put("book_name",getOne.get("book_name"));
@@ -125,7 +125,7 @@ public class ServerThread implements Runnable{
 					soos.writeObject(send);
 					break;
 				case "search_unreturn":
-					sendList=db.selectWhere("book", "reader = "+"\'"+getOne.get("user_name")+"\'");
+					sendList=db.selectWhere("book", "reader = "+"\'"+getOne.get("card_id")+"\'");
 					if(sendList.size()==0){
 						soos.writeObject(sendList);
 						break;
@@ -158,10 +158,34 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}	
-				}
+				case "search_course":
+					//return course_name,credits and course_info_id
+					ArrayList<HashMap<String,String>> scList=db.selectWhere("course_records", "course_student =\' "+getOne.get("card_id")+"\'");
+					for(int i=0;i<scList.size();i++){
+						ArrayList<HashMap<String,String>> courseList = db.selectWhere("course_info", "course_info_id ="+ scList.get(i).get("course_record_id"));
+						courseList.get(0).put("course_record_id", scList.get(i).get("course_record_id"));
+						sendList.add(courseList.get(0));
+					}
+					soos.writeObject(sendList);
+					break;
+				case "choose_course":
+					//return details to client
+					sendList=db.selectWhere("course_details", "course_info_id= "+getOne.get("course_info_id"));
+					for(int i = 0;i<sendList.size();i++){
+						sendList.get(i).put("course_records_id", getOne.get("course_records_id"));
+						sendList.get(i).put("coure_name", getOne.get("course_name"));
+					}
+					soos.writeObject(sendList);
+					break;
+				case "choose_ok":
+					//use course_records_id to choose course
+					db.setWhere("course_records", "course_id = "+getOne.get("course_id")+",select_status =" + "TRUE,", "course_records_id=" + getOne.get("course_records_id"));
+					send.put("result", "successfully");
+					send.put("course_name", getOne.get("course_name"));
+					soos.writeObject(send);
+				}		
 				db.finalize();	
 				
-					
 			} catch (IOException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();

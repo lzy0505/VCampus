@@ -1,14 +1,7 @@
 package client;
-
 import java.awt.*;
-
 import java.awt.event.*;
-
 import javax.swing.*;
-
-
-
-
 import java.io.IOException;
 import java.lang.String;
 import java.net.Socket;
@@ -19,10 +12,9 @@ import java.util.HashMap;
 public class GUI extends JFrame 
 {
 	private Client client;
-	//!!!!un is used to identify a user 
-	private String un=null;
-	//the elements of G1
 	private String[] book_id = null;
+	private String ci;
+	private ClientInfo clientInfo = new ClientInfo();
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
 	JLabel profession1,id1,password1;
@@ -171,7 +163,7 @@ public class GUI extends JFrame
 		
 		p21 = new JPanel();
 		p21.setLayout(new FlowLayout(FlowLayout.CENTER));
-		id1 = new JLabel("Username");
+		id1 = new JLabel("card_id");
 		p21.add(id1);
 		
 		i1 = new JTextField("",8);
@@ -208,7 +200,7 @@ public class GUI extends JFrame
 		
 		p12 = new JPanel();
 		p12.setLayout(new FlowLayout(FlowLayout.CENTER));
-		id2 = new JLabel("Username");
+		id2 = new JLabel("card_id");
 		p12.add(id2);
 		i2 = new JTextField("",8);
 		p12.add(i2);
@@ -379,6 +371,7 @@ public class GUI extends JFrame
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
+		l55.addMouseListener(new MyMouLister2());//open student affairs
 		b18.addActionListener(new SearchBookFromDB());//search book
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
@@ -521,7 +514,61 @@ public class GUI extends JFrame
 	 		}
 	 		
 	 	}
-
+	class MyMouLister2 implements MouseListener
+	 	{
+	 		public void mouseClicked(MouseEvent arg0) {
+	 			//cs is course select
+	 			String csCourseName[] = null;String csCredit[] = null;String details[] = null;int csSize = 0;
+	 			//si is score inquery
+	 			String siCourseName[] = null;String siCredit[] = null;String score[] = null;int siSize = 0;
+	 			//ea is exam arrangement
+	 			String eaCourseName[] = null;String place[] = null;String examTime[] = null;int eaSize = 0;
+	 			
+	 			HashMap<String,String> hm = new HashMap<>();
+	 	 	 	hm.put("Card_id", ci);
+	 	 	 	ArrayList<HashMap<String,String>> csList=getList(hm);
+	 	 	 	csSize = csList.size();
+	 	 	 	for(int i=0;i<csList.size();i++) {
+	 	 	 		csCourseName[i] = csList.get(i).get("course_name");;
+	 	 	 		csCredit[i] = csList.get(i).get("course_credits");
+	 	 	 		if(csList.get(i).get("select_status").equals("TRUE")) {
+	 	 	 			details[i] = "Selected" + csList.get(i).get("course_teacher");
+	 	 	 		}
+	 	 	 		else {
+						details[i] = "Unselected";
+					}
+	 	 	 	}
+	 			//get information from database and give value to this above parameters
+	  			StudentAffairs student;
+	  			student = new StudentAffairs(csCourseName,csCredit,details,csSize,
+	  					siCourseName,siCredit,score,siSize,
+	  					eaCourseName,place,examTime,eaSize);
+	  		}
+	 
+	 		@Override
+	 		public void mouseEntered(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mouseExited(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mousePressed(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	 
+	 		@Override
+	 		public void mouseReleased(MouseEvent arg0) {
+	 			// TODO 自动生成的方法存根
+	 			
+	 		}
+	}
 	class MyActLister1 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
@@ -556,7 +603,7 @@ public class GUI extends JFrame
 				
 				HashMap<String,String> hm=new HashMap<String,String>();
 					
-				hm.put("username",i2.getText());
+				hm.put("card_id",i2.getText());
 				hm.put("password",pass2.getText());
 				hm.put("op", "sign up");
 				if(pro1.getSelectedIndex()==0){
@@ -565,7 +612,7 @@ public class GUI extends JFrame
 					hm.put("identity","teacher");
 				}
 			    
-				System.out.println(hm.get("username"));
+				System.out.println(hm.get("card_id"));
 				System.out.println(hm.get("password"));	
 				hm=getOne(hm);
 				//System.out.println(hm.get("result"));
@@ -601,7 +648,7 @@ public class GUI extends JFrame
 			//TODO
 			HashMap<String,String> hmlib=new HashMap<String,String>();
 			hmlib.put("op", "search_unreturn");
-		 	hmlib.put("user_name", un);
+		 	hmlib.put("card_id", ci);
 			//ReturnBook(bookNameR,authorR,publisherR,quantityR,alist.size)
 		 	ArrayList<HashMap<String,String>> alist = getList(hmlib);	
 			String[] bookNameR = new String[alist.size()];
@@ -652,7 +699,7 @@ public class GUI extends JFrame
 	*/
 			HashMap<String,String> hm=new HashMap<String,String>();
 			
-			hm.put("username",i1.getText());
+			hm.put("card_id",i1.getText());
 			hm.put("password",pass1.getText());
 			hm.put("op", "sign in");
 			if(pro1.getSelectedIndex()==0){
@@ -664,7 +711,8 @@ public class GUI extends JFrame
 		    hm=getOne(hm);
 		    if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==0)
 		    {
-		    	un = hm.get("username");//un is used to identify user,a global variable
+		    	clientInfo.setCi(hm.get("card_id"));
+		    	ci =clientInfo.getCi() ;//un is used to identify user,a global variable
 		    	G5.setVisible(true);
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -672,7 +720,8 @@ public class GUI extends JFrame
 		    }
 		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==1)
 		    {
-		    	un = hm.get("username");//un is used to identify user,a global variable
+		    	clientInfo.setCi(hm.get("card_id"));
+		    	ci =clientInfo.getCi();//ci is used to identify user,a global variable
 		    	G6.setVisible(true);
 		    	G1.setVisible(false);
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -774,7 +823,7 @@ public class GUI extends JFrame
 					 flag=true;
 				 	hmlib.put("book_name", bookNameLabel[i].getText());
 				 	hmlib.put("op", "borrow");
-				 	hmlib.put("user_name", un);
+				 	hmlib.put("card_id", ci);
 				 	hmlib=getOne(hmlib);
 				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
 				 }
@@ -809,7 +858,7 @@ public class GUI extends JFrame
 					flag=true;
 				 	hmlib.put("book_name", bookNameLabelR[i].getText());
 				 	hmlib.put("op", "return");
-				 	hmlib.put("user_name", un);
+				 	hmlib.put("card_id", ci);
 				 	hmlib.put("book_id", book_id[i]);
 				 	hmlib=getOne(hmlib);
 				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
