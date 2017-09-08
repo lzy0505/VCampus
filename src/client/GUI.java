@@ -532,9 +532,11 @@ public class GUI extends JFrame
 	 	 	 	csCourseName = new String[csSize];
 	 	 	 	csCredit = new String[csSize];
 	 	 	 	details= new String[csSize];
+	 	 	 	String[] courseInfoId = new String[csSize];
 	 	 	 	for(int i=0;i<csSize;i++) {
 	 	 	 		csCourseName[i] = csList.get(i).get("course_name");
 	 	 	 		csCredit[i] = csList.get(i).get("course_credits");
+	 	 	 		courseInfoId[i] = csList.get(i).get("course_info_id");
 	 	 	 		if(csList.get(i).get("select_status").equals("TRUE")) {
 	 	 	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
 	 	 	 		}
@@ -542,11 +544,12 @@ public class GUI extends JFrame
 						details[i] = "Unselected";
 					}
 	 	 	 	}
+	 	 	 	System.out.println("MouseList" + csList.get(0).get("course_record_id"));
 	 			//get information from database and give value to this above parameters
 	  			StudentAffairs student;
 	  			student = new StudentAffairs(csCourseName,csCredit,details,csSize,
 	  					siCourseName,siCredit,score,siSize,
-	  					eaCourseName,place,examTime,eaSize);
+	  					eaCourseName,place,examTime,eaSize,courseInfoId,csList);
 	  		}
 	 
 	 		@Override

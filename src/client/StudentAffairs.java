@@ -9,8 +9,10 @@ package client;
  import javax.swing.JPanel;
  import javax.swing.JLabel;
  import javax.swing.SwingConstants;
- 
- //import client.GUI.ChooseCourseLister;
+
+import com.sun.javafx.stage.EmbeddedWindow;
+
+//import client.GUI.ChooseCourseLister;
  
  import javax.swing.JButton;
  import javax.swing.JTextField;
@@ -33,7 +35,10 @@ import javax.swing.JOptionPane;
  	private JFrame Welcome;
  	private ClientInfo clientInfo = new ClientInfo();
  	private String ci = clientInfo.getCi();
- 	
+ 	private String[] courseInfoId =null;
+ 	private ArrayList<HashMap<String,String>> csList =new ArrayList<HashMap<String,String>>();
+ 	private ArrayList<HashMap<String,String>> coList =new ArrayList<HashMap<String,String>>();
+ 	JLabel courseNameLabel[] = null;
  	/*public static void main(String[] args) {
  		EventQueue.invokeLater(new Runnable() {
  			public void run() {
@@ -123,12 +128,12 @@ import javax.swing.JOptionPane;
  	
  	public StudentAffairs(String courseName[],String credit[],String details[],int csSize,
  			String siCourseName[],String siCredit[],String score[],int siSize,
- 			String eaCourseName[],String place[],String examTime[],int eaSize) {
+ 			String eaCourseName[],String place[],String examTime[],int eaSize,String[] courseInfoId,ArrayList<HashMap<String,String>> csList) {
  		
  		
  		initialize(courseName,credit,details,csSize,
  				siCourseName,siCredit,score,siSize,
- 				eaCourseName,place,examTime,eaSize);
+ 				eaCourseName,place,examTime,eaSize,courseInfoId,csList);
  	}
  
  	/**
@@ -136,8 +141,10 @@ import javax.swing.JOptionPane;
  	 */
  	private void initialize(String courseName[],String credit[],String details[],int csSize,
  			String siCourseName[],String siCredit[],String score[],int siSize,
- 			String eaCourseName[],String place[],String examTime[],int eaSize) {
+ 			String eaCourseName[],String place[],String examTime[],int eaSize,String[] courseInfoId,ArrayList<HashMap<String,String>> csList) {
  		//the elements of CourseSelecting
+ 		this.courseInfoId = courseInfoId;
+ 		this.csList = csList;
  		JLabel courseNameLabel[] = new JLabel[csSize];
  		JLabel creditLabel[] = new JLabel[csSize];
  		JLabel detailsLabel[] = new JLabel[csSize];
@@ -300,6 +307,9 @@ import javax.swing.JOptionPane;
  			CourseSelectPane.add(creditLabel[i]);
  			CourseSelectPane.add(detailsLabel[i]);
  			CourseSelectPane.add(chooseButton[i]);
+ 			
+ 			chooseButton[i].setName(i+"");
+ 			chooseButton[i].addActionListener(new SelectCourse());
  
  		}
  		
@@ -336,11 +346,7 @@ import javax.swing.JOptionPane;
  		}
  		
  		Welcome.setVisible(true);
- 		
- 		for(int i = 0;i<csSize;i++)
- 		{
- 			chooseButton[i].addActionListener(new SelectCourse());
- 		}
+
  
  		//different teachers
  		//the elements of CourseDetails
@@ -377,6 +383,7 @@ import javax.swing.JOptionPane;
  		teacherNameLabel[0] = new JLabel("Teacher");
  		timetableLabel[0] = new JLabel("Time");
  		stateLabel[0] = new JLabel("State");
+ 		coursePanel[0]=new JPanel();
  		JLabel operation = new JLabel("Operation");
  		
  		coursePanel[0].add(teacherNameLabel[0]);
@@ -386,19 +393,21 @@ import javax.swing.JOptionPane;
  		CourseDetails.add(coursePanel[0]);
  		
  		for(int i=1;i<size+1;i++)
- 		{
+ 		{	
+ 			coursePanel[i]=new JPanel();
  			coursePanel[i].setLayout(new FlowLayout());
  			teacherNameLabel[i] = new JLabel(teacherName[i-1]);
  			timetableLabel[i] = new JLabel(time[i-1]);
  			stateLabel[i] = new JLabel(state[i-1]);
  			choose[i-1] = new JButton("Choose");
- 			
+ 			choose[i-1].setName((i-1)+"");
  			coursePanel[i].add(teacherNameLabel[i]);
  			coursePanel[i].add(timetableLabel[i]);
  			coursePanel[i].add(stateLabel[i]);
  			coursePanel[i].add(choose[i-1]);
  			CourseDetails.add(coursePanel[i]);
  			
+ 			choose[i-1].addActionListener(new ChooseCourseLister());
  			if(stateLabel[i].getText().equals("full"))
  			{
  				choose[i-1].setEnabled(false);
@@ -409,12 +418,6 @@ import javax.swing.JOptionPane;
  		
  		CourseDetails.setVisible(true);
  		
- 		for(int i=0;i<size;i++)
- 		{
- 			if(choose[i].isSelected())
- 				choose[i].addActionListener(new ChooseCourseLister());
- 		}//if a course is selected,show the Choose Successful GUI
- 		
  	}
  	
  	class SelectCourse implements ActionListener
@@ -422,11 +425,28 @@ import javax.swing.JOptionPane;
  
  		@Override
  		public void actionPerformed(ActionEvent arg0) {
- 			String teacherName[] = null;
- 			String time[] = null;
- 			String state[] = null;
- 			int size = 0;
- 			
+ 			HashMap<String,String> cchm =new HashMap<String,String>();
+ 			JButton choosenBuntton=(JButton)arg0.getSource();
+ 			int index=Integer.parseInt(choosenBuntton.getName());
+ 			cchm.put("course_info_id", csList.get(index).get("course_info_id"));
+ 			cchm.put("op", "choose_course");
+ 			cchm.put("course_name",csList.get(index).get("course_name"));
+ 			cchm.put("course_record_id",csList.get(index).get("course_record_id"));
+ 			coList = getList(cchm);
+ 			int size = coList.size();
+ 			String teacherName[] = new String[size];
+ 			String time[] = new String[size];
+ 			String state[] = new String[size];
+ 			for(int i = 0;i<size;i++) {
+ 				teacherName[i]=coList.get(i).get("course_teacher");
+ 				time[i] = coList.get(i).get("course_time");
+ 				if(coList.get(i).get("course_is_full").equals("TRUE")) {
+ 					state[i] = "full";
+ 				}
+ 				else {
+ 					state[i] = "notfull";
+ 				}
+ 			} 			
  			//get information from database,and give value to teacherName[],time[],state[] and size
  			courseSelect(teacherName,time,state,size);
  		}
@@ -436,17 +456,18 @@ import javax.swing.JOptionPane;
  	class ChooseCourseLister implements ActionListener
  	{
  		public void actionPerformed(ActionEvent arg0) {
- 			JOptionPane.showMessageDialog(null, "Choose course successfully!",
- 					"Choose Successfully",JOptionPane.INFORMATION_MESSAGE);
  			
- 			for(int i=0;i<choose.length;i++)
- 			{
- 				if(choose[i].isSelected())
- 				{//this teacher's course quantity -1
- 					//database's job TODO
- 				}
- 			}
- 			
+ 			HashMap<String,String> cohm =new HashMap<String,String>();
+ 			JButton selectedButton=(JButton)arg0.getSource();
+ 			int i=Integer.parseInt(selectedButton.getName());
+ 			cohm.put("course_id", coList.get(i).get("course_id"));
+ 			cohm.put("course_record_id", coList.get(i).get("course_record_id"));
+ 			cohm.put("op", "choose_ok");
+ 			cohm = getOne(cohm);
+ 			String result=cohm.get("course_name")+" is chosen "+cohm.get("result")+"!";
+			JOptionPane.showMessageDialog(null, result,
+ 					"Results",JOptionPane.INFORMATION_MESSAGE);
+			
  		}
  		
  	}

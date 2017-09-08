@@ -9,6 +9,9 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.sun.corba.se.impl.orbutil.closure.Constant;
+
 import java.util.Date;
 
 import utils.User;
@@ -160,11 +163,15 @@ public class ServerThread implements Runnable{
 				case "search_course":
 					//return course_name,credits and course_info_id
 					ArrayList<HashMap<String,String>> scList=db.selectWhere("course_records", "course_student =\'"+getOne.get("card_id")+"\'");
+					for(int i=0;i<Constants.constructionOfTables.get("course_records").length;i++) {
+						System.out.println(Constants.constructionOfTables.get("course_records")[i]+"-"+scList.get(0).get(Constants.constructionOfTables.get("course_records")[i]));
+					}
 					sendList=new ArrayList<HashMap<String,String>>();
 					for(int i=0;i<scList.size();i++){
 						ArrayList<HashMap<String,String>> courseList = db.selectWhere("course_info", "course_info_id ="+ scList.get(i).get("course_info_id"));
 						courseList.get(0).put("course_record_id", scList.get(i).get("course_record_id"));
 						courseList.get(0).put("select_status", scList.get(i).get("select_status"));
+						courseList.get(0).put("course_info_id", scList.get(i).get("course_info_id"));
 						if(scList.get(i).get("select_status").equals("TRUE")) {
 							ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
 							courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
@@ -176,15 +183,20 @@ public class ServerThread implements Runnable{
 				case "choose_course":
 					//return details to client
 					sendList=db.selectWhere("course_details", "course_info_id= "+getOne.get("course_info_id"));
+					System.out.println(" choose_course"+ getOne.get("course_record_id"));
 					for(int i = 0;i<sendList.size();i++){
-						sendList.get(i).put("course_records_id", getOne.get("course_records_id"));
+						sendList.get(i).put("course_record_id", getOne.get("course_record_id"));
 						sendList.get(i).put("coure_name", getOne.get("course_name"));
 					}
 					soos.writeObject(sendList);
 					break;
 				case "choose_ok":
-					//use course_records_id to choose course
-					db.setWhere("course_records", "course_id = "+getOne.get("course_id")+",select_status =" + "TRUE,", "course_records_id=" + getOne.get("course_records_id"));
+					//use course_record_id to choose course
+					db.setWhere("course_records", "course_id="+getOne.get("course_id")+",select_status=" + "TRUE", "course_record_id=" + getOne.get("course_record_id"));
+					sendList=db.selectWhere("course_details", "course_id= "+getOne.get("course_id"));
+					db.setWhere("course_details", "course_selected_number = course_selected_number+1", "course_id=" + getOne.get("course_id"));
+					if(sendList.get(0).get("course_selected_number").equals(sendList.get(0).get("course_max_number")))
+						db.setWhere("course_details", "course_is_full ="+ "TRUE", "course_id=" + getOne.get("course_id"));
 					send.put("result", "successfully");
 					send.put("course_name", getOne.get("course_name"));
 					soos.writeObject(send);
