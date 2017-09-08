@@ -33,10 +33,9 @@ import javax.swing.JOptionPane;
  public class StudentAffairs {
  
  	private JFrame Welcome;
- 	private ClientInfo clientInfo = new ClientInfo();
- 	private String ci = clientInfo.getCi();
+ 	private String ci = ClientInfo.getCi();
  	private String[] courseInfoId =null;
- 	private ArrayList<HashMap<String,String>> csList =new ArrayList<HashMap<String,String>>();
+ 	private ArrayList<HashMap<String,String>> csList =null;
  	private ArrayList<HashMap<String,String>> coList =new ArrayList<HashMap<String,String>>();
  	JLabel courseNameLabel[] = null;
  	JFrame CourseDetails=null;
@@ -138,7 +137,8 @@ import javax.swing.JOptionPane;
  		return(Toolkit.getDefaultToolkit().getScreenSize().height - frameHeight) / 2;
  	}
  	public StudentAffairs(HashMap<String,String> hm) {
- 		ArrayList<HashMap<String,String>> csList=getList(hm);
+ 		csList=getList(hm);
+ 		System.out.println("create-"+csList.size());
 		//si is score inquery
 		String[] siCourseName = null;String[] siCredit = null;String[] score= null;int siSize = 0;
 		//ea is exam arrangement
@@ -162,7 +162,7 @@ import javax.swing.JOptionPane;
  	 	}
  	 	initialize(csCourseName,csCredit,details,csSize,
  				siCourseName,siCredit,score,siSize,
- 				eaCourseName,place,examTime,eaSize,courseInfoId,csList);
+ 				eaCourseName,place,examTime,eaSize,courseInfoId);
  	}
  	
  
@@ -171,10 +171,9 @@ import javax.swing.JOptionPane;
  	 */
  	private void initialize(String courseName[],String credit[],String details[],int csSize,
  			String siCourseName[],String siCredit[],String score[],int siSize,
- 			String eaCourseName[],String place[],String examTime[],int eaSize,String[] courseInfoId,ArrayList<HashMap<String,String>> csList) {
+ 			String eaCourseName[],String place[],String examTime[],int eaSize,String[] courseInfoId) {
  		//the elements of CourseSelecting
  		this.courseInfoId = courseInfoId;
- 		this.csList = csList;
  		courseNameLabel= new JLabel[csSize];
  		creditLabel= new JLabel[csSize];
  		detailsLabel= new JLabel[csSize];
@@ -388,12 +387,9 @@ import javax.swing.JOptionPane;
  	 	JButton[] choose = null;
  		
  	 	HashMap<String,String> hm = new HashMap<>();
- 	 	hm.put("Card_id", ci);
+ 	 	hm.put("Card_id", ClientInfo.getCi());
  	 	
- 	 	
- 	 	
- 	 	
- 	 	
+ 	 
  	 	
  	}
  	/**
@@ -401,9 +397,11 @@ import javax.swing.JOptionPane;
  	 */
  	private void updateStudentCourse() {
  		HashMap<String,String> hm = new HashMap<String,String>();
-	 	hm.put("card_id", ci);
+	 	hm.put("card_id", ClientInfo.getCi());
 	 	hm.put("op", "search_course");
- 		ArrayList<HashMap<String,String>> csList=getList(hm);
+ 		csList=getList(hm);
+ 		System.out.println("update-"+ClientInfo.getCi());
+ 		System.out.println("update-"+csList.size());
 		int csSize = csList.size();
 		String[] csCourseName = new String[csSize];
 		String[] csCredit = new String[csSize];
@@ -429,7 +427,7 @@ import javax.swing.JOptionPane;
  	}
  	
  	//tow
- 	public void courseSelect(String teacherName[],String time[],String state[],int size)
+ 	public void courseSelect(String teacherName[],String time[],String state[],int size,HashMap<String,String> course)
  	{
  		CourseDetails = new JFrame();
  		CourseDetails.setSize(360,360);
@@ -470,7 +468,7 @@ import javax.swing.JOptionPane;
  			CourseDetails.add(coursePanel[i]);
  			
  			choose[i-1].addActionListener(new ChooseCourseLister());
- 			if(stateLabel[i].getText().equals("full"))
+ 			if(stateLabel[i].getText().equals("full")||(course.get("select_status").equals("TRUE")&&course.get("course_id").equals(coList.get(i-1).get("course_id"))))
  			{
  				choose[i-1].setEnabled(false);
  			}//if the course is full,the choose button can't be pressed
@@ -510,7 +508,7 @@ import javax.swing.JOptionPane;
  				}
  			} 			
  			//get information from database,and give value to teacherName[],time[],state[] and size
- 			courseSelect(teacherName,time,state,size);
+ 			courseSelect(teacherName,time,state,size,csList.get(index));
  		}
  		
  	}

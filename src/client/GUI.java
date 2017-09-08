@@ -14,7 +14,6 @@ public class GUI extends JFrame
 	private Client client;
 	private String[] book_id = null;
 	private String ci;
-	private ClientInfo clientInfo = new ClientInfo();
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
 	JLabel profession1,id1,password1;
@@ -692,8 +691,8 @@ public class GUI extends JFrame
 		    hm=getOne(hm);
 		    if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==0)
 		    {
-		    	clientInfo.setCi(hm.get("card_id"));
-		    	ci =clientInfo.getCi() ;//un is used to identify user,a global variable
+		    	ClientInfo.setCi(hm.get("card_id"));
+		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	G5.setVisible(true);
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -701,8 +700,8 @@ public class GUI extends JFrame
 		    }
 		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==1)
 		    {
-		    	clientInfo.setCi(hm.get("card_id"));
-		    	ci =clientInfo.getCi();//ci is used to identify user,a global variable
+		    	ClientInfo.setCi(hm.get("card_id"));
+		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
 		    	G6.setVisible(true);
 		    	G1.setVisible(false);
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

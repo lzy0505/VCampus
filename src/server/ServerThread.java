@@ -172,6 +172,7 @@ public class ServerThread implements Runnable{
 						if(scList.get(i).get("select_status").equals("TRUE")) {
 							ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
 							courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
+							courseList.get(0).put("course_id", scList.get(i).get("course_id"));
 						}
 						sendList.add(courseList.get(0));
 					}
@@ -180,21 +181,25 @@ public class ServerThread implements Runnable{
 				case "choose_course":
 					//return details to client
 					sendList=db.selectWhere("course_details", "course_info_id= "+getOne.get("course_info_id"));
-					System.out.println(" choose_course"+ getOne.get("course_record_id"));
 					for(int i = 0;i<sendList.size();i++){
 						sendList.get(i).put("course_record_id", getOne.get("course_record_id"));
 						sendList.get(i).put("coure_name", getOne.get("course_name"));
+						sendList.get(i).put("select_status", getOne.get("select_status"));
 					}
 					soos.writeObject(sendList);
 					break;
 				case "choose_ok":
 					//use course_record_id to choose course
+					sendList=db.selectWhere("course_records", "course_record_id="+getOne.get("course_record_id"));
+					if(sendList.get(0).get("select_status").equals("TRUE")) {
+						db.setWhere("course_details", "course_selected_number=course_selected_number-1,course_is_full=FALSE", "course_id="+sendList.get(0).get("course_id"));
+					}
 					db.setWhere("course_records", "course_id="+getOne.get("course_id")+",select_status=" + "TRUE", "course_record_id=" + getOne.get("course_record_id"));
 					sendList=db.selectWhere("course_details", "course_id= "+getOne.get("course_id"));
 					db.setWhere("course_details", "course_selected_number = course_selected_number+1", "course_id=" + getOne.get("course_id"));
 					if(sendList.get(0).get("course_selected_number").equals(sendList.get(0).get("course_max_number")))
 						db.setWhere("course_details", "course_is_full ="+ "TRUE", "course_id=" + getOne.get("course_id"));
-					send.put("result", "successfully");
+					send.put("result", " successfully");
 					soos.writeObject(send);
 				}		
 				db.finalize();	
