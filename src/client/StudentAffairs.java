@@ -34,8 +34,6 @@ import javax.swing.JOptionPane;
  	private ClientInfo clientInfo = new ClientInfo();
  	private String ci = clientInfo.getCi();
  	
- 	public 
- 	
  	/*public static void main(String[] args) {
  		EventQueue.invokeLater(new Runnable() {
  			public void run() {
@@ -49,45 +47,46 @@ import javax.swing.JOptionPane;
  		});
  	}*/
  	//send message
- 		public void send(HashMap<String,String> sendmes){
- 			try {
- 				Client client = new Client();
- 				client.clientSocket = new Socket("localhost",8080);
- 				client.sendMessage(sendmes);
- 			} catch (IOException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
- 		}
- 		//send and get message
- 		public HashMap<String, String> getOne(HashMap<String,String> sendmes){
- 			HashMap<String, String> getmes=null;
- 			try {
- 				Client client = new Client();
- 				client.clientSocket = new Socket("localhost",8080);
- 				client.sendMessage(sendmes);
- 				getmes = client.getMessage();
- 			} catch (IOException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
- 			return getmes;
- 		}
- 		public ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
- 			ArrayList<HashMap<String,String>> getmes=null;
- 			try {
- 				Client client = new Client();
- 				client.clientSocket = new Socket("localhost",8080);
- 				client.sendMessage(sendmes);
- 				getmes = client.getMessages();
- 				
- 			} catch (IOException e) {
- 				// TODO Auto-generated catch block
- 				e.printStackTrace();
- 			}
- 			return getmes;
- 		}
- 		
+ 	
+	 public void send(HashMap<String,String> sendmes){
+		try {
+			Client client = new Client();
+			client.clientSocket = new Socket("localhost",8080);
+		client.sendMessage(sendmes);
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	//send and get message
+	public HashMap<String, String> getOne(HashMap<String,String> sendmes){
+		HashMap<String, String> getmes=null;
+		try {
+			Client client = new Client();
+			client.clientSocket = new Socket("localhost",8080);
+		client.sendMessage(sendmes);
+		getmes = client.getMessage();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return getmes;
+	}
+	public ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
+		ArrayList<HashMap<String,String>> getmes=null;
+		try {
+			Client client = new Client();
+			client.clientSocket = new Socket("localhost",8080);
+		client.sendMessage(sendmes);
+		getmes = client.getMessages();
+		
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return getmes;
+	}
+
  	
  	JButton choose[] = null;
  	
