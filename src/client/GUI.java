@@ -518,21 +518,25 @@ public class GUI extends JFrame
 	 	{
 	 		public void mouseClicked(MouseEvent arg0) {
 	 			//cs is course select
-	 			String csCourseName[] = null;String csCredit[] = null;String details[] = null;int csSize = 0;
+	 			String[] csCourseName = null;String[] csCredit = null;String[] details= null;int csSize = 0;
 	 			//si is score inquery
-	 			String siCourseName[] = null;String siCredit[] = null;String score[] = null;int siSize = 0;
+	 			String[] siCourseName = null;String[] siCredit = null;String[] score= null;int siSize = 0;
 	 			//ea is exam arrangement
-	 			String eaCourseName[] = null;String place[] = null;String examTime[] = null;int eaSize = 0;
+	 			String[] eaCourseName = null;String[] place = null;String[] examTime= null;int eaSize = 0;
 	 			
 	 			HashMap<String,String> hm = new HashMap<>();
-	 	 	 	hm.put("Card_id", ci);
+	 	 	 	hm.put("card_id", ci);
+	 	 	 	hm.put("op", "search_course");
 	 	 	 	ArrayList<HashMap<String,String>> csList=getList(hm);
 	 	 	 	csSize = csList.size();
-	 	 	 	for(int i=0;i<csList.size();i++) {
-	 	 	 		csCourseName[i] = csList.get(i).get("course_name");;
+	 	 	 	csCourseName = new String[csSize];
+	 	 	 	csCredit = new String[csSize];
+	 	 	 	details= new String[csSize];
+	 	 	 	for(int i=0;i<csSize;i++) {
+	 	 	 		csCourseName[i] = csList.get(i).get("course_name");
 	 	 	 		csCredit[i] = csList.get(i).get("course_credits");
 	 	 	 		if(csList.get(i).get("select_status").equals("TRUE")) {
-	 	 	 			details[i] = "Selected" + csList.get(i).get("course_teacher");
+	 	 	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
 	 	 	 		}
 	 	 	 		else {
 						details[i] = "Unselected";

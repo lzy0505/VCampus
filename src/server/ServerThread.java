@@ -159,15 +159,15 @@ public class ServerThread implements Runnable{
 					}	
 				case "search_course":
 					//return course_name,credits and course_info_id
-					ArrayList<HashMap<String,String>> scList=db.selectWhere("course_records", "course_student =\' "+getOne.get("card_id")+"\'");
-					
+					ArrayList<HashMap<String,String>> scList=db.selectWhere("course_records", "course_student =\'"+getOne.get("card_id")+"\'");
+					sendList=new ArrayList<HashMap<String,String>>();
 					for(int i=0;i<scList.size();i++){
 						ArrayList<HashMap<String,String>> courseList = db.selectWhere("course_info", "course_info_id ="+ scList.get(i).get("course_info_id"));
 						courseList.get(0).put("course_record_id", scList.get(i).get("course_record_id"));
 						courseList.get(0).put("select_status", scList.get(i).get("select_status"));
 						if(scList.get(i).get("select_status").equals("TRUE")) {
-						ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
-						courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
+							ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
+							courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
 						}
 						sendList.add(courseList.get(0));
 					}
