@@ -48,16 +48,16 @@ public class ServerThread implements Runnable{
 				ArrayList<HashMap<String,String>> aList=null;
 				switch (op) {
 				case "sign in":
-					//get a array of HashMap whose username equal to b'username
-					aList=db.selectWhere("users", "username = "+"\'"+b.get("username")+"\'");
+					//get a array of HashMap whose card_id equal to b'card_id
+					aList=db.selectWhere("users", "card_id = "+"\'"+b.get("card_id")+"\'");
 					if(aList.size()==0) {
 						a.put("result", "fail");
-						a.put("reason", "Username or Password is false!");
+						a.put("reason", "card_id or Password is false!");
 						soos.writeObject(a);
 						break;
 					}
 					else if (aList.get(0).get("password").equals(b.get("password"))&&aList.get(0).get("identity").equals(b.get("identity"))) {
-						a.put("username",b.get("username") );
+						a.put("card_id",b.get("card_id") );
 						a.put("result", "success");
 						soos.writeObject(a);
 						break;
@@ -70,8 +70,8 @@ public class ServerThread implements Runnable{
 					
 				case "sign up":
 					
-					aList=db.selectWhere("users", "username = "+"\'"+b.get("username")+"\'");
-					// if there's no username same as b'username,which means sing up is allowable;
+					aList=db.selectWhere("users", "card_id = "+"\'"+b.get("card_id")+"\'");
+					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(aList.size()==0) {
 						b.remove("op");
 						
@@ -82,7 +82,7 @@ public class ServerThread implements Runnable{
 					}
 					else {
 						a.put("result","fail");
-						a.put("reason","Username has been used!");
+						a.put("reason","card_id has been used!");
 						soos.writeObject(a);
 						break;
 					}

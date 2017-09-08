@@ -564,7 +564,7 @@ public class GUI extends JFrame
 				
 				HashMap<String,String> hm=new HashMap<String,String>();
 					
-				hm.put("username",i2.getText());
+				hm.put("card_id",i2.getText());
 				hm.put("password",pass2.getText());
 				hm.put("op", "sign up");
 				if(pro1.getSelectedIndex()==0){
@@ -573,7 +573,7 @@ public class GUI extends JFrame
 					hm.put("identity","teacher");
 				}
 			    
-				System.out.println(hm.get("username"));
+				System.out.println(hm.get("card_id"));
 				System.out.println(hm.get("password"));	
 				hm=getOne(hm);
 				//System.out.println(hm.get("result"));
@@ -609,8 +609,7 @@ public class GUI extends JFrame
 			String eaCourseName[] = null;String place[] = null;String examTime[] = null;int eaSize = 0;
 			
 			//get information from database and give value to this above parameters
- 			StudentAffairs student;
- 			student = new StudentAffairs(csCourseName,csCredit,details,csSize,
+ 			StudentAffairs student= new StudentAffairs(csCourseName,csCredit,details,csSize,
  					siCourseName,siCredit,score,siSize,
  					eaCourseName,place,examTime,eaSize);
  		}
@@ -691,7 +690,7 @@ public class GUI extends JFrame
 	*/
 			HashMap<String,String> hm=new HashMap<String,String>();
 			
-			hm.put("username",i1.getText());
+			hm.put("card_id",i1.getText());
 			hm.put("password",pass1.getText());
 			hm.put("op", "sign in");
 			if(pro1.getSelectedIndex()==0){
@@ -703,14 +702,14 @@ public class GUI extends JFrame
 		    hm=getOne(hm);
 		    if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==0)
 		    {
-		    	un = hm.get("username");//un is used to identify user,a global variable
+		    	un = hm.get("card_id");//un is used to identify user,a global variable
 		    	G5.setVisible(true);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	
 		    }
 		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==1)
 		    {
-		    	un = hm.get("username");//un is used to identify user,a global variable
+		    	un = hm.get("card_id");//un is used to identify user,a global variable
 		    	G6.setVisible(true);
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		

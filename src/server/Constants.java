@@ -12,7 +12,7 @@ import java.util.HashMap;
 class Constants {
 	public final static HashMap<String,String[]> constructionOfTables=new HashMap<String,String[]>() {
 		{
-			put("users",new String[]{"username","password","identity"});
+			put("users",new String[]{"card_id","password","identity"});
 			put("book_info",new String[]{"book_name","author","publisher","quantity","book_info_id"});
 			put("book",new String[]{"book_info_id","book_id","reader","borrow_date","is_borrowed"});
 		}

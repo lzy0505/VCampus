@@ -82,6 +82,7 @@ public class StudentAffairs {
 		initialize(courseName,credit,details,csSize,
 				siCourseName,siCredit,score,siSize,
 				eaCourseName,place,examTime,eaSize);
+		
 	}
 
 	/**
@@ -303,7 +304,14 @@ public class StudentAffairs {
 	 	JLabel[] timetableLabel = null;
 	 	JLabel[] stateLabel = null;
 	 	JButton[] choose = null;
+	 	
+	 	
 		
+	 	
+	 	
+	 	
+	 	
+	 	
 	}
 	
 	public void courseSelect(String teacherName[],String time[],String state[],int size)
