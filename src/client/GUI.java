@@ -85,6 +85,7 @@ public class GUI extends JFrame
  	JLabel[] quantityLabelR = null;
  	JCheckBox[] bookCheckBoxR = null;//which book to choose
  	JButton returnBook;
+ 	
  		
 	
 	public void init(){
@@ -379,6 +380,7 @@ public class GUI extends JFrame
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
+		l55.addMouseListener(new MyMouLister2());//open student affairs
 		b18.addActionListener(new SearchBookFromDB());//search book
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
@@ -480,6 +482,8 @@ public class GUI extends JFrame
 			
 			ReturnBook.setVisible(true);
 	}
+	
+	
 	
 	public static void main(String[] args) 
 	{
@@ -592,6 +596,48 @@ public class GUI extends JFrame
 			}
 		}
 		
+	}
+	
+	class MyMouLister2 implements MouseListener
+	{
+		public void mouseClicked(MouseEvent arg0) {
+			//cs is course select
+			String csCourseName[] = null;String csCredit[] = null;String details[] = null;int csSize = 0;
+			//si is score inquery
+			String siCourseName[] = null;String siCredit[] = null;String score[] = null;int siSize = 0;
+			//ea is exam arrangement
+			String eaCourseName[] = null;String place[] = null;String examTime[] = null;int eaSize = 0;
+			
+			//get information from database and give value to this above parameters
+ 			StudentAffairs student;
+ 			student = new StudentAffairs(csCourseName,csCredit,details,csSize,
+ 					siCourseName,siCredit,score,siSize,
+ 					eaCourseName,place,examTime,eaSize);
+ 		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
 	}
 	
 	class MyActLister3 implements ActionListener
@@ -776,9 +822,10 @@ public class GUI extends JFrame
 			// TODO decrease some message from library database and add the same message
 			//from this person's Borrowed book library
 			
-		}
-		
+		}	
 	}
+	
+	
 }
 
 
