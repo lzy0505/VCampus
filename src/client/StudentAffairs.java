@@ -139,22 +139,39 @@ import javax.swing.JOptionPane;
  	public StudentAffairs(HashMap<String,String> hm) {
  		csList=getList(hm);
  		System.out.println("create-"+csList.size());
-		//si is score inquery
-		String[] siCourseName = null;String[] siCredit = null;String[] score= null;int siSize = 0;
-		//ea is exam arrangement
-		String[] eaCourseName = null;String[] place = null;String[] examTime= null;int eaSize = 0;
 		
 		int csSize = csList.size();
 		String[] csCourseName = new String[csSize];
 		String[] csCredit = new String[csSize];
 		String[] details= new String[csSize];
  	 	String[] courseInfoId = new String[csSize];
+ 	 	
+ 	 	//si is score inquery
+ 	 	String[] siCourseName = new String[csSize];
+ 	 	String[] siCredit =new String[csSize];
+ 	 	String[] score= new String[csSize];
+ 	 	int siSize = 0;
+		//ea is exam arrangement
+		String[] eaCourseName = new String[csSize];
+		String[] place =new String[csSize];
+		String[] examTime= new String[csSize];
+		int eaSize = 0;
  	 	for(int i=0;i<csSize;i++) {
  	 		csCourseName[i] = csList.get(i).get("course_name");
  	 		csCredit[i] = csList.get(i).get("course_credits");
  	 		courseInfoId[i] = csList.get(i).get("course_info_id");
  	 		if(csList.get(i).get("select_status").equals("TRUE")) {
  	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
+ 	 			//score inquery need selected
+ 	 			siCourseName[siSize] = csCourseName[i];
+ 	 			siCredit[siSize] = csCredit[i];
+ 	 			score[siSize] = csList.get(i).get("course_score");;
+ 	 			siSize = siSize +1;
+ 	 			//exam need selected
+ 	 			eaCourseName[eaSize] = csCourseName[i];
+ 	 			place[eaSize] = csList.get(i).get("course_exam_time");
+ 	 			examTime[eaSize] = csList.get(i).get("course_exam_place");
+ 	 			eaSize++;
  	 		}
  	 		else {
  	 			details[i] = "Unselected";

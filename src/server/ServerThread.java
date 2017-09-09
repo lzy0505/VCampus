@@ -169,10 +169,14 @@ public class ServerThread implements Runnable{
 						courseList.get(0).put("course_record_id", scList.get(i).get("course_record_id"));
 						courseList.get(0).put("select_status", scList.get(i).get("select_status"));
 						courseList.get(0).put("course_info_id", scList.get(i).get("course_info_id"));
+						courseList.get(0).put("course_exam_status", scList.get(i).get("course_exam_status"));					
 						if(scList.get(i).get("select_status").equals("TRUE")) {
 							ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
 							courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
 							courseList.get(0).put("course_id", scList.get(i).get("course_id"));
+							courseList.get(0).put("course_score", scList.get(i).get("course_score"));
+							courseList.get(0).put("course_exam_time", cdlList.get(0).get("course_exam_time"));
+							courseList.get(0).put("course_exam_place", cdlList.get(0).get("course_exam_place"));
 						}
 						sendList.add(courseList.get(0));
 					}
