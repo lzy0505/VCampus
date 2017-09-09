@@ -37,6 +37,8 @@ import javax.swing.JOptionPane;
  	private String[] courseInfoId =null;
  	private ArrayList<HashMap<String,String>> csList =null;
  	private ArrayList<HashMap<String,String>> coList =new ArrayList<HashMap<String,String>>();
+ 	JScrollPane ScoreInqueryPane=null;
+ 	JPanel ExamArrangementPane = null;
  	JLabel courseNameLabel[] = null;
  	JFrame CourseDetails=null;
 	JLabel creditLabel[] = null;
@@ -169,8 +171,8 @@ import javax.swing.JOptionPane;
  	 			siSize = siSize +1;
  	 			//exam need selected
  	 			eaCourseName[eaSize] = csCourseName[i];
- 	 			place[eaSize] = csList.get(i).get("course_exam_time");
- 	 			examTime[eaSize] = csList.get(i).get("course_exam_place");
+ 	 			place[eaSize] = csList.get(i).get("course_exam_place");
+ 	 			examTime[eaSize] = csList.get(i).get("course_exam_time");
  	 			eaSize++;
  	 		}
  	 		else {
@@ -263,7 +265,7 @@ import javax.swing.JOptionPane;
  		CourseSelectPane.add(separator_3);
  		
  		//Score Inquery part
- 		JScrollPane ScoreInqueryPane = new JScrollPane();
+ 		ScoreInqueryPane = new JScrollPane();
  		tabbedPane.addTab("Score Inquery", null, ScoreInqueryPane, null);
  		ScoreInqueryPane.setLayout(null);
  		
@@ -298,7 +300,7 @@ import javax.swing.JOptionPane;
  		ScoreInqueryPane.add(scrollBar_1);
  		
  		//Exam Arrangement
- 		JPanel ExamArrangementPane = new JPanel();
+ 		ExamArrangementPane = new JPanel();
  		tabbedPane.addTab("Exam\tArrangement", null, ExamArrangementPane, null);
  		ExamArrangementPane.setLayout(null);
  		
@@ -417,30 +419,63 @@ import javax.swing.JOptionPane;
 	 	hm.put("card_id", ClientInfo.getCi());
 	 	hm.put("op", "search_course");
  		csList=getList(hm);
- 		System.out.println("update-"+ClientInfo.getCi());
- 		System.out.println("update-"+csList.size());
 		int csSize = csList.size();
-		String[] csCourseName = new String[csSize];
-		String[] csCredit = new String[csSize];
-		String[] details= new String[csSize];
- 	 	String[] courseInfoId = new String[csSize];
+		//si is score inquery
+ 	 	String[] siCourseName = new String[csSize];
+ 	 	String[] siCredit =new String[csSize];
+ 	 	String[] score= new String[csSize];
+ 	 	int siSize = 0;
+		//ea is exam arrangement
+		String[] eaCourseName = new String[csSize];
+		String[] place =new String[csSize];
+		String[] examTime= new String[csSize];
+		int eaSize = 0;
  	 	for(int i=0;i<csSize;i++) {
- 	 		csCourseName[i] = csList.get(i).get("course_name");
- 	 		csCredit[i] = csList.get(i).get("course_credits");
- 	 		courseInfoId[i] = csList.get(i).get("course_info_id");
+ 	 		courseNameLabel[i] .setText(csList.get(i).get("course_name"));
+ 	 		creditLabel[i].setText(csList.get(i).get("course_credits"));
+ 	 		detailsLabel[i].setText(csList.get(i).get("course_info_id"));
  	 		if(csList.get(i).get("select_status").equals("TRUE")) {
- 	 			details[i] = "Selected: " + csList.get(i).get("course_teacher");
+ 	 			detailsLabel[i].setText("Selected: " + csList.get(i).get("course_teacher"));
+  	 			//score inquery need selected
+ 	 			siCourseName[siSize] = csList.get(i).get("course_name");
+ 	 			siCredit[siSize] = csList.get(i).get("course_credits");
+ 	 			score[siSize] = csList.get(i).get("course_score");;
+ 	 			siSize = siSize +1;
+ 	 			//exam need selected
+ 	 			eaCourseName[eaSize] = csList.get(i).get("course_name");
+ 	 			place[eaSize] = csList.get(i).get("course_exam_place");
+ 	 			examTime[eaSize] = csList.get(i).get("course_exam_time");
+ 	 			eaSize++;
+ 	 		
  	 		}
  	 		else {
- 	 			details[i] = "Unselected";
+ 	 			detailsLabel[i].setText("Unselected");
  	 		}
  	 	}
- 	 	for(int i=0;i<csSize;i++)
- 		{
- 			courseNameLabel[i] .setText(csCourseName[i]);
- 			creditLabel[i].setText(csCredit[i]);
- 			detailsLabel[i].setText(details[i]);
- 		}
+ 	 	for(int i=0;i<siSize;i++)
+	 		{
+	 			courseNameSILabel[i].setText(siCourseName[i]);
+	 			creditSILabel[i] .setText(siCredit[i]);
+	 			scoreLabel[i] .setText(score[i]);
+	 			
+	 			ScoreInqueryPane.add(courseNameSILabel[i]);
+	 			ScoreInqueryPane.add(creditSILabel[i]);
+	 			ScoreInqueryPane.add(scoreLabel[i]);
+	 		}
+	 		
+	 		//add information into ExamArrangement
+	 		for(int i=0;i<eaSize;i++)
+	 		{
+	 			courseNameEALabel[i] .setText(eaCourseName[i]);
+	 			placeLabel[i] .setText(place[i]);
+	 			examTimeLabel[i].setText(examTime[i]);
+
+	 			
+	 			ExamArrangementPane.add(courseNameEALabel[i]);
+	 			ExamArrangementPane.add(placeLabel[i]);
+	 			ExamArrangementPane.add(examTimeLabel[i]);
+	 		}
+
  	}
  	
  	//tow
