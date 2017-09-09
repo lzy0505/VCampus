@@ -435,22 +435,27 @@ import javax.swing.JOptionPane;
  	 		creditLabel[i].setText(csList.get(i).get("course_credits"));
  	 		detailsLabel[i].setText(csList.get(i).get("course_info_id"));
  	 		if(csList.get(i).get("select_status").equals("TRUE")) {
- 	 			detailsLabel[i].setText("Selected: " + csList.get(i).get("course_teacher"));
-  	 			//score inquery need selected
- 	 			siCourseName[siSize] = csList.get(i).get("course_name");
- 	 			siCredit[siSize] = csList.get(i).get("course_credits");
- 	 			score[siSize] = csList.get(i).get("course_score");;
- 	 			siSize = siSize +1;
- 	 			//exam need selected
- 	 			eaCourseName[eaSize] = csList.get(i).get("course_name");
- 	 			place[eaSize] = csList.get(i).get("course_exam_place");
- 	 			examTime[eaSize] = csList.get(i).get("course_exam_time");
- 	 			eaSize++;
- 	 		
+ 	 			detailsLabel[i].setText("Selected: " + csList.get(i).get("course_teacher")); 		
  	 		}
  	 		else {
  	 			detailsLabel[i].setText("Unselected");
  	 		}
+ 	 		if(csList.get(i).get("select_status").equals("TRUE")&&csList.get(i).get("course_exam_status").equals("TRUE")) {
+ 	 		//score inquery need selected and student has tooken a exam
+ 	 			siCourseName[siSize] = csList.get(i).get("course_name");
+ 	 			siCredit[siSize] = csList.get(i).get("course_credits");
+ 	 			score[siSize] = csList.get(i).get("course_score");;
+ 	 			siSize = siSize +1;
+ 	 		}
+ 	 		if(csList.get(i).get("select_status").equals("TRUE")&&csList.get(i).get("course_exam_status").equals("FALSE")) {	 			
+ 	 			//exam need selected and student has'n tooken a exam
+ 	 			eaCourseName[eaSize] = csList.get(i).get("course_name");
+ 	 			place[eaSize] = csList.get(i).get("course_exam_place");
+ 	 			examTime[eaSize] = csList.get(i).get("course_exam_time");
+ 	 			eaSize++;
+ 	 		}
+ 	 		
+ 	 		
  	 	}
  	 	for(int i=0;i<siSize;i++)
 	 		{
