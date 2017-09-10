@@ -205,6 +205,16 @@ public class ServerThread implements Runnable{
 						db.setWhere("course_details", "course_is_full ="+ "TRUE", "course_id=" + getOne.get("course_id"));
 					send.put("result", " successfully");
 					soos.writeObject(send);
+					break;
+					
+				default:
+					send.put("result","No such operation!");
+					soos.writeObject(send);
+					break;
+					
+					
+					
+					
 				}		
 				db.finalize();	
 				
