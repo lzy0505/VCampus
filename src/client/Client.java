@@ -16,8 +16,10 @@ public class Client{
 	private ObjectInputStream cin;//对象输入流
 	private ObjectOutputStream cout;//对象输出流
 	public static int port =8080;
+	private String host= "127.0.0.1";
 	public Socket clientSocket = null;
 	public Client()throws IOException {
+		clientSocket =new Socket(host, port);
 	}
 	
 	//发送数据包

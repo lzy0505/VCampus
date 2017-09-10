@@ -1,7 +1,7 @@
 package client;
 
 public class ClientInfo {
-	//!!!!un is used to identify a user 
+	//!!!!card_id is used to identify a user 
 	static String ci=null;
 	//the elements of G1
 	

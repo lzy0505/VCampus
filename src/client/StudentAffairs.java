@@ -68,44 +68,6 @@ import javax.swing.JOptionPane;
  	}*/
  	//send message
  	
-	 public void send(HashMap<String,String> sendmes){
-		try {
-			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
-		client.sendMessage(sendmes);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	//send and get message
-	public HashMap<String, String> getOne(HashMap<String,String> sendmes){
-		HashMap<String, String> getmes=null;
-		try {
-			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
-		client.sendMessage(sendmes);
-		getmes = client.getMessage();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return getmes;
-	}
-	public ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
-		ArrayList<HashMap<String,String>> getmes=null;
-		try {
-			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
-		client.sendMessage(sendmes);
-		getmes = client.getMessages();
-		
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return getmes;
-	}
 
  	
  	JButton choose[] = null;
@@ -139,7 +101,7 @@ import javax.swing.JOptionPane;
  		return(Toolkit.getDefaultToolkit().getScreenSize().height - frameHeight) / 2;
  	}
  	public StudentAffairs(HashMap<String,String> hm) {
- 		csList=getList(hm);
+ 		csList=GUI.getList(hm);
  		System.out.println("create-"+csList.size());
 		
 		int csSize = csList.size();
@@ -422,7 +384,7 @@ import javax.swing.JOptionPane;
  		HashMap<String,String> hm = new HashMap<String,String>();
 	 	hm.put("card_id", ClientInfo.getCi());
 	 	hm.put("op", "search_course");
- 		csList=getList(hm);
+ 		csList=GUI.getList(hm);
 		int csSize = csList.size();
 		//si is score inquery
  	 	String[] siCourseName = new String[csSize];
@@ -553,7 +515,7 @@ import javax.swing.JOptionPane;
  			cchm.put("op", "choose_course");
  			cchm.put("course_name",csList.get(index).get("course_name"));
  			cchm.put("course_record_id",csList.get(index).get("course_record_id"));
- 			coList = getList(cchm);
+ 			coList = GUI.getList(cchm);
  			int size = coList.size();
  			String teacherName[] = new String[size];
  			String time[] = new String[size];
@@ -584,7 +546,7 @@ import javax.swing.JOptionPane;
  			cohm.put("course_id", coList.get(i).get("course_id"));
  			cohm.put("course_record_id", coList.get(i).get("course_record_id"));
  			cohm.put("op", "choose_ok");
- 			cohm = getOne(cohm);
+ 			cohm = GUI.getOne(cohm);
  			String result="Choosing course"+cohm.get("result")+"!";
  			CourseDetails.dispose();
  			updateStudentCourse();

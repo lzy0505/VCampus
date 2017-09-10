@@ -12,10 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
-
-
-
 //----------------------------------------
 //@主界面类--------------------------------
 class HomeScreen
@@ -193,7 +189,7 @@ class HomeScreen
 	 		@Override
 	 		public void mouseClicked(MouseEvent arg0) {
 	 			// TODO 自动生成的方法存根
-	 			
+	 		
 	 		}
 	 
 	 		@Override

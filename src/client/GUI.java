@@ -13,7 +13,7 @@ public class GUI extends JFrame
 {
 	private Client client;
 	private String[] book_id = null;
-	private String ci;
+	private String ci; //card_id
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
 	JLabel profession1,id1,password1;
@@ -108,7 +108,6 @@ public class GUI extends JFrame
 		HashMap<String, String> getmes=null;
 		try {
 			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 			getmes = client.getMessage();
 		} catch (IOException e) {
@@ -117,11 +116,10 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
-	public ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
+	public static ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
 		ArrayList<HashMap<String,String>> getmes=null;
 		try {
 			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 			getmes = client.getMessages();
 			
@@ -498,14 +496,12 @@ public class GUI extends JFrame
 			 {  			    		 
 				 //初始化时注意先后顺序
 				loadHomeScreen();
-				loadBank();	
-				update();//这一步是必需的
-						
+				loadBank();							
 			 }
 			 //初始化银行类
 			 void loadBank()
 			 {  
-				 bank=new Bank(homeScreen,ci);
+				 bank=new Bank(homeScreen);
 				 bank.init();
 			 }
 			 //初始化主界面类
@@ -516,12 +512,7 @@ public class GUI extends JFrame
 		    	    	 
 		     }
 		     //调用主界面的update函数将Library、Bank等变量传入
-			 void update()
-			 {
-				 homeScreen.update(G8, bank,ci);
-				 
-				 
-			 }
+		
 		     
 	   
 		     
@@ -676,6 +667,10 @@ public class GUI extends JFrame
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	//G5.setVisible(true);
 		    	homeScreen.G5.setVisible(true);
+		    	homeScreen.update(G8, bank, ci);
+		    	System.out.println("update card_id to : homeScreen!");
+		    	bank.update(ci);
+		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	
