@@ -4,8 +4,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 import javax.swing.border.LineBorder;
 
@@ -14,6 +13,7 @@ import java.awt.Color;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 
+import client.Registration.DoubleClickModifyDelete;
 import client.Registration.CancelLister;
 import client.Registration.SubmitLister;
 
@@ -32,13 +32,18 @@ public class Registration {
 	JRadioButton rdbtnMale;
 	JFormattedTextField textEnrollTime;
 	JComboBox SpecialitySelection;
+	
+	//Information table construction
+	String[] headName= {"StudentNumber","StudentName","Sex","EnrollmentTime","Specialty","",""};
 
-	public Registration() {
-		initialize();
+	
+
+	public Registration(String [][]data) {
+		initialize(data);
 		
 	}
 
-	private void initialize() {
+	private void initialize(String data[][]) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 900, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,22 +57,11 @@ public class Registration {
 		tabbedPane.addTab("Information Service", null, InformationService, null);
 		InformationService.setLayout(null);
 		
-		/*JPanel DisplayBar1 = new JPanel();
-		DisplayBar1.setBorder(null);
-		DisplayBar1.setBounds(21, 5, 760, 33);
-		
-		
-		DisplayBar1.setBackground(UIManager.getColor("MenuBar.selectionBackground"));
-		InformationService.add(DisplayBar1);
-		DisplayBar1.setLayout(new BorderLayout(0, 0));*/
-		
 		JLabel SInformationService = new JLabel("Student Information Service");
 		SInformationService.setFont(new Font("Lucida Console", Font.PLAIN, 17));
 		SInformationService.setBounds(21, 5, 700, 30);
 		SInformationService.setForeground(Color.blue);
-		//SInformationService.setForeground(UIManager.getColor("CheckBoxMenuItem.background"));
-		//SInformationService.setBackground(SystemColor.inactiveCaption);
-		//DisplayBar1.add(SInformationService);
+		
 		
 		InformationService.add(SInformationService);
 		
@@ -103,30 +97,18 @@ public class Registration {
 		panel.setBounds(21, 84, 750, 408);
 		InformationService.add(panel);
 		
-		//Information table construction
-		String[] headName= {"StudentNumber","StudentName","Sex","EnrollmentTime","Specialty","Operation",""};
-		/*Try to implement "add buttons to the table",but failed
-		JButton [] buttons=new JButton[3];
-		buttons[0]=new JButton("Check");
-		buttons[1]=new JButton("Modify");
-		buttons[2]=new JButton("Delete");*/
-		Object[] [] data= {
-				{"09015101","Mary","Female",new Integer(5),"CSE","Modify","Delete"},//new integer test
+		
+		/*String [][]data= {
+				{"09015101","Mary","Female","201509","CSE","Modify","Delete"},//new integer test
 				{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
 				{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
 				{"09015104","Amy","Female","201509","CSE","Modify","Delete"}
-		};
+		};*/
+		
+		
 		panel.setLayout(null);
-		JTable table = new JTable(data,headName);
+		table = new JTable(data,headName);
 		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-		
-		
-		
-		JLabel test = new JLabel("Modifying");
-		table.add(test,10);
-		
-		
-		
 		
 		//Scroll implement
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -134,31 +116,15 @@ public class Registration {
 		table.setFillsViewportHeight(true);
 		panel.add(scrollPane);
 		
-		//when having no scrollpane(only have a table), use the following method
-		//scrollPane.setLayout(new BorderLayout());  
-		//scrollPane.add(table.getTableHeader(), BorderLayout.PAGE_START);  
-		//scrollPane.add(table, BorderLayout.CENTER);
-
-		
-		
 		//The following code is about the "Information Import" bar.
 		JPanel InformationImport_1 = new JPanel();
 		tabbedPane.addTab("Information Import", null, InformationImport_1, null);
 		InformationImport_1.setLayout(null);
 		
-		/*JPanel DisplayBar2 = new JPanel();
-		DisplayBar2.setBounds(21, 5, 750, 34);
-		DisplayBar2.setBorder(null);
-		DisplayBar2.setBackground(UIManager.getColor("MenuBar.selectionBackground"));
-		InformationImport_1.add(DisplayBar2);
-		DisplayBar2.setLayout(new BorderLayout(0, 0));*/
-		
 		JLabel SInformationImport = new JLabel("Student Information Import");
 		SInformationImport.setFont(new Font("Lucida Console", Font.PLAIN, 17));
 		SInformationImport.setBounds(21,10,750,34);
 		SInformationImport.setForeground(Color.blue);
-		//SInformationImport.setBackground(SystemColor.inactiveCaption);
-		//DisplayBar2.add(SInformationImport, BorderLayout.CENTER);
 		InformationImport_1.add(SInformationImport);
 		
 		JPanel InfoImportActionBar = new JPanel();
@@ -265,27 +231,102 @@ public class Registration {
 		
 		frame.setVisible(true);
 
+		search.addActionListener(new SearchLister());
+		table.addMouseListener(new DoubleClickModifyDelete());
 		btnButton.addActionListener(new SubmitLister());
 		btnCancel.addActionListener(new CancelLister());
-		
-		//if "delete" is chosen,turn to the method deleteConfirm()
-		//TODO
+
 	}
 	
-	//delete function in "student information"
-	public void deleteConfirm()
+	class SearchLister implements ActionListener
 	{
-		Object[] options ={ "确定删除", "取消并返回" };
-		JOptionPane.showOptionDialog(null, "Are you sure that you want to delete this student status information?","Delete Confirm",JOptionPane.YES_NO_OPTION,
-				  JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-		int result = JOptionPane.showConfirmDialog(null, "Delete confirm?");
-		if(result == 0)
-		{
-			//delete corresponding data from database
+		public void actionPerformed(ActionEvent e) {
+			String information[][]=null;
+			//find whether there is a person searched in the database,if yes,
+			//give value to the array information[][]
+			//if()//if search successfully,show the searchFrame
 			//TODO
-			JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
+			{
+			//create a window to show the searching student
+			JFrame searchFrame = new JFrame("Search");
+			searchFrame.setSize(800, 150);
+			searchFrame.setLayout(null);
+			JTable searchTable = new JTable(information,headName);
+			searchTable.setBounds(5, 5, 740, 90);
+			searchFrame.add(searchTable);
+			searchFrame.setLocation(300, 250);
+
+			searchFrame.setVisible(true);
+			searchTable.addMouseListener(new DoubleClickModifyDelete());
+			}
+			//else
+			{
+				JOptionPane.showMessageDialog(null, "Search failed!","Search Failed",JOptionPane.ERROR_MESSAGE);
+			}
+
 		}
+		
+	}
 	
+	//Modify and delete function
+	class DoubleClickModifyDelete implements MouseListener
+	{
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			for(int row=0,colModify=5,colDelete=6;row<table.getRowCount();row++)
+			{
+				if(e.getClickCount() == 2)
+				{
+					if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
+					{
+						int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
+						if(result == 0)
+						{
+						    //Modify the information of student[row] in the database
+							//TODO
+							JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
+
+						}
+					}
+					else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
+					{
+						int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
+						if(result == 0)
+						{
+							//delete the information of student[row] from database
+							//TODO
+							JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
+						}
+					}
+				}	
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+		
 	}
 
 	//submit function in "information import"
@@ -297,7 +338,6 @@ public class Registration {
 			//SpecialitySelection.getSelectedItem() into the database
 			//TODO
 			
-			//
 			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);
 			
 		}	

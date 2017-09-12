@@ -319,7 +319,7 @@ public class GUI extends JFrame
 		p26.add(l46);
 		G6.add(p26);
 				
-		l56 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
+		l56 = new JLabel("StudentMessage",new ImageIcon("studentMessage.png"),JLabel.LEFT);
 		l56.setHorizontalTextPosition(JLabel.CENTER);
 		l56.setVerticalTextPosition(JLabel.BOTTOM);
 		p36 = new JPanel();
@@ -371,6 +371,7 @@ public class GUI extends JFrame
 		l35.addMouseListener(new MyMouLister1());//open library(student)
 		l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		l55.addMouseListener(new MyMouLister2());//open student affairs
+		l56.addMouseListener(new StudentMessage());//open student messages(teahcer's function)
 		b18.addActionListener(new SearchBookFromDB());//search book
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
@@ -549,6 +550,45 @@ public class GUI extends JFrame
 	 			
 	 		}
 	}
+	
+	class StudentMessage implements MouseListener
+	{
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+
+			//get data from database and do the following sentence
+			//the String [][]data has a firmed writing
+			//TODO
+			//Registration studentMessage = new Registration(String [][]data);
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO 自动生成的方法存根
+			
+		}
+		
+	}
+	
 	class MyActLister1 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
