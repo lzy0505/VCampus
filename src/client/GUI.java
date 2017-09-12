@@ -588,17 +588,15 @@ public class GUI extends JFrame
 				
 				HashMap<String,String> hm=new HashMap<String,String>();
 					
-				hm.put("card_id",i2.getText());
-				hm.put("password",pass2.getText());
+				hm.put("card_id","\'"+i2.getText()+"\'");
+				hm.put("password","\'"+pass2.getText()+"\'");
 				hm.put("op", "sign up");
 				if(pro1.getSelectedIndex()==0){
-					hm.put("identity","student");
+					hm.put("identity","\'student\'");
 				}else{
-					hm.put("identity","teacher");
+					hm.put("identity","\'teacher\'");
 				}
-			    
-				System.out.println(hm.get("card_id"));
-				System.out.println(hm.get("password"));	
+
 				hm=getOne(hm);
 				//System.out.println(hm.get("result"));
 				if(hm.get("result").equals("success"))

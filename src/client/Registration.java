@@ -398,17 +398,17 @@ public class Registration {
 			//TODO
 			HashMap<String,String> hm = new HashMap<String,String>();
 			hm.put("op","import_student");
-			hm.put("nname", textStudentName.getText());
-			hm.put("student_id", textStudentName.getText());
-			if(rdbtnMale.isSelected())hm.put("gender", "male");
-			else if(rdbtnFemale.isSelected()) hm.put("gender", "female");
+			hm.put("nname", "\'"+textStudentName.getText()+"\'");
+			hm.put("student_id","\'"+ textStudentName.getText()+"\'");
+			if(rdbtnMale.isSelected())hm.put("gender", "\'male\'");
+			else if(rdbtnFemale.isSelected()) hm.put("gender", "\'female\'");
 			else {
 				JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			hm.put("grade", textEnrollTime.getText());
 			hm.put("card_id", textStudentCardID.getText());
-			hm.put("major", majors[SpecialitySelection.getSelectedIndex()]);
+			hm.put("major", "\'"+majors[SpecialitySelection.getSelectedIndex()]+"\'");
 			GUI.send(hm);
 			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);
 			

@@ -70,14 +70,14 @@ public class ServerThread implements Runnable{
 					}
 					
 				case "sign up":
-					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
+					sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
 					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(sendList.size()==0) {
-						
 						getOne.remove("op");
+//						getOne.put("user_info_id", "null");
 						db.insert("users",getOne );
-						sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
-						System.out.println("Sign up" + " card_id = "+sendList.get(0).get("card_id") + "password = " +sendList.get(0).get("password"));
+						sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
+//						System.out.println("Sign up" + " card_id = "+sendList.get(0).get("card_id") + "password = " +sendList.get(0).get("password"));
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
