@@ -323,6 +323,7 @@ public class GUI extends JFrame
 		p26.add(l46);
 		G6.add(p26);
 				
+		
 		l56 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
 		l56.setHorizontalTextPosition(JLabel.CENTER);
 		l56.setVerticalTextPosition(JLabel.BOTTOM);
@@ -378,6 +379,43 @@ public class GUI extends JFrame
 		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		//l55.addMouseListener(new MyMouLister2());//open student affairs
 		b18.addActionListener(new SearchBookFromDB());//search book
+		l56.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO 自动生成的方法存根
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO 自动生成的方法存根
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO 自动生成的方法存根
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO 自动生成的方法存根
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO 自动生成的方法存根
+				new Registration(new String [][]{
+				{"09015101","Mary","Female","201509","CSE","Modify","Delete"},//new integer test
+				{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
+				{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
+				{"09015104","Amy","Female","201509","CSE","Modify","Delete"}
+		});
+			}
+		});
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
