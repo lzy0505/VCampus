@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.TableCellEditor;
 
 import client.HomeScreen;
 import sun.security.util.Password;
@@ -57,6 +58,7 @@ class Bank
 	
 	
 	//缴费界面
+    boolean clickflag;
 	JLabel l_chosePay;
 	JComboBox<String> chosePay;//选择缴费的种类
 	JButton payment_query;//查询相应缴费项目欠款金额的按钮
@@ -125,6 +127,7 @@ class Bank
 		 	
 		 	
 		 	//缴费界面
+		 	clickflag=false;
 		    sign="Tuition";//默认缴学费
 		    p_payment=new JPanel();		  
 		    p_payment.setLayout(new BoxLayout(p_payment,BoxLayout.Y_AXIS));
@@ -133,8 +136,8 @@ class Bank
 		 	chosePay.addItem("Tuition");//学费选项
 		 	chosePay.addItem("Water and electricity");//水电费
 		 	chosePay.addItem("Accommodation fee");//住宿费	 	
-		 	payment_query=new JButton("Query");//查询相应缴费项目欠款金额的按钮
-		 	payment_query.setPreferredSize(new Dimension(70,30));
+		 	//payment_query=new JButton("Query");//查询相应缴费项目欠款金额的按钮
+		 	//payment_query.setPreferredSize(new Dimension(70,30));
 		 	l_needtopay=new JLabel("need to pay : ");//
 		 	t_needtopay=new JTextField();//需要交多少钱的文本框显示
 		 	t_needtopay.setColumns(10);
@@ -154,7 +157,7 @@ class Bank
 		 	payment_p2=new JPanel();
 		 	payment_p1.add(l_chosePay);
 		 	payment_p1.add(chosePay);
-		 	payment_p1.add(payment_query);		 	
+		 	//payment_p1.add(payment_query);		 	
 		 	p_payment.add(payment_p1);
 		 	p_payment.add(payment_p2);
 		 	p_payment.add(payment_p3);
@@ -201,7 +204,8 @@ class Bank
 	 {   
 		 return_upbank.addActionListener(new ActionLis_RepaintHomeScreen());//返回重绘按钮（已完成）
 		 ok_re.addActionListener(new ActionLis_recharge());	//确认充值按钮	
-		 payment_query.addActionListener(new ActionLis_Paymentquery());//缴费查询按钮
+		 //payment_query.addActionListener(new ActionLis_Paymentquery());//缴费查询按钮
+		 chosePay.addActionListener(new ActionLis_Paymentquery());
 		 ok_pay.addActionListener(new ActionLis_Pay());//确认缴费按钮
 		 tab_bank.addChangeListener(new ChangeLis_tab());//Tab选项卡监听，当鼠标点击第三个选项卡（查询余额）,触发查询事件
 	 }
@@ -216,7 +220,11 @@ class Bank
 			
 		    JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
 		    int selectedIndex = tabbedPane.getSelectedIndex();
-		    if(selectedIndex==2)
+		    if(selectedIndex==1){
+		    	//ActionEvent e=new ActionEvent(e, selectedIndex, ci);
+		    	//chosePay.actionPerformed(new ActionEvent(chosePay,ActionEvent.ACTION_PERFORMED,null));
+		    	new ActionLis_Paymentquery().actionPerformed(null);
+		    }else if(selectedIndex==2)
 		    {
 		    	HashMap<String,String> hm=new HashMap<String,String>();
 				hm.put("op", "QueryBalance");//查询一卡通余额操作
@@ -248,13 +256,19 @@ class Bank
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				if(t.getSelectedRow()==-1){
+					JOptionPane.showMessageDialog(null, "尚未选择付款项！","ERROR:",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				if(rowData[t.getSelectedRow()][3].equals("Yes"))
-					JOptionPane.showMessageDialog(null, "This cost has already been paid","Warnning",JOptionPane.WARNING_MESSAGE);
+					{JOptionPane.showMessageDialog(null, "This cost has already been paid","Warnning",JOptionPane.WARNING_MESSAGE);
+					return;
+					}
 				
 				HashMap<String,String> hm=new HashMap<String,String>();
 				hm.put("op", "Payment");	
 				hm.put("card_id", ci);
-				String password = t_password_confirm2.toString();
+				String password = t_password_confirm2.getText();
 				System.out.println(password +" life mima ");
 				hm.put("password", password);
 				
@@ -264,13 +278,16 @@ class Bank
 				hm.put("card_time", time[row]);
 				System.out.println("card_time = " +time[row]);
 				hm.put("card_record_id", card_record_id[row]);
+				
 				System.out.println("card_record_id = " +card_record_id[row]);
 				hm=GUI.getOne(hm);//GetOne是GUI的static函数，调用时要前缀" GUI. "
 				if(hm.get("result").equals("success")){
 					JOptionPane.showMessageDialog(null, "缴费成功！");
+					t.setValueAt("Yes", row, 3);
+
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "原因："+hm.get("reason"),"/n 缴费失败!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "原因："+hm.get("reason"),"缴费失败!", JOptionPane.ERROR_MESSAGE);
 				}
 				//---反馈部分交给李某		
 				//...返回是否交钱成功，建议弄一个小弹窗
@@ -293,7 +310,7 @@ class Bank
 			hm.put("op", "recharge");
 			hm.put("card_id", ci);//传递用户名
 			hm.put("amount",money_recharge.getText());//传递需要充值多少金额
-			String password = t_password_confirm1.toString();//密码
+			String password = t_password_confirm1.getText();//密码
 			System.out.println(password +" e card mima ");
 			hm.put("password", password);
 			hm=GUI.getOne(hm);
@@ -332,34 +349,19 @@ class Bank
 	  {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public  void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			HashMap<String,String> hm=new HashMap<String,String>();
 			hm.put("card_id", ci);
-			rowData=new String[8][4];
-			columnNames=new String[4];
-			//表头
-			columnNames[0]="Grade";
-			columnNames[1]="Semester";
 			
-			columnNames[3]="Has paid?";	
+			columnNames=new String[3];
+			//表头
+			columnNames[0]="Semester";
+			columnNames[1]="Cost";
+			
+			columnNames[2]="Has paid?";	
 			//初始化年级和学期方格的内容
-			rowData[0][0]=rowData[1][0]="1";
-			rowData[2][0]=rowData[3][0]="2";
-			rowData[4][0]=rowData[5][0]="3";
-			rowData[6][0]=rowData[7][0]="4";
-			for(int i=0;i<8;i++)
-			{
-				if(i%2==0)
-				{					
-					rowData[i][1]="First";					
-				}
-				if(i%2==1)
-				{
-					rowData[i][1]="Second";
-				}
-				time[i] = rowData[i][0] + rowData[i][1];
-			}
+
 			
 		switch(chosePay.getSelectedIndex())
 		{
@@ -370,30 +372,24 @@ class Bank
 			hm.put("type", "Tuition");
 			System.out.println("now type:"+ hm.get("type"));
 			sign="Tuition";//表示交学费
-			columnNames[2]="Tution";
+			columnNames[1]="Tution";
 			ArrayList<HashMap<String,String>> TuitionList = GUI.getList(hm);
 			//@反馈部分--------
 			//...返回学费表的费用和是否缴清两列数据，显示
-			for(int i=0;i<8;i++)
+			rowData=new String[TuitionList.size()][3];
+			
+			for(int i=0;i<TuitionList.size();i++)
 			{
-				for(int j = 0;j<TuitionList.size();j++)
-				{
-					if(TuitionList.get(j).get("card_time").equals(time[i]))
-						{
-							rowData[i][2]=TuitionList.get(j).get("card_cost");
-							
-							if(TuitionList.get(j).get("card_is_paid").equals("TRUE")) {
-								rowData[i][3]="Yes";
-								/////////////////////
-							}
-							else {
-								rowData[i][3]="No";
-							}
-							card_record_id[i] = TuitionList.get(j).get("card_record_id");
-							break;
-							
-						}
-				}
+					rowData[i][0]=TuitionList.get(i).get("card_time");
+					rowData[i][1]=TuitionList.get(i).get("card_cost");			
+					if(TuitionList.get(i).get("card_is_paid").equals("TRUE")) {
+						rowData[i][2]="Yes";
+					}
+					else {
+						rowData[i][2]="No";
+					}
+					card_record_id[i] = TuitionList.get(i).get("card_record_id");
+						
 			}
 			//
 			//-----------------
@@ -406,7 +402,7 @@ class Bank
 			hm.put("type", "WandE");
 			System.out.println("now type:"+ hm.get("type"));
 			sign="WandE";//表示交水电费
-			columnNames[2]="Water and electricty fee";
+			columnNames[1]="Water and electricty fee";
 			//@反馈部分--------
 			//...返回水电表的费用和是否缴清两列数据，显示
 			//
@@ -414,17 +410,21 @@ class Bank
 			ArrayList<HashMap<String,String>> WandEList = GUI.getList(hm);
 			//@反馈部分--------
 			//...返回学费表的费用和是否缴清两列数据，显示
-			for(int i=0;i<8;i++)
+			rowData=new String[WandEList.size()][3];
+			for(int i=0;i<WandEList.size();i++)
 			{
-				for(int j = 0;j<WandEList.size();j++)
-				{
-					if(WandEList.get(j).get("card_time").equals(time[i]))
-						{
-							rowData[i][2]=WandEList.get(j).get("card_cost");
-							rowData[i][3]=WandEList.get(j).get("card_is_paid");
-							break;
-						}
+			
+				rowData[i][0]=WandEList.get(i).get("card_time");
+				rowData[i][1]=WandEList.get(i).get("card_cost");
+				
+				if(WandEList.get(i).get("card_is_paid").equals("TRUE")) {
+					rowData[i][2]="Yes";
 				}
+				else {
+					rowData[i][2]="No";
+				}
+				card_record_id[i] = WandEList.get(i).get("card_record_id");
+			
 			}		
 			break;
 		case 2:
@@ -432,7 +432,7 @@ class Bank
 			hm.put("type", "Afee");
 			System.out.println("now type:"+ hm.get("type"));
 			sign="Afee";//表示交住宿费
-			columnNames[2]="Accommodation fee";
+			columnNames[1]="Accommodation fee";
 			//@反馈部分--------
 			//...返回住宿表的费用和是否缴清两列数据，显示
 			//
@@ -440,17 +440,19 @@ class Bank
 			ArrayList<HashMap<String,String>> AfeeList = GUI.getList(hm);
 			//@反馈部分--------
 			//...返回学费表的费用和是否缴清两列数据，显示
-			for(int i=0;i<8;i++)
+			rowData=new String[AfeeList.size()][3];
+			for(int i=0;i<AfeeList.size();i++)
 			{
-				for(int j = 0;j<AfeeList.size();j++)
-				{
-					if(AfeeList.get(j).get("card_time").equals(time[i]))
-						{
-							rowData[i][2]=AfeeList.get(j).get("card_cost");
-							rowData[i][3]=AfeeList.get(j).get("card_is_paid");
-							break;
-						}
+				rowData[i][0]=AfeeList.get(i).get("card_time");			
+				rowData[i][1]=AfeeList.get(i).get("card_cost");		
+				if(AfeeList.get(i).get("card_is_paid").equals("TRUE")) {
+					rowData[i][2]="Yes";
 				}
+				else {
+					rowData[i][2]="No";
+				}
+				card_record_id[i] = AfeeList.get(i).get("card_record_id");
+		
 			}		
 			break;
 			
