@@ -335,6 +335,7 @@ public class ServerThread implements Runnable{
 					break;
 				case "import_student":
 					getOne.remove("op");
+					getOne.remove("card_id");
 					db.insert("user_info", getOne);
 					break;
 				default:

@@ -29,6 +29,7 @@ public class Registration {
 	private JTable table;
 	private JTextField textStudentNo;
 	private JTextField textStudentName;
+	private JTextField textStudentCardID;
 	private String information[][] = null;
 	private String user_info_id[] =null;
 	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
@@ -175,27 +176,32 @@ public class Registration {
 		
 		JLabel lblStudentNumber2 = new JLabel("StudentNumber:");
 		lblStudentNumber2.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentNumber2.setBounds(123, 18, 142, 45);
+		lblStudentNumber2.setBounds(123, 20, 142, 45);
 		InfoImportActionBar.add(lblStudentNumber2);
+		
+		JLabel lblStudentCardID = new JLabel("StudentCardID:");
+		lblStudentCardID.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
+		lblStudentCardID.setBounds(123, 60, 142, 45);
+		InfoImportActionBar.add(lblStudentCardID);
 		
 		JLabel lblStudentname = new JLabel("StudentName:");
 		lblStudentname.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentname.setBounds(123, 62, 142, 45);
+		lblStudentname.setBounds(123, 100, 142, 45);
 		InfoImportActionBar.add(lblStudentname);
 		
-		JLabel lblSex = new JLabel("Sex:");
+		JLabel lblSex = new JLabel("Gender:");
 		lblSex.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblSex.setBounds(123, 110, 142, 45);
+		lblSex.setBounds(123, 140, 142, 45);
 		InfoImportActionBar.add(lblSex);
 		
-		JLabel lblEnrollmenttime = new JLabel("EnrollmentTime:");
+		JLabel lblEnrollmenttime = new JLabel("Grade:");
 		lblEnrollmenttime.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblEnrollmenttime.setBounds(123, 160, 142, 45);
+		lblEnrollmenttime.setBounds(123, 180, 142, 45);
 		InfoImportActionBar.add(lblEnrollmenttime);
 		
-		JLabel lblSpecialty = new JLabel("Speciality:");
+		JLabel lblSpecialty = new JLabel("Major:");
 		lblSpecialty.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblSpecialty.setBounds(123, 216, 142, 45);
+		lblSpecialty.setBounds(123, 220, 142, 45);
 		InfoImportActionBar.add(lblSpecialty);
 		
 		rdbtnFemale = new JRadioButton("Female");
@@ -214,12 +220,17 @@ public class Registration {
 		
 		
 		textStudentNo = new JTextField();
-		textStudentNo.setBounds(311, 29, 130, 26);
+		textStudentNo.setBounds(311, 30, 130, 26);
 		InfoImportActionBar.add(textStudentNo);
 		textStudentNo.setColumns(10);
 		
+		textStudentCardID = new JTextField();
+		textStudentCardID.setBounds(311, 55, 130, 26);
+		InfoImportActionBar.add(textStudentCardID);
+		textStudentCardID.setColumns(10);
+		
 		textStudentName = new JTextField();
-		textStudentName.setBounds(311, 73, 130, 26);
+		textStudentName.setBounds(311, 80, 130, 26);
 		InfoImportActionBar.add(textStudentName);
 		textStudentName.setColumns(10);
 		
@@ -391,8 +402,12 @@ public class Registration {
 			hm.put("student_id", textStudentName.getText());
 			if(rdbtnMale.isSelected())hm.put("gender", "male");
 			else if(rdbtnFemale.isSelected()) hm.put("gender", "female");
-			else JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
+			else {
+				JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			hm.put("grade", textEnrollTime.getText());
+			hm.put("card_id", textStudentCardID.getText());
 			hm.put("major", majors[SpecialitySelection.getSelectedIndex()]);
 			GUI.send(hm);
 			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);

@@ -408,10 +408,6 @@ public class GUI extends JFrame
 			public void mouseClicked(MouseEvent e) {
 				// TODO 自动生成的方法存根
 				new Registration(new String [][]{
-				{"09015101","Mary","Female","201509","CSE","Modify","Delete"},//new integer test
-				{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
-				{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
-				{"09015104","Amy","Female","201509","CSE","Modify","Delete"}
 				});
 			}
 		});
