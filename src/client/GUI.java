@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class GUI extends JFrame 
 {
 	private Client client;
-	private String[] book_id = null;
+	//private String[] book_id = null;
 	private String ci; //card_id
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
@@ -50,14 +50,16 @@ public class GUI extends JFrame
 	JLabel l16,l26,l36,l46,l56,l66;
 	
 	
-	//the elements of G8
+	/*//the elements of G8
 	static JFrame G8;
  	JPanel p18,p28;
  	JLabel l18,l28;
  	JComboBox ways;
  	JTextField t18;
  	JButton b18,b28;
- 	
+ 	*/
+	
+	/*
  	//the elements of SearchBook9th
  	static JFrame SearchBook9th;
  	JPanel[] bookPanel=null;//mostly 5 messages at present
@@ -77,10 +79,11 @@ public class GUI extends JFrame
  	JLabel[] quantityLabelR = null;
  	JCheckBox[] bookCheckBoxR = null;//which book to choose
  	JButton returnBook;
- 		
+ 	*/	
  	
  	//HomeScreen、Library等成员变量
  	Bank bank;
+ 	Library library;
  	HomeScreen homeScreen;
 	
 	public void init(){
@@ -339,7 +342,7 @@ public class GUI extends JFrame
 		
 		G6.setLocation(getWidth(G6.getWidth()),getHeight(G6.getHeight()));
 		
-		
+		/*
 		//the part of G8
 		G8 = new JFrame(title8);
 		G8.setSize(300, 150);
@@ -364,7 +367,7 @@ public class GUI extends JFrame
 		p28.add(b28);
 		G8.add(p28);		
 		G8.setLocation(getWidth(G8.getWidth()),getHeight(G8.getHeight()));
-		
+		*/
 		//调用Load类初始化所有类变量
 		new Load();
 		
@@ -372,13 +375,13 @@ public class GUI extends JFrame
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());//sign up int the first GUI
 		reg2.addActionListener(new MyActLister2());//the GUI of sign up
-		b28.addActionListener(new MyActLister3());//turn to the GUI ReturnBook
+		//b28.addActionListener(new MyActLister3());//turn to the GUI ReturnBook
 		close3.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
 		//l35.addMouseListener(new MyMouLister1());//open library(student)
 		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		//l55.addMouseListener(new MyMouLister2());//open student affairs
-		b18.addActionListener(new SearchBookFromDB());//search book
+		//b18.addActionListener(new SearchBookFromDB());//search book
 		l56.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -421,7 +424,7 @@ public class GUI extends JFrame
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
-	
+	/*
 	//the method of creating SearchBook9th
 	public void searchBook9th(String[] bookName,String[] author,String[] publisher,String[] quantity,int size)
 	{
@@ -512,7 +515,7 @@ public class GUI extends JFrame
 			
 			ReturnBook.setVisible(true);
 	}
-	
+	*/
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
 	{  try{//定义界面风格
 		UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
@@ -534,7 +537,8 @@ public class GUI extends JFrame
 			 {  			    		 
 				 //初始化时注意先后顺序
 				loadHomeScreen();
-				loadBank();							
+				loadBank();
+				loadLibrary();
 			 }
 			 //初始化银行类
 			 void loadBank()
@@ -546,9 +550,15 @@ public class GUI extends JFrame
 		     void loadHomeScreen()
 		     {
 		    	 homeScreen=new HomeScreen();	
-		    	 homeScreen.init();
-		    	    	 
+		    	 homeScreen.init();		    	    	 
 		     }
+		     void loadLibrary()
+		     {
+		    	 library=new Library(homeScreen);
+		    	 library.init();
+	    	 
+		     }
+		    
 		     //调用主界面的update函数将Library、Bank等变量传入
 		
 		     
@@ -626,7 +636,7 @@ public class GUI extends JFrame
 		}
 		
 	}
-	
+	/*
 	class MyActLister3 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) 
@@ -667,7 +677,7 @@ public class GUI extends JFrame
 		}
 		
 	}
-	
+	*/
 	class MyActLister4 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) 
@@ -705,9 +715,10 @@ public class GUI extends JFrame
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	//G5.setVisible(true);
 		    	homeScreen.G5.setVisible(true);
-		    	homeScreen.update(G8, bank, ci);
+		    	homeScreen.update(library, bank, ci);
 		    	System.out.println("update card_id to : homeScreen!");
 		    	bank.update(ci);
+		    	library.update(ci);
 		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -745,7 +756,7 @@ public class GUI extends JFrame
 	 	}
 	 		
 	 }
-	// 
+	/*
 	class SearchBookFromDB implements ActionListener
 	{
 		@Override
@@ -784,7 +795,7 @@ public class GUI extends JFrame
 			
 			
 			
-			 //TODO*/
+			 
 			
 			
 			if(alist.size()>=1)
@@ -804,6 +815,8 @@ public class GUI extends JFrame
 		}
 		
 	}
+	*/
+	/*
 	class BorrowBookFromDB implements ActionListener
 	{
 		public void actionPerformed(ActionEvent arg0)
@@ -836,7 +849,8 @@ public class GUI extends JFrame
 		}
 		
 	}
-	
+	*/
+	/*
 	class ReturnBookFromDB implements ActionListener
 	{
 
@@ -869,5 +883,6 @@ public class GUI extends JFrame
 		}
 		
 	}
+	*/
 }
 

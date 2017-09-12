@@ -19,9 +19,9 @@ class HomeScreen
 	//the elements of G5
 	//需要传参的变量
 	    Bank bank;
-	    JFrame G8;
+	    Library library;//图书馆
 	    String ci;
-	//init()变量    
+	   //init()变量    
 	    JFrame G5;
 		JPanel p15,p25,p35;
 		Container p_HomeScreen; //主面板内容容器
@@ -46,13 +46,13 @@ class HomeScreen
 		  p25.setLayout(new BoxLayout(p25,BoxLayout.X_AXIS));
 		  l65 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
 		  G5.setSize(500,500);
-		  //p15.setLayout(new GridLayout(1,2,150,0));			
+		  			
 		  p15.add(l15);
 		  p15.add(l25);
 		  p_HomeScreen.add(p15);		
 		  l35.setHorizontalTextPosition(JLabel.CENTER);
 		  l35.setVerticalTextPosition(JLabel.BOTTOM);
-     	  //p25.setLayout(new FlowLayout(FlowLayout.CENTER));
+     	  
 		  p25.add(l35);
 		  l45.setHorizontalTextPosition(JLabel.CENTER);
 		  l45.setVerticalTextPosition(JLabel.BOTTOM);
@@ -60,7 +60,7 @@ class HomeScreen
 		  p_HomeScreen.add(p25);
 		  l55.setHorizontalTextPosition(JLabel.CENTER);
 		  l55.setVerticalTextPosition(JLabel.BOTTOM);				
-		  //p35.setLayout(new FlowLayout(FlowLayout.CENTER));
+		  
 		  p35.setLayout(new BoxLayout(p35,BoxLayout.X_AXIS));
 		  p35.add(l55);	
 		  l65.setHorizontalTextPosition(JLabel.CENTER);
@@ -72,6 +72,7 @@ class HomeScreen
 		  
 		  
 	 }
+	 
 	 //重绘函数
 	 void paint()
 	 {
@@ -86,15 +87,15 @@ class HomeScreen
 	 {
 		 
 		 l65.addMouseListener(new MyMouLister_bank());//open bank;(stduent)
-		 l35.addMouseListener(new MyMouLister1());//open library(student)
+		 l35.addMouseListener(new MyMouLister1());//open library(student)		 
 		 l55.addMouseListener(new MyMouLister2());//open student affairs
 		 
 	 }
 	//传参并且启用监听函数
-	 void update(JFrame lb,Bank bk,String card_id)
+	 void update(Library lb,Bank bk,String card_id)
 	 {
-		 G8=lb;	 
-		 bank=bk;
+		 library=lb;	 
+		 bank=bk;		 
 		 ci=card_id;
 		 addLis();//HomeScreen的addLis()应写在update()里
 		 
@@ -125,7 +126,8 @@ class HomeScreen
 	 		@Override
 	 		public void mousePressed(MouseEvent arg0) {
 	 			
-	 			G8.setVisible(true);
+	 			library.paint();
+	 			
 	 			
 	 		}
 	 
@@ -206,7 +208,7 @@ class HomeScreen
 	 
 	 		@Override
 	 		public void mousePressed(MouseEvent arg0) {
-	 			//System.out.println("BANKOK");
+	 		
 	 			bank.paint();
 	 			//virtualBank.setVisible(true);
 	 			

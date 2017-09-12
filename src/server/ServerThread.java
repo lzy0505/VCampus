@@ -221,6 +221,7 @@ public class ServerThread implements Runnable{
 					case "Tuition":
 						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 						cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
+						System.out.println("PRINT:"+cardInfoList.size());
 						for(int i= 0;i<cardInfoList.size();i++) {
 							if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
 						}
