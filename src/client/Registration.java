@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.SystemColor;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.border.LineBorder;
 
@@ -27,7 +29,13 @@ public class Registration {
 	private JTable table;
 	private JTextField textStudentNo;
 	private JTextField textStudentName;
-	
+	private String information[][] = null;
+	private String user_info_id[] =null;
+	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
+	           				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
+	        				"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
+	        				"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
+	JTable searchTable =null;
 	JRadioButton rdbtnFemale;
 	JRadioButton rdbtnMale;
 	JFormattedTextField textEnrollTime;
@@ -237,16 +245,39 @@ public class Registration {
 		btnCancel.addActionListener(new CancelLister());
 
 	}
-	
+	//查找学生功能
 	class SearchLister implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
-			String information[][]=null;
+			
 			//find whether there is a person searched in the database,if yes,
 			//give value to the array information[][]
-			//if()//if search successfully,show the searchFrame
+			////if search successfully,show the searchFrame
 			//TODO
+			HashMap<String,String> hm= new HashMap<>();
+			ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+			hm.put("student_id", studentnumber.getText());
+			hm.put("nname",studentname.getText());
+			hm.put("op", "search_student");
+			hmList = GUI.getList(hm);
+			if(hmList.size()!=0)
 			{
+				String information[][]=new String[hmList.size()][7];
+				for(int i = 0;i<hmList.size();i++) {	
+					information[i][0] = hmList.get(i).get("student_id");
+					System.out.println("hmList.get(i).get(student_id) :" + hmList.get(i).get("student_id"));
+					information[i][1] = hmList.get(i).get("nname");
+					System.out.println("student name :" + hmList.get(i).get("nname"));
+					information[i][2] = hmList.get(i).get("gender");
+					System.out.println("gender) :" + hmList.get(i).get("gender"));
+					information[i][3] = hmList.get(i).get("grade");
+					System.out.println("grade :" + hmList.get(i).get("grade"));
+					information[i][4] = hmList.get(i).get("major");
+					System.out.println("major:" + hmList.get(i).get("major"));
+					information[i][5] = "Modify";
+					information[i][6]= "Delete";
+					user_info_id[i] = hmList.get(i).get("user_info_id");
+				}
 			//create a window to show the searching student
 			JFrame searchFrame = new JFrame("Search");
 			searchFrame.setSize(800, 150);
@@ -259,7 +290,7 @@ public class Registration {
 			searchFrame.setVisible(true);
 			searchTable.addMouseListener(new DoubleClickModifyDelete());
 			}
-			//else
+			else
 			{
 				JOptionPane.showMessageDialog(null, "Search failed!","Search Failed",JOptionPane.ERROR_MESSAGE);
 			}
@@ -298,15 +329,32 @@ public class Registration {
 				{
 					if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
 					{
+						//修改学生信息
 						int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
 						if(result == 0)
 						{
+							HashMap<String,String> hm= new HashMap<>();
+							ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+							hm.put("op", "modify_student");
+							System.out.println((String)table.getValueAt(row, 0));
+							hm.put("student_id",(String)table.getValueAt(row, 0));
+							System.out.println((String)table.getValueAt(row, 1));
+							hm.put("nname", (String)table.getValueAt(row, 1));
+							System.out.println((String)table.getValueAt(row, 2));
+							hm.put("gender",(String)table.getValueAt(row, 2));
+							System.out.println((String)table.getValueAt(row, 3));
+							hm.put("grade", (String)table.getValueAt(row, 3));
+							System.out.println((String)table.getValueAt(row, 4));
+							hm.put("major", (String)table.getValueAt(row, 4));
+							hm.put("user_info_id", user_info_id[row]);
+							hm = GUI.getOne(hm);
 						    //Modify the information of student[row] in the database
 							//TODO
 							JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
 
 						}
 					}
+					//删除学生信息
 					else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
 					{
 						int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
@@ -328,7 +376,7 @@ public class Registration {
 		}
 		
 	}
-
+	//导入学生信息
 	//submit function in "information import"
 	class SubmitLister implements ActionListener
 	{
@@ -337,7 +385,16 @@ public class Registration {
 			//put textStudentNo.getText(),textStudentName.getText(),sex,textEnrollTime.getText(),
 			//SpecialitySelection.getSelectedItem() into the database
 			//TODO
-			
+			HashMap<String,String> hm = new HashMap<String,String>();
+			hm.put("op","import_student");
+			hm.put("nname", textStudentName.getText());
+			hm.put("student_id", textStudentName.getText());
+			if(rdbtnMale.isSelected())hm.put("gender", "male");
+			else if(rdbtnFemale.isSelected()) hm.put("gender", "female");
+			else JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
+			hm.put("grade", textEnrollTime.getText());
+			hm.put("major", majors[SpecialitySelection.getSelectedIndex()]);
+			GUI.send(hm);
 			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);
 			
 		}	

@@ -324,12 +324,6 @@ import javax.swing.JOptionPane;
  			
  			chooseButton[i].setName(i+"");
  			chooseButton[i].addActionListener(new SelectCourse());
- 
- 		}
- 		
- 		//add information into ScoreInqueryPane
- 		for(int i=0;i<siSize;i++)
- 		{
  			courseNameSILabel[i] = new JLabel(siCourseName[i]);
  			creditSILabel[i] = new JLabel(siCredit[i]);
  			scoreLabel[i] = new JLabel(score[i]);
@@ -338,14 +332,6 @@ import javax.swing.JOptionPane;
  			creditSILabel[i].setBounds(185, 33+33*i, 50, 16);
  			scoreLabel[i].setBounds(250,33+33*i, 100, 16);
  			
- 			ScoreInqueryPane.add(courseNameSILabel[i]);
- 			ScoreInqueryPane.add(creditSILabel[i]);
- 			ScoreInqueryPane.add(scoreLabel[i]);
- 		}
- 		
- 		//add information into ExamArrangement
- 		for(int i=0;i<eaSize;i++)
- 		{
  			courseNameEALabel[i] = new JLabel(eaCourseName[i]);
  			placeLabel[i] = new JLabel(place[i]);
  			examTimeLabel[i] = new JLabel(examTime[i]);
@@ -353,6 +339,23 @@ import javax.swing.JOptionPane;
  			courseNameEALabel[i].setBounds(50, 33+33*i, 135, 16);
  			placeLabel[i].setBounds(160, 33+33*i, 60, 16);
  			examTimeLabel[i].setBounds(270, 33+33*i, 100, 16);
+ 
+ 		}
+ 		
+ 		//add information into ScoreInqueryPane
+ 		for(int i=0;i<siSize;i++)
+ 		{
+ 			ScoreInqueryPane.add(courseNameSILabel[i]);
+ 			ScoreInqueryPane.add(creditSILabel[i]);
+ 			ScoreInqueryPane.add(scoreLabel[i]);
+ 			
+ 			
+ 		}
+ 		
+ 		//add information into ExamArrangement
+ 		for(int i=0;i<eaSize;i++)
+ 		{
+ 					
  			
  			ExamArrangementPane.add(courseNameEALabel[i]);
  			ExamArrangementPane.add(placeLabel[i]);
@@ -392,9 +395,9 @@ import javax.swing.JOptionPane;
  	 	String[] score= new String[csSize];
  	 	int siSize = 0;
 		//ea is exam arrangement
-		String[] eaCourseName = new String[csSize];
-		String[] place =new String[csSize];
-		String[] examTime= new String[csSize];
+		String[] eaCourseName = new String[csSize+1];
+		String[] place =new String[csSize+1];
+		String[] examTime= new String[csSize+1];
 		int eaSize = 0;
  	 	for(int i=0;i<csSize;i++) {
  	 		courseNameLabel[i] .setText(csList.get(i).get("course_name"));
@@ -423,7 +426,8 @@ import javax.swing.JOptionPane;
  	 		
  	 		
  	 	}
- 	 	for(int i=0;i<siSize;i++)
+ 	
+ 	 		for(int i=0;i<siSize;i++)
 	 		{
 	 			courseNameSILabel[i].setText(siCourseName[i]);
 	 			creditSILabel[i] .setText(siCredit[i]);
@@ -433,8 +437,9 @@ import javax.swing.JOptionPane;
 	 			ScoreInqueryPane.add(creditSILabel[i]);
 	 			ScoreInqueryPane.add(scoreLabel[i]);
 	 		}
-	 		
+	 
 	 		//add information into ExamArrangement
+ 	 
 	 		for(int i=0;i<eaSize;i++)
 	 		{
 	 			courseNameEALabel[i] .setText(eaCourseName[i]);
@@ -446,7 +451,7 @@ import javax.swing.JOptionPane;
 	 			ExamArrangementPane.add(placeLabel[i]);
 	 			ExamArrangementPane.add(examTimeLabel[i]);
 	 		}
-
+ 	 	
  	}
  	
  	//tow

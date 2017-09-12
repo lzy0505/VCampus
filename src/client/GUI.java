@@ -93,10 +93,9 @@ public class GUI extends JFrame
 		}
 	}
 	//send message
-	public void send(HashMap<String,String> sendmes){
+	public static void send(HashMap<String,String> sendmes){
 		try {
 			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -413,7 +412,7 @@ public class GUI extends JFrame
 				{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
 				{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
 				{"09015104","Amy","Female","201509","CSE","Modify","Delete"}
-		});
+				});
 			}
 		});
 		

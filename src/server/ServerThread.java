@@ -210,24 +210,40 @@ public class ServerThread implements Runnable{
 					send.put("result", " successfully");
 					soos.writeObject(send);
 					break;
-				case "QueryBalance":
-					sendList=db.selectWhere("card_info", "card_id="+getOne.get("card_id"));
-					send.put("card_balance", sendList.get(0).get("card_balance"));
-					soos.writeObject(send);
-					break;
+				case "QueryBalance":				
+					sendList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(sendList.size()==0){
+						send.put("card_balance", "0");	
+						soos.writeObject(send);
+						break;
+					}
+					else{
+						send.put("card_balance", sendList.get(0).get("card_balance"));				
+						soos.writeObject(send);
+						break;
+					}
+					
 				case "QueryPayment":
 					sendList=new ArrayList<HashMap<String,String>>();
 					switch (type) {
 					case "Tuition":
 						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						if(getOne.get("card_info_id")==null) {
+							soos.writeObject(sendList);
+							break;
+						}
 						cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoList.size();i++) {
 							if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
 						}
 						soos.writeObject(sendList);
 						break;
-					case "WandE":
+					case "WandE":					
 						ArrayList<HashMap<String,String>> cardInfoListWanE=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						if(getOne.get("card_info_id")==null) {
+							soos.writeObject(sendList);
+							break;
+						}
 						cardInfoListWanE = db.selectWhere("card_records", "card_info_id="+cardInfoListWanE.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoListWanE.size();i++) {
 							if(cardInfoListWanE.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListWanE.get(i));
@@ -236,6 +252,10 @@ public class ServerThread implements Runnable{
 						break;
 					case "Afee":
 						ArrayList<HashMap<String,String>> cardInfoListAfee=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						if(getOne.get("card_info_id")==null) {
+							soos.writeObject(sendList);
+							break;
+						}
 						cardInfoListAfee = db.selectWhere("card_records", "card_info_id="+cardInfoListAfee.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoListAfee.size();i++) {
 							if(cardInfoListAfee.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListAfee.get(i));
@@ -289,15 +309,39 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-						
+				case "search_student":
+					//通过学号或者姓名查找学生，找不到就给个空数组
+					System.out.println("name :" +getOne.get("nname")+ "student_id :"+getOne.get("student_id"));
+					ArrayList<HashMap<String,String>> use_name_to_find = db.selectWhere("user_info", "nname =\'" + getOne.get("nname")+"\'");
+					if(use_name_to_find.size()==0) {
+						ArrayList<HashMap<String,String>> use_student_id_to_find = db.selectWhere("user_info", "student_id =\'" + getOne.get("student_id")+"\'");
+						if(use_student_id_to_find.size()==0){
+							soos.writeObject(sendList);
+							break;
+						}else {
+							soos.writeObject(use_student_id_to_find);
+							break;
+						}
+					}else {
+						soos.writeObject(use_name_to_find);
+						break;
+					}
+				case "modify_student":
+					int grade = Integer.parseInt(getOne.get("grade"));
+					db.setWhere("user_info", "nname =\'"+getOne.get("nname")+"\'," +"gender =\'"+getOne.get("gender")+"\',"+ "grade ="+grade +","+"major =\'"+ getOne.get("major")+"\',"+ "student_id =\'" + getOne.get("student_id")+"\'" , "user_info_id =" + getOne.get("user_info_id"));
+					break;
+				case "delete_student":
+					
+					break;
+				case "import_student":
+					getOne.remove("op");
+					db.insert("user_info", getOne);
+					break;
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);
 					break;
-					
-					
-					
-					
+			
 				}		
 				db.finalize();	
 				
