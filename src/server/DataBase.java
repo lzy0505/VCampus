@@ -63,6 +63,7 @@ public class DataBase {
 			while(rs.next()) {
 				HashMap<String,String> inst=new HashMap<String,String>();
 				for(int i=0;i<keywords.length;i++) {
+					System.out.println("DataBase -Excute select- "+keywords[i]+":"+ rs.getString(i+1));
 					inst.put(keywords[i], rs.getString(i+1));
 					//System.out.println(rs.getString(i+1));
 				}

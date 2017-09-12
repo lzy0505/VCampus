@@ -13,7 +13,7 @@ public class GUI extends JFrame
 {
 	private Client client;
 	private String[] book_id = null;
-	private String ci;
+	private String ci; //card_id
 	static JFrame G1;
 	JPanel p11,p21,p31,p41;
 	JLabel profession1,id1,password1;
@@ -38,12 +38,12 @@ public class GUI extends JFrame
 	JLabel la3;
 	static JButton close3;
 	
-	
+	/*
 	//the elements of G5
 	static JFrame G5;
 	JPanel p15,p25,p35;
 	JLabel l15,l25,l35,l45,l55,l65;
-	
+	*/
 	//the elements of G6
 	static JFrame G6;
 	JPanel p16,p26,p36;
@@ -78,6 +78,10 @@ public class GUI extends JFrame
  	JCheckBox[] bookCheckBoxR = null;//which book to choose
  	JButton returnBook;
  		
+ 	
+ 	//HomeScreen、Library等成员变量
+ 	Bank bank;
+ 	HomeScreen homeScreen;
 	
 	public void init(){
 		
@@ -100,11 +104,10 @@ public class GUI extends JFrame
 		}
 	}
 	//send and get message
-	public HashMap<String, String> getOne(HashMap<String,String> sendmes){
+	public static HashMap<String, String> getOne(HashMap<String,String> sendmes){
 		HashMap<String, String> getmes=null;
 		try {
 			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 			getmes = client.getMessage();
 		} catch (IOException e) {
@@ -113,11 +116,10 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
-	public ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
+	public static ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
 		ArrayList<HashMap<String,String>> getmes=null;
 		try {
 			Client client = new Client();
-			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 			getmes = client.getMessages();
 			
@@ -128,12 +130,12 @@ public class GUI extends JFrame
 		return getmes;
 	}
 	
-	public int getWidth(int frameWidth)
+	public static int getWidth(int frameWidth)
 	{
 		return(Toolkit.getDefaultToolkit().getScreenSize().width - frameWidth) / 2;
 	}
 	
-	public int getHeight(int frameHeight)
+	public static int getHeight(int frameHeight)
 	{
 		return(Toolkit.getDefaultToolkit().getScreenSize().height - frameHeight) / 2;
 	}
@@ -253,7 +255,7 @@ public class GUI extends JFrame
 		
 		G3.setLocation(getWidth(G3.getWidth()),getHeight(G3.getHeight()));
 
-		
+	/*	
 		//the part of G5
 		G5 = new JFrame(title5);
 		G5.setSize(300,300);
@@ -290,9 +292,11 @@ public class GUI extends JFrame
 		l65.setHorizontalTextPosition(JLabel.CENTER);
 		l65.setVerticalTextPosition(JLabel.BOTTOM);
 		p35.add(l65);
-		G5.add(p35);
-		
+		G5.add(p35);		
 		G5.setLocation(getWidth(G5.getWidth()),getHeight(G5.getHeight()));
+		
+		*/
+		
 		
 		//the part of G6
 		G6 = new JFrame(title6);
@@ -319,7 +323,7 @@ public class GUI extends JFrame
 		p26.add(l46);
 		G6.add(p26);
 				
-		l56 = new JLabel("StudentMessage",new ImageIcon("studentMessage.png"),JLabel.LEFT);
+		l56 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
 		l56.setHorizontalTextPosition(JLabel.CENTER);
 		l56.setVerticalTextPosition(JLabel.BOTTOM);
 		p36 = new JPanel();
@@ -357,9 +361,11 @@ public class GUI extends JFrame
 		p28.setLayout(new FlowLayout(FlowLayout.CENTER));
 		p28.add(b18);
 		p28.add(b28);
-		G8.add(p28);
-		
+		G8.add(p28);		
 		G8.setLocation(getWidth(G8.getWidth()),getHeight(G8.getHeight()));
+		
+		//调用Load类初始化所有类变量
+		new Load();
 		
 		
 		//events and reaction
@@ -368,10 +374,9 @@ public class GUI extends JFrame
 		b28.addActionListener(new MyActLister3());//turn to the GUI ReturnBook
 		close3.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
-		l35.addMouseListener(new MyMouLister1());//open library(student)
-		l36.addMouseListener(new MyMouLister1());//open library(teacher)
-		l55.addMouseListener(new MyMouLister2());//open student affairs
-		l56.addMouseListener(new StudentMessage());//open student messages(teahcer's function)
+		//l35.addMouseListener(new MyMouLister1());//open library(student)
+		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
+		//l55.addMouseListener(new MyMouLister2());//open student affairs
 		b18.addActionListener(new SearchBookFromDB());//search book
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
@@ -470,125 +475,52 @@ public class GUI extends JFrame
 			ReturnBook.setVisible(true);
 	}
 	
-	public static void main(String[] args) 
-	{
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
+	{  try{//定义界面风格
+		UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+	  }catch(UnsupportedLookAndFeelException e)
+	    {
+		  
+	    }
 		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher",
 				"Sign in failed","Library","Search unsuccessful");
-		gui.init();
+		//gui.init();
 	
 	}
 
-	
-	class MyMouLister1 implements MouseListener
-	 	{
-	 
-	 		@Override
-	 		public void mouseClicked(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseEntered(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseExited(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mousePressed(MouseEvent arg0) {
-	 			
-	 			G8.setVisible(true);
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseReleased(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 		
-	 	}
-	class MyMouLister2 implements MouseListener
-	 	{
-	 		public void mouseClicked(MouseEvent arg0) {
-	 			
-	 			
-	 			HashMap<String,String> hm = new HashMap<>();
-	 	 	 	hm.put("card_id", ci);
-	 	 	 	hm.put("op", "search_course");
-	 			//get information from database and give value to this above parameters
-	  			StudentAffairs student= new StudentAffairs(hm);
-	  		}
-	 
-	 		@Override
-	 		public void mouseEntered(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseExited(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mousePressed(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseReleased(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	}
-	
-	class StudentMessage implements MouseListener
-	{
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-
-			//get data from database and do the following sentence
-			//the String [][]data has a firmed writing
-			//TODO
-			//Registration studentMessage = new Registration(String [][]data);
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
+	//---------------------------------
+	//@初始化类-------------------------
+		 class Load{
+			 
+			 Load()
+			 {  			    		 
+				 //初始化时注意先后顺序
+				loadHomeScreen();
+				loadBank();							
+			 }
+			 //初始化银行类
+			 void loadBank()
+			 {  
+				 bank=new Bank(homeScreen);
+				 bank.init();
+			 }
+			 //初始化主界面类
+		     void loadHomeScreen()
+		     {
+		    	 homeScreen=new HomeScreen();	
+		    	 homeScreen.init();
+		    	    	 
+		     }
+		     //调用主界面的update函数将Library、Bank等变量传入
 		
-	}
+		     
+	   
+		     
+		 }
+		 //@初始化类结束--------------------------
+		 //--------------------------------------
 	
+
 	class MyActLister1 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
@@ -733,7 +665,12 @@ public class GUI extends JFrame
 		    {
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
-		    	G5.setVisible(true);
+		    	//G5.setVisible(true);
+		    	homeScreen.G5.setVisible(true);
+		    	homeScreen.update(G8, bank, ci);
+		    	System.out.println("update card_id to : homeScreen!");
+		    	bank.update(ci);
+		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	

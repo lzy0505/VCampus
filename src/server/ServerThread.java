@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.sun.corba.se.impl.orbutil.closure.Constant;
+import com.sun.crypto.provider.HmacMD5;
 
 import java.util.Date;
 
@@ -44,7 +45,8 @@ public class ServerThread implements Runnable{
 				getOne = (HashMap<String,String>) sois.readObject();	
 				
 				//op is used to decide what user will do 
-				String op = getOne.get("op");	
+				String op = getOne.get("op");
+				String type = getOne.get("type");
 				switch (op) {
 				case "sign in":
 					//get a array of HashMap whose card_id equal to b'card_id
@@ -71,9 +73,11 @@ public class ServerThread implements Runnable{
 					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
 					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(sendList.size()==0) {
-						getOne.remove("op");
 						
+						getOne.remove("op");
 						db.insert("users",getOne );
+						sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
+						System.out.println("Sign up" + " card_id = "+sendList.get(0).get("card_id") + "password = " +sendList.get(0).get("password"));
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
@@ -169,10 +173,14 @@ public class ServerThread implements Runnable{
 						courseList.get(0).put("course_record_id", scList.get(i).get("course_record_id"));
 						courseList.get(0).put("select_status", scList.get(i).get("select_status"));
 						courseList.get(0).put("course_info_id", scList.get(i).get("course_info_id"));
+						courseList.get(0).put("course_exam_status", scList.get(i).get("course_exam_status"));					
 						if(scList.get(i).get("select_status").equals("TRUE")) {
 							ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
 							courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
 							courseList.get(0).put("course_id", scList.get(i).get("course_id"));
+							courseList.get(0).put("course_score", scList.get(i).get("course_score"));
+							courseList.get(0).put("course_exam_time", cdlList.get(0).get("course_exam_time"));
+							courseList.get(0).put("course_exam_place", cdlList.get(0).get("course_exam_place"));
 						}
 						sendList.add(courseList.get(0));
 					}
@@ -201,6 +209,95 @@ public class ServerThread implements Runnable{
 						db.setWhere("course_details", "course_is_full ="+ "TRUE", "course_id=" + getOne.get("course_id"));
 					send.put("result", " successfully");
 					soos.writeObject(send);
+					break;
+				case "QueryBalance":
+					sendList=db.selectWhere("card_info", "card_id="+getOne.get("card_id"));
+					send.put("card_balance", sendList.get(0).get("card_balance"));
+					soos.writeObject(send);
+					break;
+				case "QueryPayment":
+					sendList=new ArrayList<HashMap<String,String>>();
+					switch (type) {
+					case "Tuition":
+						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
+						for(int i= 0;i<cardInfoList.size();i++) {
+							if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
+						}
+						soos.writeObject(sendList);
+						break;
+					case "WandE":
+						ArrayList<HashMap<String,String>> cardInfoListWanE=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						cardInfoListWanE = db.selectWhere("card_records", "card_info_id="+cardInfoListWanE.get(0).get("card_info_id"));
+						for(int i= 0;i<cardInfoListWanE.size();i++) {
+							if(cardInfoListWanE.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListWanE.get(i));
+						}
+						soos.writeObject(sendList);
+						break;
+					case "Afee":
+						ArrayList<HashMap<String,String>> cardInfoListAfee=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						cardInfoListAfee = db.selectWhere("card_records", "card_info_id="+cardInfoListAfee.get(0).get("card_info_id"));
+						for(int i= 0;i<cardInfoListAfee.size();i++) {
+							if(cardInfoListAfee.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListAfee.get(i));
+						}
+						soos.writeObject(sendList);
+						break;
+					}
+					break;
+				case "Payment":					
+						ArrayList<HashMap<String,String>> cardRecordsListTuition=db.selectWhere("card_records", "card_record_id="+getOne.get("card_record_id"));
+						ArrayList<HashMap<String,String>> cardInfoListTuition=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						ArrayList<HashMap<String,String>> users = db.selectWhere("users", "card_id=\'"+getOne.get("card_id")+"\'");
+						System.out.println("balance :" +cardInfoListTuition.get(0).get("card_balance"));
+						System.out.println("cost :" +cardRecordsListTuition.get(0).get("card_cost"));
+						System.out.println("password :" +users.get(0).get("password"));
+						System.out.println("password form client :" +getOne.get("password"));
+						if(Float.parseFloat((cardInfoListTuition.get(0).get("card_balance")))<Float.parseFloat(cardRecordsListTuition.get(0).get("card_cost"))) {
+							send.put("result", "false");
+							send.put("reason", "Balance is unenough!");
+							soos.writeObject(send);
+							break;
+						}
+						else if(!users.get(0).get("password").equals(getOne.get("password"))){
+							send.put("result", "false");
+							send.put("reason", "Password is incorrect!");
+							soos.writeObject(send);
+							break;
+						}
+						else {
+							String balance = (Float.parseFloat((cardInfoListTuition.get(0).get("card_balance")))-Float.parseFloat(cardRecordsListTuition.get(0).get("card_cost")))+"";
+							System.out.println("balance now :" + balance);
+							db.setWhere("card_info", "card_balance ="+balance, "card_id=\'" + getOne.get("card_id")+"\'");
+							db.setWhere("card_records", "card_is_paid ="+ "TRUE", "card_record_id=" + getOne.get("card_record_id"));
+							send.put("result", "success");
+							soos.writeObject(send);
+							break;
+						}
+				case "recharge":
+					ArrayList<HashMap<String,String>> usersRecharge = db.selectWhere("users", "card_id=\'"+getOne.get("card_id")+"\'");
+					ArrayList<HashMap<String,String>> cardInfoBalance=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(!usersRecharge.get(0).get("password").equals(getOne.get("password"))) {
+						send.put("result", "false");
+						send.put("reason", "Password is incorrect!");
+						soos.writeObject(send);
+						break;
+					}
+					else {
+						String balance = (Float.parseFloat(cardInfoBalance.get(0).get("card_balance"))+Float.parseFloat(getOne.get("amount"))) + "";
+						db.setWhere("card_info", "card_balance="+ balance, "card_id=\'" + getOne.get("card_id")+"\'");
+						send.put("result", "success");	
+						soos.writeObject(send);
+						break;
+					}
+						
+				default:
+					send.put("result","No such operation!");
+					soos.writeObject(send);
+					break;
+					
+					
+					
+					
 				}		
 				db.finalize();	
 				
