@@ -327,16 +327,23 @@ public class ServerThread implements Runnable{
 						break;
 					}
 				case "modify_student":
+					//修改学生信息
 					int grade = Integer.parseInt(getOne.get("grade"));
 					db.setWhere("user_info", "nname =\'"+getOne.get("nname")+"\'," +"gender =\'"+getOne.get("gender")+"\',"+ "grade ="+grade +","+"major =\'"+ getOne.get("major")+"\',"+ "student_id =\'" + getOne.get("student_id")+"\'" , "user_info_id =" + getOne.get("user_info_id"));
 					break;
 				case "delete_student":
-					
+					db.deleteWhere("user_info", "student_id =\'"+ getOne.get("student_id")+"\'");				
 					break;
 				case "import_student":
+					ArrayList<HashMap<String,String>> users_list =db.selectWhere("users", "card_id =\'"+getOne.get("card_id")+"\'");
+					String student_id = getOne.get("student_id");
+					System.out.println("card_id :"+getOne.get("card_id"));
 					getOne.remove("op");
 					getOne.remove("card_id");
 					db.insert("user_info", getOne);
+					ArrayList<HashMap<String,String>> user_info_list = db.selectWhere("user_info", "student_id=\'"+student_id + "\'");
+					System.out.println("user_info_id :"+user_info_list.get(0).get("user_info_id"));
+					users_list.get(0).put("user_info_id", user_info_list.get(0).get("user_info_id"));
 					break;
 				default:
 					send.put("result","No such operation!");

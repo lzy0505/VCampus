@@ -358,7 +358,7 @@ public class Registration {
 							System.out.println((String)table.getValueAt(row, 4));
 							hm.put("major", (String)table.getValueAt(row, 4));
 							hm.put("user_info_id", user_info_id[row]);
-							hm = GUI.getOne(hm);
+							GUI.send(hm);
 						    //Modify the information of student[row] in the database
 							//TODO
 							JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
@@ -370,10 +370,14 @@ public class Registration {
 					{
 						int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
 						if(result == 0)
-						{
+						{					
 							//delete the information of student[row] from database
 							//TODO
+							HashMap<String,String> hm= new HashMap<>();
+							hm.put("student_id",(String)table.getValueAt(row, 0));
+							GUI.send(hm);
 							JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
+							
 						}
 					}
 				}	
@@ -399,7 +403,7 @@ public class Registration {
 			HashMap<String,String> hm = new HashMap<String,String>();
 			hm.put("op","import_student");
 			hm.put("nname", "\'"+textStudentName.getText()+"\'");
-			hm.put("student_id","\'"+ textStudentName.getText()+"\'");
+			hm.put("student_id","\'"+ textStudentNo.getText()+"\'");
 			if(rdbtnMale.isSelected())hm.put("gender", "\'male\'");
 			else if(rdbtnFemale.isSelected()) hm.put("gender", "\'female\'");
 			else {
@@ -421,6 +425,7 @@ public class Registration {
 
 			textStudentNo.setText(null);
 			textStudentName.setText(null);
+			textStudentCardID.setText(null);
 			textEnrollTime.setText(null);
 		}
 		
