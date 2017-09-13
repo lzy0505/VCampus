@@ -120,7 +120,7 @@ public class DataBase {
 	
 	public void deleteWhere(String tableName, String condition) {
 		try {
-			String command="DELETE "+tableName+" WHERE "+condition+";";
+			String command="DELETE FROM "+tableName+" WHERE "+condition+";";
 			System.out.println("DataBase -Excute delete- "+"Excuting:"+command);
 			stmt.executeUpdate(command);
 			conn.commit();

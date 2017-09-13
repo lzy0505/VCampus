@@ -13,7 +13,9 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import client.Registration.DoubleClickModifyDelete;
 import client.Registration.CancelLister;
@@ -33,7 +35,7 @@ public class Registration {
 	private String information[][] = null;
 	private String user_info_id[] =null;
 	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
-	           				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
+	           				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "cs", "物理系", "生物科学与医学工程学院", 
 	        				"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
 	        				"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
 	JTable searchTable =null;
@@ -117,12 +119,14 @@ public class Registration {
 		
 		panel.setLayout(null);
 		table = new JTable(data,headName);
-		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+//		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		
 		//Scroll implement
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(0, 6, 750, 396);
 		table.setFillsViewportHeight(true);
+		table.addMouseListener(new DoubleClickModifyDelete());
+		table.setColumnSelectionAllowed(false);
 		panel.add(scrollPane);
 		
 		//The following code is about the "Information Import" bar.
@@ -141,30 +145,30 @@ public class Registration {
 		InformationImport_1.add(InfoImportActionBar);
 		InfoImportActionBar.setLayout(null);
 		
-		JSeparator separatorVer = new JSeparator();
-		separatorVer.setOrientation(SwingConstants.VERTICAL);
-		separatorVer.setBounds(290, 20, 12, 239);
-		InfoImportActionBar.add(separatorVer);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(6, 61, 738, 12);
-		InfoImportActionBar.add(separator_1);
-		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(6, 103, 738, 12);
-		InfoImportActionBar.add(separator_2);
-		
-		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(6, 154, 738, 12);
-		InfoImportActionBar.add(separator_3);
-		
-		JSeparator separator_4 = new JSeparator();
-		separator_4.setBounds(6, 202, 738, 12);
-		InfoImportActionBar.add(separator_4);
-		
-		JSeparator separator_5 = new JSeparator();
-		separator_5.setBounds(6, 257, 738, 12);
-		InfoImportActionBar.add(separator_5);
+//		JSeparator separatorVer = new JSeparator();
+//		separatorVer.setOrientation(SwingConstants.VERTICAL);
+//		separatorVer.setBounds(290, 20, 12, 239);
+//		InfoImportActionBar.add(separatorVer);
+//		
+//		JSeparator separator_1 = new JSeparator();
+//		separator_1.setBounds(6, 61, 738, 12);
+//		InfoImportActionBar.add(separator_1);
+//		
+//		JSeparator separator_2 = new JSeparator();
+//		separator_2.setBounds(6, 103, 738, 12);
+//		InfoImportActionBar.add(separator_2);
+//		
+//		JSeparator separator_3 = new JSeparator();
+//		separator_3.setBounds(6, 154, 738, 12);
+//		InfoImportActionBar.add(separator_3);
+//		
+//		JSeparator separator_4 = new JSeparator();
+//		separator_4.setBounds(6, 202, 738, 12);
+//		InfoImportActionBar.add(separator_4);
+//		
+//		JSeparator separator_5 = new JSeparator();
+//		separator_5.setBounds(6, 257, 738, 12);
+//		InfoImportActionBar.add(separator_5);
 		
 		JButton btnButton = new JButton("Summit");
 		btnButton.setBounds(140, 310, 117, 29);
@@ -235,10 +239,7 @@ public class Registration {
 		textStudentName.setColumns(10);
 		
 		SpecialitySelection = new JComboBox();
-		SpecialitySelection.setModel(new DefaultComboBoxModel(new String[] {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
-				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
-				"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
-				"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"}));
+		SpecialitySelection.setModel(new DefaultComboBoxModel(majors));
 		SpecialitySelection.setMaximumRowCount(28);
 		SpecialitySelection.setBounds(314, 226, 218, 27);
 		InfoImportActionBar.add(SpecialitySelection);
@@ -251,7 +252,6 @@ public class Registration {
 		frame.setVisible(true);
 
 		search.addActionListener(new SearchLister());
-		table.addMouseListener(new DoubleClickModifyDelete());
 		btnButton.addActionListener(new SubmitLister());
 		btnCancel.addActionListener(new CancelLister());
 
@@ -271,9 +271,10 @@ public class Registration {
 			hm.put("nname",studentname.getText());
 			hm.put("op", "search_student");
 			hmList = GUI.getList(hm);
-			if(hmList.size()!=0)
+			if(hmList!=null)
 			{
 				String information[][]=new String[hmList.size()][7];
+				user_info_id=new String[hmList.size()];
 				for(int i = 0;i<hmList.size();i++) {	
 					information[i][0] = hmList.get(i).get("student_id");
 					System.out.println("hmList.get(i).get(student_id) :" + hmList.get(i).get("student_id"));
@@ -288,18 +289,13 @@ public class Registration {
 					information[i][5] = "Modify";
 					information[i][6]= "Delete";
 					user_info_id[i] = hmList.get(i).get("user_info_id");
-				}
+			}
 			//create a window to show the searching student
-			JFrame searchFrame = new JFrame("Search");
-			searchFrame.setSize(800, 150);
-			searchFrame.setLayout(null);
-			JTable searchTable = new JTable(information,headName);
-			searchTable.setBounds(5, 5, 740, 90);
-			searchFrame.add(searchTable);
-			searchFrame.setLocation(300, 250);
-
-			searchFrame.setVisible(true);
-			searchTable.addMouseListener(new DoubleClickModifyDelete());
+//			JFrame searchFrame = new JFrame("Search");
+//			searchFrame.setSize(800, 150);
+//			searchFrame.setLayout(null);
+			table.setModel(new DefaultTableModel(information,headName));
+			
 			}
 			else
 			{
@@ -315,9 +311,60 @@ public class Registration {
 	{
 
 		@Override
-		public void mouseClicked(MouseEvent arg0) {
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("mouseClicked");
 			// TODO 自动生成的方法存根
-			
+			for(int row=0,colModify=5,colDelete=6;row<table.getRowCount();row++)
+			{	
+				if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
+				{
+					System.out.println("pop!!!!");
+					System.out.println("table.getSelectedRow() :"+table.getSelectedRow());
+					//修改学生信息
+					int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
+					if(result == 0)
+					{
+						HashMap<String,String> hm= new HashMap<>();
+						ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+						hm.put("op", "modify_student");
+						System.out.println((String)table.getValueAt(row, 0));
+						hm.put("student_id",(String)table.getValueAt(row, 0));
+						System.out.println((String)table.getValueAt(row, 1));
+						hm.put("nname", (String)table.getValueAt(row, 1));
+						System.out.println((String)table.getValueAt(row, 2));
+						hm.put("gender",(String)table.getValueAt(row, 2));
+						System.out.println((String)table.getValueAt(row, 3));
+						hm.put("grade", (String)table.getValueAt(row, 3));
+						System.out.println((String)table.getValueAt(row, 4));
+						hm.put("major", (String)table.getValueAt(row, 4));
+						hm.put("user_info_id", user_info_id[row]);
+						GUI.send(hm);
+					    //Modify the information of student[row] in the database
+						//TODO
+						JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+				//删除学生信息
+				else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
+				{
+					int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
+					if(result == 0)
+					{					
+						//delete the information of student[row] from database
+						//TODO
+						HashMap<String,String> hm= new HashMap<>();
+						hm.put("student_id",(String)table.getValueAt(row, 0));
+						hm.put("user_info_id", user_info_id[row]);
+						hm.put("op", "delete_student");
+						GUI.send(hm);
+						JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
+						DefaultTableModel dtm=(DefaultTableModel)table.getModel();
+						dtm.removeRow(row);	
+						dtm.fireTableDataChanged();
+					}
+				}
+//				}	
+			}
 		}
 
 		@Override
@@ -334,54 +381,7 @@ public class Registration {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			for(int row=0,colModify=5,colDelete=6;row<table.getRowCount();row++)
-			{
-				if(e.getClickCount() == 2)
-				{
-					if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
-					{
-						//修改学生信息
-						int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
-						if(result == 0)
-						{
-							HashMap<String,String> hm= new HashMap<>();
-							ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
-							hm.put("op", "modify_student");
-							System.out.println((String)table.getValueAt(row, 0));
-							hm.put("student_id",(String)table.getValueAt(row, 0));
-							System.out.println((String)table.getValueAt(row, 1));
-							hm.put("nname", (String)table.getValueAt(row, 1));
-							System.out.println((String)table.getValueAt(row, 2));
-							hm.put("gender",(String)table.getValueAt(row, 2));
-							System.out.println((String)table.getValueAt(row, 3));
-							hm.put("grade", (String)table.getValueAt(row, 3));
-							System.out.println((String)table.getValueAt(row, 4));
-							hm.put("major", (String)table.getValueAt(row, 4));
-							hm.put("user_info_id", user_info_id[row]);
-							GUI.send(hm);
-						    //Modify the information of student[row] in the database
-							//TODO
-							JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
-
-						}
-					}
-					//删除学生信息
-					else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
-					{
-						int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
-						if(result == 0)
-						{					
-							//delete the information of student[row] from database
-							//TODO
-							HashMap<String,String> hm= new HashMap<>();
-							hm.put("student_id",(String)table.getValueAt(row, 0));
-							GUI.send(hm);
-							JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
-							
-						}
-					}
-				}	
-			}
+			
 		}
 
 		@Override
