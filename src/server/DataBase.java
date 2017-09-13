@@ -118,6 +118,20 @@ public class DataBase {
 		}
 	}
 	
+	public void deleteWhere(String tableName, String condition) {
+		try {
+			String command="DELETE "+tableName+" WHERE "+condition+";";
+			System.out.println("DataBase -Excute delete- "+"Excuting:"+command);
+			stmt.executeUpdate(command);
+			conn.commit();
+			System.out.println("DataBase -Excute delete- "+"Successfull!");
+		}catch(SQLException e){
+			System.out.println("DataBase -Excute delete "+"Error:");
+			e.printStackTrace();
+		}
+		
+	}
+	
 	
 	protected void finalize(){
 		System.out.println("DataBase -Disconnect to DB- "+"Disconnecting...");
