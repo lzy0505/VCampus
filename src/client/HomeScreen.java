@@ -20,6 +20,7 @@ class HomeScreen
 	//需要传参的变量
 	    Bank bank;
 	    Library library;//图书馆
+	    StudentAffairs studentAffairs;
 	    String ci;
 	   //init()变量    
 	    JFrame G5;
@@ -97,6 +98,7 @@ class HomeScreen
 		 library=lb;	 
 		 bank=bk;		 
 		 ci=card_id;
+		 studentAffairs=new StudentAffairs(this);
 		 addLis();//HomeScreen的addLis()应写在update()里
 		 
 	 }
@@ -145,12 +147,8 @@ class HomeScreen
 	 	{
 	 		public void mouseClicked(MouseEvent arg0) {
 	 			
-	 			
-	 			HashMap<String,String> hm = new HashMap<>();
-	 	 	 	hm.put("card_id", ci);
-	 	 	 	hm.put("op", "search_course");
 	 			//get information from database and give value to this above parameters
-	  			StudentAffairs student= new StudentAffairs(hm);
+	 			studentAffairs.paint();
 	  		}
 	 
 	 		@Override

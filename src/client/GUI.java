@@ -49,41 +49,12 @@ public class GUI extends JFrame
 	JPanel p16,p26,p36;
 	JLabel l16,l26,l36,l46,l56,l66;
 	
-	
-	/*//the elements of G8
-	static JFrame G8;
- 	JPanel p18,p28;
- 	JLabel l18,l28;
- 	JComboBox ways;
- 	JTextField t18;
- 	JButton b18,b28;
- 	*/
-	
-	/*
- 	//the elements of SearchBook9th
- 	static JFrame SearchBook9th;
- 	JPanel[] bookPanel=null;//mostly 5 messages at present
- 	JLabel[] bookNameLabel=null;
- 	JLabel[] authorLabel=null;
- 	JLabel[] publisherLabel=null;
- 	JLabel[] quantityLabel=null;
- 	JCheckBox[] bookCheckBox=null;//which book to choose
- 	JButton borrow;
- 	
- 	//the elements of ReturnBook
- 	static JFrame ReturnBook;
- 	JPanel[] bookPanelR = null;
- 	JLabel[] bookNameLabelR = null;
- 	JLabel[] authorLabelR = null;
- 	JLabel[] publisherLabelR = null;
- 	JLabel[] quantityLabelR = null;
- 	JCheckBox[] bookCheckBoxR = null;//which book to choose
- 	JButton returnBook;
- 	*/	
+
  	
  	//HomeScreen、Library等成员变量
  	Bank bank;
  	Library library;
+// 	StudentAffairs studentAffairs;
  	HomeScreen homeScreen;
 	
 	public void init(){
@@ -424,98 +395,7 @@ public class GUI extends JFrame
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
-	/*
-	//the method of creating SearchBook9th
-	public void searchBook9th(String[] bookName,String[] author,String[] publisher,String[] quantity,int size)
-	{
-		SearchBook9th = new JFrame("Search book");
-		SearchBook9th.setSize(300, 350);
-		SearchBook9th.setLayout(new FlowLayout());
-		
-		bookPanel=new JPanel[size+1];
-		 bookNameLabel=new JLabel[size];
-		 authorLabel=new JLabel[size];
-		 publisherLabel=new JLabel[size];
-		 quantityLabel=new JLabel[size];
-		 bookCheckBox=new JCheckBox[size];
-		
-		
-		for(int i=0;i<size;i++) {
-			bookPanel[i]=new JPanel();
-			bookPanel[i].setLayout(new FlowLayout());
-			bookNameLabel[i]=new JLabel(bookName[i]);
-			authorLabel[i]=new JLabel(author[i]);
-			publisherLabel[i]=new JLabel(publisher[i]);
-			quantityLabel[i]=new JLabel(quantity[i]);
-			bookCheckBox[i]=new JCheckBox();
-			
-			if(quantity[i].equals("0")) {
-				bookCheckBox[i].setEnabled(false);
-			}
-			bookPanel[i].add(bookNameLabel[i]);
-			bookPanel[i].add(authorLabel[i]);
-			bookPanel[i].add(publisherLabel[i]);
-			bookPanel[i].add(quantityLabel[i]);
-			bookPanel[i].add(bookCheckBox[i]);
-
-			SearchBook9th.add(bookPanel[i]);
-		}
-		
-		
-		bookPanel[size] = new JPanel();
-		bookPanel[size].setLayout(new FlowLayout(FlowLayout.CENTER));
-		borrow = new JButton("Borrow");
-		bookPanel[size].add(borrow);
-		SearchBook9th.add(bookPanel[size]);
-		borrow.addActionListener(new BorrowBookFromDB());
-		SearchBook9th.setLocation(getWidth(SearchBook9th.getWidth()),getHeight(SearchBook9th.getHeight()));
-		
-		SearchBook9th.setVisible(true);
-		
-	}
 	
-	public void returnBook(String[] bookName,String[] author,String[] publisher,String[] bookId,int size)
-	{
-		ReturnBook = new JFrame("Return book");
-		ReturnBook.setSize(300, 350);
-		ReturnBook.setLayout(new FlowLayout());
-		
-		bookPanelR = new JPanel[size+1];
-		bookNameLabelR = new JLabel[size];
-		authorLabelR = new JLabel[size];
-		publisherLabelR = new JLabel[size];
-		
-		bookCheckBoxR = new JCheckBox[size];
-		book_id = new String[size];
-		for(int i=0;i<size;i++) 
-		{
-			bookPanelR[i] = new JPanel();
-			bookPanelR[i].setLayout(new FlowLayout());
-			bookNameLabelR[i] = new JLabel(bookName[i]);
-			authorLabelR[i] = new JLabel(author[i]);
-			publisherLabelR[i] = new JLabel(publisher[i]);
-			
-			bookCheckBoxR[i] = new JCheckBox();
-			bookPanelR[i].add(bookNameLabelR[i]);
-			bookPanelR[i].add(authorLabelR[i]);
-			bookPanelR[i].add(publisherLabelR[i]);
-			bookPanelR[i].add(bookCheckBoxR[i]);
-			book_id[i] = bookId[i];
-			ReturnBook.add(bookPanelR[i]);
-		}
-		
-			bookPanelR[size] = new JPanel();
-			bookPanelR[size].setLayout(new FlowLayout(FlowLayout.CENTER));
-			returnBook = new JButton("ReturnBook");
-			bookPanelR[size].add(returnBook);
-			ReturnBook.add(bookPanelR[size]);
-			returnBook.addActionListener(new ReturnBookFromDB());
-			//TODO
-			ReturnBook.setLocation(getWidth(ReturnBook.getWidth()),getHeight(ReturnBook.getHeight()));
-			
-			ReturnBook.setVisible(true);
-	}
-	*/
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
 	{  try{//定义界面风格
 		UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
@@ -539,6 +419,7 @@ public class GUI extends JFrame
 				loadHomeScreen();
 				loadBank();
 				loadLibrary();
+//				loadStudentAffairs();
 			 }
 			 //初始化银行类
 			 void loadBank()
@@ -558,6 +439,10 @@ public class GUI extends JFrame
 		    	 library.init();
 	    	 
 		     }
+//		     void loadStudentAffairs()
+//		     {
+//		    	 studentAffairs=new StudentAffairs(homeScreen); 	 
+//		     }
 		    
 		     //调用主界面的update函数将Library、Bank等变量传入
 		
@@ -636,48 +521,7 @@ public class GUI extends JFrame
 		}
 		
 	}
-	/*
-	class MyActLister3 implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e) 
-		{
-		
-			
-			//get information form this person's borrowed book database,and then turn
-			//to the method returnBook(...) to create the ReturnBook GUI and show it
-			//TODO
-			HashMap<String,String> hmlib=new HashMap<String,String>();
-			hmlib.put("op", "search_unreturn");
-		 	hmlib.put("card_id", ci);
-			//ReturnBook(bookNameR,authorR,publisherR,quantityR,alist.size)
-		 	ArrayList<HashMap<String,String>> alist = getList(hmlib);	
-			String[] bookNameR = new String[alist.size()];
-			String[] publisherR = new String[alist.size()];
-			String[] authorR = new String[alist.size()];//R means to return 
-			String[] book_idR = new String[alist.size()];
-			
-			for(int i=0;i<alist.size();i++) {
-				bookNameR[i]=alist.get(i).get("book_name");
-				authorR[i]=alist.get(i).get("author");
-				publisherR[i]=alist.get(i).get("publisher");	
-				book_idR[i] = alist.get(i).get("book_id");
-			}
-		 	
-			if(alist.size()>=1)
-			{
-				returnBook(bookNameR,authorR,publisherR,book_idR,alist.size());
-			}//if the first book is not a null,then show all the message of this book
-			else 
-			{
-				JOptionPane.showMessageDialog(null,"You haven't borrowed any book!",
-						"Return book unsuccessfully",JOptionPane.WARNING_MESSAGE);
-							  
-			}
-			
-		}
-		
-	}
-	*/
+
 	class MyActLister4 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) 
@@ -719,6 +563,8 @@ public class GUI extends JFrame
 		    	System.out.println("update card_id to : homeScreen!");
 		    	bank.update(ci);
 		    	library.update(ci);
+		    	ClientInfo.setCi(ci);
+//		    	studentAffairs.update(ci);
 		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -746,143 +592,6 @@ public class GUI extends JFrame
 		}
 		
 	}
-	
-	class MyActLister6 implements ActionListener
-	{
-	 
-	 	public void actionPerformed(ActionEvent arg0) 
-	 	{
-	 		
-	 	}
-	 		
-	 }
-	/*
-	class SearchBookFromDB implements ActionListener
-	{
-		@Override
-		public void actionPerformed(ActionEvent arg0)
-		{
-			
-			String[] bookName=new String[5];
-			String[] publisher=new String[5];//bookName and press
-			String[] quantity=new String[5];
-			String[] author=new String[5];
-			
-			HashMap<String,String> hmlib=new HashMap<String,String>();
-			if(ways.getSelectedItem() == "Author")
-			{
-				//search book according to Author
-				hmlib.put("op", "searchbook");
-				hmlib.put("search_type", "author");
-				hmlib.put("keyword", t18.getText());					
-			}
-			else
-			{
-				//search book according to BookName
-				hmlib.put("op", "searchbook");
-				hmlib.put("search_type", "name");
-				hmlib.put("keyword", t18.getText());
-			}
-			
-			ArrayList<HashMap<String,String>> alist = getList(hmlib);
-			
-			for(int i=0;i<alist.size();i++) {
-				bookName[i]=alist.get(i).get("book_name");
-				author[i]=alist.get(i).get("author");
-				publisher[i]=alist.get(i).get("publisher");
-				quantity[i]=alist.get(i).get("quantity");
-			}
-			
-			
-			
-			 
-			
-			
-			if(alist.size()>=1)
-			{
-				searchBook9th(bookName,author,publisher,quantity,alist.size());
-			}//if the first book is not a null,then show all the message of this book
-			else 
-			{
-				//SearchUnSuccessful.setVisible(true);
-				//show the GUI of searching unsuccessfully
-				//TODO
-				JOptionPane.showMessageDialog(null,"The book that you searched is not found!",
-						"search unsuccessful",JOptionPane.WARNING_MESSAGE);
-							  
-			}
-			t18.setText("");
-		}
-		
-	}
-	*/
-	/*
-	class BorrowBookFromDB implements ActionListener
-	{
-		public void actionPerformed(ActionEvent arg0)
-		{
-			HashMap<String,String> hmlib=null;
-			boolean flag=false;
 
-			HashMap<String,String> hmbook=new HashMap<String,String>();
-			for (int i = 0;i < bookCheckBox.length;i++) {
-				 hmlib=new HashMap<String,String>();
-				 if(bookCheckBox[i].isSelected()==true) {
-					 flag=true;
-				 	hmlib.put("book_name", bookNameLabel[i].getText());
-				 	hmlib.put("op", "borrow");
-				 	hmlib.put("card_id", ci);
-				 	hmlib=getOne(hmlib);
-				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
-				 }
-			}
-			
-			String[] booknames=new String[hmbook.size()];
-			System.out.println(hmbook.size());
-			booknames= hmbook.keySet().toArray(booknames);
-			String result="";
-
-			for(int i=0;i<hmbook.size();i++){
-				result+=(booknames[i]+ " is borrowed "+hmbook.get(booknames[i])+"!\n");
-			}
-			if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
-		}
-		
-	}
-	*/
-	/*
-	class ReturnBookFromDB implements ActionListener
-	{
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// TODO decrease some message from library database and add the same message
-			//from this person's Borrowed book library
-			HashMap<String,String> hmlib=null;
-			boolean flag=false;
-			HashMap<String,String> hmbook=new HashMap<String,String>();
-			for (int i = 0;i < bookCheckBoxR.length;i++) {
-				 hmlib=new HashMap<String,String>();
-				 if(bookCheckBoxR[i].isSelected()==true) {
-					flag=true;
-				 	hmlib.put("book_name", bookNameLabelR[i].getText());
-				 	hmlib.put("op", "return");
-				 	hmlib.put("card_id", ci);
-				 	hmlib.put("book_id", book_id[i]);
-				 	hmlib=getOne(hmlib);
-				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
-				 }
-			}
-			String[] booknames=new String[hmbook.size()];
-			booknames= hmbook.keySet().toArray(booknames);
-			String result="";
-			for(int i=0;i<hmbook.size();i++){
-				result+=(booknames[i]+ " is returned "+hmbook.get(booknames[i])+"!\n");
-			}
-			if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
-		}
-		
-	}
-	*/
 }
 
