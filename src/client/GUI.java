@@ -511,8 +511,9 @@ public class GUI extends JFrame
 		    	System.out.println("Adminok");
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
-		    	hsAdmin.update(ci);
+		    	hsAdmin.update(ci);		    	
 		    	hsAdmin.f_admin.setVisible(true);
+		    	hsAdmin.paint();
 		    	G1.setVisible(false);
 		    	System.out.println("Adminok1");
 		    	
