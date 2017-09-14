@@ -37,8 +37,8 @@ class HomeScreen
 		  p_HomeScreen.setLayout(new BoxLayout(p_HomeScreen,BoxLayout.Y_AXIS));
 		  p15 = new JPanel();
 		  p15.setLayout(new BoxLayout(p15,BoxLayout.X_AXIS));
-		  l15 = new JLabel("Welcome!");
-		  l25 = new JLabel("Sign out");
+		  //l15 = new JLabel("Welcome,"+ci+"!");
+		  //l25 = new JLabel("Sign out");
 		  p35 = new JPanel();
 		  l35 = new JLabel("Library",new ImageIcon("library.png"),JLabel.LEFT);
 		  l45 = new JLabel("Store",new ImageIcon("store.png"),JLabel.LEFT);
@@ -48,8 +48,8 @@ class HomeScreen
 		  l65 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
 		  G5.setSize(500,500);
 		  			
-		  p15.add(l15);
-		  p15.add(l25);
+		  
+		  //p15.add(l25);
 		  p_HomeScreen.add(p15);		
 		  l35.setHorizontalTextPosition(JLabel.CENTER);
 		  l35.setVerticalTextPosition(JLabel.BOTTOM);
@@ -99,6 +99,9 @@ class HomeScreen
 		 bank=bk;		 
 		 ci=card_id;
 		 studentAffairs=new StudentAffairs(this);
+		 l15 = new JLabel("Welcome, "+ci+" ! ");
+		 p15.add(l15);
+		 l15.repaint();
 		 addLis();//HomeScreen的addLis()应写在update()里
 		 
 	 }
@@ -147,6 +150,7 @@ class HomeScreen
 	 	{
 	 		public void mouseClicked(MouseEvent arg0) {
 	 			
+
 	 			//get information from database and give value to this above parameters
 	 			studentAffairs.paint();
 	  		}

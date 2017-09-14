@@ -70,14 +70,14 @@ public class ServerThread implements Runnable{
 					}
 					
 				case "sign up":
-					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
+					sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
 					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(sendList.size()==0) {
-						
 						getOne.remove("op");
+//						getOne.put("user_info_id", "null");
 						db.insert("users",getOne );
-						sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
-						System.out.println("Sign up" + " card_id = "+sendList.get(0).get("card_id") + "password = " +sendList.get(0).get("password"));
+						sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
+//						System.out.println("Sign up" + " card_id = "+sendList.get(0).get("card_id") + "password = " +sendList.get(0).get("password"));
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
@@ -210,25 +210,40 @@ public class ServerThread implements Runnable{
 					send.put("result", " successfully");
 					soos.writeObject(send);
 					break;
-				case "QueryBalance":
-					sendList=db.selectWhere("card_info", "card_id="+getOne.get("card_id"));
-					send.put("card_balance", sendList.get(0).get("card_balance"));
-					soos.writeObject(send);
-					break;
+				case "QueryBalance":				
+					sendList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(sendList.size()==0){
+						send.put("card_balance", "0");	
+						soos.writeObject(send);
+						break;
+					}
+					else{
+						send.put("card_balance", sendList.get(0).get("card_balance"));				
+						soos.writeObject(send);
+						break;
+					}
+					
 				case "QueryPayment":
 					sendList=new ArrayList<HashMap<String,String>>();
 					switch (type) {
 					case "Tuition":
 						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						if(cardInfoList.get(0).get("card_info_id")==null) {
+							soos.writeObject(sendList);
+							break;
+						}
 						cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
-						System.out.println("PRINT:"+cardInfoList.size());
 						for(int i= 0;i<cardInfoList.size();i++) {
 							if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
 						}
 						soos.writeObject(sendList);
 						break;
-					case "WandE":
+					case "WandE":					
 						ArrayList<HashMap<String,String>> cardInfoListWanE=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						if(getOne.get("card_info_id")==null) {
+							soos.writeObject(sendList);
+							break;
+						}
 						cardInfoListWanE = db.selectWhere("card_records", "card_info_id="+cardInfoListWanE.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoListWanE.size();i++) {
 							if(cardInfoListWanE.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListWanE.get(i));
@@ -237,6 +252,10 @@ public class ServerThread implements Runnable{
 						break;
 					case "Afee":
 						ArrayList<HashMap<String,String>> cardInfoListAfee=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+						if(getOne.get("card_info_id")==null) {
+							soos.writeObject(sendList);
+							break;
+						}
 						cardInfoListAfee = db.selectWhere("card_records", "card_info_id="+cardInfoListAfee.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoListAfee.size();i++) {
 							if(cardInfoListAfee.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListAfee.get(i));
@@ -290,15 +309,64 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-						
+				case "search_student":
+					//通过学号或者姓名查找学生，找不到就给个空数组
+					System.out.println("name :" +getOne.get("nname")+ "student_id :"+getOne.get("student_id"));
+					ArrayList<HashMap<String,String>> use_name_to_find = db.selectWhere("user_info", "nname =\'" + getOne.get("nname")+"\'");
+					if(use_name_to_find.size()==0) {
+						ArrayList<HashMap<String,String>> use_student_id_to_find = db.selectWhere("user_info", "student_id =\'" + getOne.get("student_id")+"\'");
+						if(use_student_id_to_find.size()==0){
+							soos.writeObject(sendList);
+							break;
+						}else {
+							soos.writeObject(use_student_id_to_find);
+							break;
+						}
+					}else {
+						soos.writeObject(use_name_to_find);
+						break;
+					}
+				case "modify_student":
+					//修改学生信息
+					int grade = Integer.parseInt(getOne.get("grade"));
+					db.setWhere("user_info", "nname =\'"+getOne.get("nname")+"\'," +"gender =\'"+getOne.get("gender")+"\',"+ "grade ="+grade +","+"major =\'"+ getOne.get("major")+"\',"+ "student_id =\'" + getOne.get("student_id")+"\'" , "user_info_id =" + getOne.get("user_info_id"));
+					break;
+				case "delete_student":
+					db.setWhere("users", "user_info_id =null", "user_info_id ="+ getOne.get("user_info_id"));
+					db.deleteWhere("user_info", "student_id =\'"+ getOne.get("student_id")+"\'");				
+					break;
+				case "import_student":
+					String card_id= getOne.get("card_id");
+					String student_id = getOne.get("student_id");
+					System.out.println("card_id :"+getOne.get("card_id"));
+					getOne.remove("op");
+					getOne.remove("card_id");
+					db.insert("user_info", getOne);
+					System.out.println("student_id :"+getOne.get("student_id"));
+					ArrayList<HashMap<String,String>> user_info_list = db.selectWhere("user_info", "student_id="+student_id);
+					System.out.println("user_info_id :"+user_info_list.get(0).get("user_info_id"));
+					db.setWhere("users", "user_info_id =" + user_info_list.get(0).get("user_info_id"), "card_id =\'" +card_id +"\'");
+					break;
+				case "add_book":
+					getOne.remove("op");
+					db.insert("book_info", getOne);
+					ArrayList<HashMap<String,String>> book_info_list = db.selectWhere("book_info", "book_name =\'"+getOne.get("book_name")+"\'");
+					for(int i = 0;i< book_info_list.size(); i++) {
+						send.put("book_info_id", book_info_list.get(i).get("book_info_id"));
+						send.put("reader", null);
+						send.put("borrow_date", null);
+						send.put("is_borrowed", "FALSE");
+						db.insert("book", send);
+					} 
+					break;
+				case "delete_book":
+					db.deleteWhere("book_info", "book_info_id =" +getOne.get("book_info_id"));
+					db.deleteWhere("book", "book_info_id =" +getOne.get("book_info_id"));
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);
 					break;
-					
-					
-					
-					
+			
 				}		
 				db.finalize();	
 				

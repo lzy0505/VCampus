@@ -2,6 +2,7 @@ package server;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
   
 
 public class DataBase {
@@ -80,17 +81,18 @@ public class DataBase {
 	
 	public void insert(String tableName,HashMap<String,String> content) {
 		try {
-			String[] keywords=Constants.constructionOfTables.get(tableName);
+			Iterator<String> it =content.keySet().iterator();
 			String command="INSERT INTO " + tableName +" (";
-			for(int i=0;i<keywords.length;i++) {
-				command+=keywords[i]+",";
+			while(it.hasNext()) {
+				command+=it.next()+",";
 			}
 			command=command.substring(0, command.length()-1);		
-			command+=") VALUES(\'";
-			for(int i=0;i<keywords.length;i++) {
-				command+=content.get(keywords[i])+"\',\'";
+			command+=") VALUES(";
+			it=content.keySet().iterator();
+			while(it.hasNext()) {
+				command+=content.get(it.next())+",";
 			}
-			command=command.substring(0, command.length()-2);
+			command=command.substring(0, command.length()-1);
 			command+=");";
 			System.out.println("DataBase -Excute insert- "+"Excuting:"+command);
 			stmt.execute(command);
@@ -114,6 +116,20 @@ public class DataBase {
 			System.out.println("DataBase -Excute update- "+"Error:");
 			e.printStackTrace();
 		}
+	}
+	
+	public void deleteWhere(String tableName, String condition) {
+		try {
+			String command="DELETE FROM "+tableName+" WHERE "+condition+";";
+			System.out.println("DataBase -Excute delete- "+"Excuting:"+command);
+			stmt.executeUpdate(command);
+			conn.commit();
+			System.out.println("DataBase -Excute delete- "+"Successfull!");
+		}catch(SQLException e){
+			System.out.println("DataBase -Excute delete "+"Error:");
+			e.printStackTrace();
+		}
+		
 	}
 	
 	

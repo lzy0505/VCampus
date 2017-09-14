@@ -38,13 +38,7 @@ public class GUI extends JFrame
 	JLabel la3;
 	static JButton close3;
 	
-	/*
-	//the elements of G5
-	static JFrame G5;
-	JPanel p15,p25,p35;
-	JLabel l15,l25,l35,l45,l55,l65;
-	*/
-	//the elements of G6
+
 	static JFrame G6;
 	JPanel p16,p26,p36;
 	JLabel l16,l26,l36,l46,l56,l66;
@@ -54,8 +48,8 @@ public class GUI extends JFrame
  	//HomeScreen、Library等成员变量
  	Bank bank;
  	Library library;
-// 	StudentAffairs studentAffairs;
  	HomeScreen homeScreen;
+ 	HSAdmin hsAdmin;
 	
 	public void init(){
 		
@@ -67,7 +61,7 @@ public class GUI extends JFrame
 		}
 	}
 	//send message
-	public void send(HashMap<String,String> sendmes){
+	public static void send(HashMap<String,String> sendmes){
 		try {
 			Client client = new Client();
 			client.clientSocket = new Socket("localhost",8080);
@@ -133,6 +127,7 @@ public class GUI extends JFrame
 		pro1 = new JComboBox();
 		pro1.addItem("Student");
 		pro1.addItem("Teacher");
+		pro1.addItem("Admin");
 		p11.add(pro1);
 		G1.add(p11);
 		
@@ -229,48 +224,7 @@ public class GUI extends JFrame
 		
 		G3.setLocation(getWidth(G3.getWidth()),getHeight(G3.getHeight()));
 
-	/*	
-		//the part of G5
-		G5 = new JFrame(title5);
-		G5.setSize(300,300);
-		G5.setLayout(new FlowLayout());
-		p15 = new JPanel();
-		p15.setLayout(new GridLayout(1,2,150,0));
-		l15 = new JLabel("Welcome!");
-		p15.add(l15);
-		l25 = new JLabel("Sign out");
-		p15.add(l25);
-		G5.add(p15);
-		
-		l35 = new JLabel("Library",new ImageIcon("library.png"),JLabel.LEFT);
-		l35.setHorizontalTextPosition(JLabel.CENTER);
-		l35.setVerticalTextPosition(JLabel.BOTTOM);
-		p25 = new JPanel();
-		p25.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p25.add(l35);
-		
-		l45 = new JLabel("Store",new ImageIcon("store.png"),JLabel.LEFT);
-		l45.setHorizontalTextPosition(JLabel.CENTER);
-		l45.setVerticalTextPosition(JLabel.BOTTOM);
-		p25.add(l45);
-		G5.add(p25);
-		
-		l55 = new JLabel("Courses",new ImageIcon("courses.png"),JLabel.LEFT);
-		l55.setHorizontalTextPosition(JLabel.CENTER);
-		l55.setVerticalTextPosition(JLabel.BOTTOM);
-		p35 = new JPanel();
-		p35.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p35.add(l55);
-		
-		l65 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
-		l65.setHorizontalTextPosition(JLabel.CENTER);
-		l65.setVerticalTextPosition(JLabel.BOTTOM);
-		p35.add(l65);
-		G5.add(p35);		
-		G5.setLocation(getWidth(G5.getWidth()),getHeight(G5.getHeight()));
-		
-		*/
-		
+
 		
 		//the part of G6
 		G6 = new JFrame(title6);
@@ -313,32 +267,7 @@ public class GUI extends JFrame
 		
 		G6.setLocation(getWidth(G6.getWidth()),getHeight(G6.getHeight()));
 		
-		/*
-		//the part of G8
-		G8 = new JFrame(title8);
-		G8.setSize(300, 150);
-		G8.setLayout(new FlowLayout());
-		
-		ways = new JComboBox();
-		ways.addItem("Author");
-		ways.addItem("BookName");
-		p18 = new JPanel();
-		p18.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p18.add(ways);
-		
-		t18 = new JTextField("",8);
-		p18.add(t18);
-		G8.add(p18);
-				
-		b18 = new JButton("Search");
-		b28 = new JButton("Return Book");
-		p28 = new JPanel();
-		p28.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p28.add(b18);
-		p28.add(b28);
-		G8.add(p28);		
-		G8.setLocation(getWidth(G8.getWidth()),getHeight(G8.getHeight()));
-		*/
+
 		//调用Load类初始化所有类变量
 		new Load();
 		
@@ -383,11 +312,7 @@ public class GUI extends JFrame
 			public void mouseClicked(MouseEvent e) {
 				// TODO 自动生成的方法存根
 				new Registration(new String [][]{
-				{"09015101","Mary","Female","201509","CSE","Modify","Delete"},//new integer test
-				{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
-				{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
-				{"09015104","Amy","Female","201509","CSE","Modify","Delete"}
-		});
+				});
 			}
 		});
 		
@@ -417,9 +342,9 @@ public class GUI extends JFrame
 			 {  			    		 
 				 //初始化时注意先后顺序
 				loadHomeScreen();
+				loadHSAdmin();
 				loadBank();
 				loadLibrary();
-//				loadStudentAffairs();
 			 }
 			 //初始化银行类
 			 void loadBank()
@@ -443,6 +368,12 @@ public class GUI extends JFrame
 //		     {
 //		    	 studentAffairs=new StudentAffairs(homeScreen); 	 
 //		     }
+		     void loadHSAdmin()
+		     {
+		    	 hsAdmin=new HSAdmin();
+		    	 hsAdmin.init();
+		    	 
+		     }
 		    
 		     //调用主界面的update函数将Library、Bank等变量传入
 		
@@ -467,7 +398,7 @@ public class GUI extends JFrame
 	{
 		public void itemStateChanged(ItemEvent e) {
 			//if the person is a teacher,then the sign up button is not able to be pressed
-			if(e.getSource() == pro1 && pro1.getSelectedIndex()==1)
+			if(e.getSource() == pro1 && pro1.getSelectedIndex()!=0)
 			{
 				reg1.setEnabled(false);
 			}
@@ -548,8 +479,10 @@ public class GUI extends JFrame
 			hm.put("op", "sign in");
 			if(pro1.getSelectedIndex()==0){
 				hm.put("identity","student");
-			}else{
+			}else if(pro1.getSelectedIndex()==1){
 				hm.put("identity","teacher");
+			}else{
+				hm.put("identity", "admin");
 			}
 			//send hm to server and get it back, check the result 
 		    hm=getOne(hm);
@@ -563,8 +496,6 @@ public class GUI extends JFrame
 		    	System.out.println("update card_id to : homeScreen!");
 		    	bank.update(ci);
 		    	library.update(ci);
-		    	ClientInfo.setCi(ci);
-//		    	studentAffairs.update(ci);
 		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -579,6 +510,19 @@ public class GUI extends JFrame
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		
 		    }
+		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==2)
+		    {
+		    	System.out.println("Adminok");
+		    	ClientInfo.setCi(hm.get("card_id"));
+		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
+		    	hsAdmin.update(ci);		    	
+		    	hsAdmin.f_admin.setVisible(true);
+		    	hsAdmin.paint();
+		    	G1.setVisible(false);
+		    	System.out.println("Adminok1");
+		    	
+		    }
+		    		    
 		    else if(hm.get("result").equals("fail"))
 		    {
 		    	JOptionPane.showMessageDialog(null,"User's name or password is incorrect!",
@@ -594,4 +538,7 @@ public class GUI extends JFrame
 	}
 
 }
+	
+
+
 

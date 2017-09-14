@@ -379,6 +379,8 @@ class Bank
 			//...返回学费表的费用和是否缴清两列数据，显示
 			rowData=new String[TuitionList.size()][3];
 			
+			if(TuitionList.size()==0)
+				break;
 			for(int i=0;i<TuitionList.size();i++)
 			{
 					rowData[i][0]=TuitionList.get(i).get("card_time");
@@ -412,6 +414,8 @@ class Bank
 			//@反馈部分--------
 			//...返回学费表的费用和是否缴清两列数据，显示
 			rowData=new String[WandEList.size()][3];
+			if(WandEList.size()==0)
+				break;
 			for(int i=0;i<WandEList.size();i++)
 			{
 			
@@ -442,6 +446,8 @@ class Bank
 			//@反馈部分--------
 			//...返回学费表的费用和是否缴清两列数据，显示
 			rowData=new String[AfeeList.size()][3];
+			if(AfeeList.size()==0)
+				break;
 			for(int i=0;i<AfeeList.size();i++)
 			{
 				rowData[i][0]=AfeeList.get(i).get("card_time");			
