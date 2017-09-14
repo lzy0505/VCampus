@@ -45,7 +45,7 @@ public class Registration {
 	JComboBox SpecialitySelection;
 	
 	//Information table construction
-	String[] headName= {"StudentNumber","StudentName","Sex","EnrollmentTime","Specialty","",""};
+	String[] headName= {"StudentNumber","StudentName","Gender","EnrollmentTime","Major","",""};
 
 	
 

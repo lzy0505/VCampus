@@ -228,7 +228,7 @@ public class ServerThread implements Runnable{
 					switch (type) {
 					case "Tuition":
 						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						if(getOne.get("card_info_id")==null) {
+						if(cardInfoList.get(0).get("card_info_id")==null) {
 							soos.writeObject(sendList);
 							break;
 						}
@@ -347,6 +347,21 @@ public class ServerThread implements Runnable{
 					System.out.println("user_info_id :"+user_info_list.get(0).get("user_info_id"));
 					db.setWhere("users", "user_info_id =" + user_info_list.get(0).get("user_info_id"), "card_id =\'" +card_id +"\'");
 					break;
+				case "add_book":
+					getOne.remove("op");
+					db.insert("book_info", getOne);
+					ArrayList<HashMap<String,String>> book_info_list = db.selectWhere("book_info", "book_name =\'"+getOne.get("book_name")+"\'");
+					for(int i = 0;i< book_info_list.size(); i++) {
+						send.put("book_info_id", book_info_list.get(i).get("book_info_id"));
+						send.put("reader", null);
+						send.put("borrow_date", null);
+						send.put("is_borrowed", "FALSE");
+						db.insert("book", send);
+					} 
+					break;
+				case "delete_book":
+					db.deleteWhere("book_info", "book_info_id =" +getOne.get("book_info_id"));
+					db.deleteWhere("book", "book_info_id =" +getOne.get("book_info_id"));
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);

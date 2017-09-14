@@ -260,7 +260,7 @@ class Bank
 					JOptionPane.showMessageDialog(null, "尚未选择付款项！","ERROR:",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				if(rowData[t.getSelectedRow()][3].equals("Yes"))
+				if(rowData[t.getSelectedRow()][2].equals("Yes"))
 					{JOptionPane.showMessageDialog(null, "This cost has already been paid","Warnning",JOptionPane.WARNING_MESSAGE);
 					return;
 					}
@@ -283,8 +283,9 @@ class Bank
 				hm=GUI.getOne(hm);//GetOne是GUI的static函数，调用时要前缀" GUI. "
 				if(hm.get("result").equals("success")){
 					JOptionPane.showMessageDialog(null, "缴费成功！");
-					t.setValueAt("Yes", row, 3);
-
+					//t.setValueAt("Yes", row, 3);
+					new ActionLis_Paymentquery().actionPerformed(null);
+                    
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "原因："+hm.get("reason"),"缴费失败!", JOptionPane.ERROR_MESSAGE);
