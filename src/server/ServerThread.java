@@ -70,14 +70,21 @@ public class ServerThread implements Runnable{
 					}
 					
 				case "sign up":
-					sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
+					sendList=db.selectWhere("users", "card_id = \'"+getOne.get("card_id")+"\'");
 					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(sendList.size()==0) {
 						getOne.remove("op");
 //						getOne.put("user_info_id", "null");
+						getOne.put("card_id", "\'"+getOne.get("card_id")+"\'");
+						getOne.put("identity", "\'"+getOne.get("identity")+"\'");
+						getOne.put("password", "\'"+getOne.get("password")+"\'");
 						db.insert("users",getOne );
-						sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
+//						sendList=db.selectWhere("users", "card_id = "+getOne.get("card_id"));
 //						System.out.println("Sign up" + " card_id = "+sendList.get(0).get("card_id") + "password = " +sendList.get(0).get("password"));
+						HashMap hm = new HashMap<String,String>();
+						hm.put("card_id", getOne.get("card_id"));
+						hm.put("card_balance", "0");
+						db.insert("card_info",hm);
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
@@ -228,10 +235,6 @@ public class ServerThread implements Runnable{
 					switch (type) {
 					case "Tuition":
 						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						if(cardInfoList.get(0).get("card_info_id")==null) {
-							soos.writeObject(sendList);
-							break;
-						}
 						cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoList.size();i++) {
 							if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
@@ -240,10 +243,6 @@ public class ServerThread implements Runnable{
 						break;
 					case "WandE":					
 						ArrayList<HashMap<String,String>> cardInfoListWanE=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						if(getOne.get("card_info_id")==null) {
-							soos.writeObject(sendList);
-							break;
-						}
 						cardInfoListWanE = db.selectWhere("card_records", "card_info_id="+cardInfoListWanE.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoListWanE.size();i++) {
 							if(cardInfoListWanE.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListWanE.get(i));
@@ -252,10 +251,6 @@ public class ServerThread implements Runnable{
 						break;
 					case "Afee":
 						ArrayList<HashMap<String,String>> cardInfoListAfee=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						if(getOne.get("card_info_id")==null) {
-							soos.writeObject(sendList);
-							break;
-						}
 						cardInfoListAfee = db.selectWhere("card_records", "card_info_id="+cardInfoListAfee.get(0).get("card_info_id"));
 						for(int i= 0;i<cardInfoListAfee.size();i++) {
 							if(cardInfoListAfee.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListAfee.get(i));

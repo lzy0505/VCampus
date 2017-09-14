@@ -92,7 +92,8 @@ import java.net.Socket;
  		DefaultTableModel selectCourseTableModel= new DefaultTableModel();
  		selectCourseTableModel.setDataVector(selectCourseTableContent,selectCourseTableHead);
  		selectCourseTable=new JTable(selectCourseTableModel);
- 		selectCourseTable.setFillsViewportHeight(true); 
+ 		selectCourseTable.setFillsViewportHeight(true);
+ 		selectCourseTable.setRowHeight(40);
 
         TableCellRenderer buttonRenderer = new ButtonRenderer();
         selectCourseTable.getColumn("操作").setCellRenderer(buttonRenderer);
@@ -106,14 +107,16 @@ import java.net.Socket;
  		examArrangementTableModel.setDataVector(examArrangementTableContent, examArrangementTableHead);
  		examArrangementTable=new JTable(examArrangementTableModel);
  		examArrangementTable.setFillsViewportHeight(true); 
- 	 	
+ 		examArrangementTable.setRowHeight(40);
+ 		
  		JScrollPane examArrangementPane = new JScrollPane(examArrangementTable);
  		tabbedPane.addTab("考试安排", null, examArrangementPane, null);
  		//成绩查询模块初始化
  		DefaultTableModel scoreQueryTableModel=new DefaultTableModel();
  		scoreQueryTableModel.setDataVector(scoreQueryTableContent, scoreQueryTableHead);
  		scoreQueryTable=new JTable(scoreQueryTableModel);
- 		scoreQueryTable.setFillsViewportHeight(true); 
+ 		scoreQueryTable.setFillsViewportHeight(true);
+ 		scoreQueryTable.setRowHeight(40);
  		
  		JScrollPane scoreQueryPane = new JScrollPane(scoreQueryTable);
  		tabbedPane.addTab("成绩查询", null, scoreQueryPane, null); 		
@@ -147,13 +150,21 @@ private void updateStudentCourse() {
  		DefaultTableModel selectCourseTableModel= new DefaultTableModel();
  		selectCourseTableModel.setDataVector(selectCourseTableContent,selectCourseTableHead);
  		selectCourseTable.setModel(selectCourseTableModel);
-		selectCourseTable.setFillsViewportHeight(true); 
-
+ 		
         TableCellRenderer buttonRenderer = new ButtonRenderer();
         selectCourseTable.getColumn("操作").setCellRenderer(buttonRenderer);
         selectCourseTable.getColumn("操作").setCellEditor(
         new SelectCourseButtonEditor(new JCheckBox()));	
  
+        
+ 		DefaultTableModel examArrangementTableModel=new DefaultTableModel();
+ 		examArrangementTableModel.setDataVector(examArrangementTableContent, examArrangementTableHead);
+ 		examArrangementTable.setModel(examArrangementTableModel); 
+ 	 	
+ 		DefaultTableModel scoreQueryTableModel=new DefaultTableModel();
+ 		scoreQueryTableModel.setDataVector(scoreQueryTableContent, scoreQueryTableHead);
+ 		scoreQueryTable.setModel(scoreQueryTableModel);
+ 		
  	}
 	
 public void updateTableContent() {

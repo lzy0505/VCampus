@@ -8,7 +8,6 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.border.LineBorder;
 
 import java.awt.Color;
 
@@ -20,15 +19,20 @@ import javax.swing.table.TableModel;
 import client.Registration.DoubleClickModifyDelete;
 import client.Registration.CancelLister;
 import client.Registration.SubmitLister;
+import client.StudentAffairs.SelectCourseButtonEditor;
+import table_component.ButtonEditor;
+import table_component.ButtonRenderer;
+import table_component.SpringUtilities;
 
 import java.awt.Font;
+import java.awt.GridLayout;
 
 public class Registration {
 
 	private JFrame frame;
 	private JTextField studentnumber;
 	private JTextField studentname;
-	private JTable table;
+	private JTable informationQueryTable;
 	private JTextField textStudentNo;
 	private JTextField textStudentName;
 	private JTextField textStudentCardID;
@@ -45,7 +49,7 @@ public class Registration {
 	JComboBox SpecialitySelection;
 	
 	//Information table construction
-	String[] headName= {"StudentNumber","StudentName","Gender","EnrollmentTime","Major","",""};
+	final String[] informationQueryTableHead= {"学号","姓名","性别","入学年份","专业","编辑","删除"};
 
 	
 
@@ -56,199 +60,149 @@ public class Registration {
 
 	private void initialize(String data[][]) {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 900, 600);
+		frame.setBounds(0, 0, 600, 400);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-		tabbedPane.setBounds(21, 17, 850, 540);
+		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.setBounds(0, 0, 600, 363);
 		frame.getContentPane().add(tabbedPane);
 		
-		JPanel InformationService = new JPanel();
-		tabbedPane.addTab("Information Service", null, InformationService, null);
-		InformationService.setLayout(null);
+		JPanel informationService = new JPanel();
+		tabbedPane.addTab("信息管理", null, informationService, null);
+		informationService.setLayout(new BoxLayout(informationService,BoxLayout.Y_AXIS));
 		
-		JLabel SInformationService = new JLabel("Student Information Service");
-		SInformationService.setFont(new Font("Lucida Console", Font.PLAIN, 17));
-		SInformationService.setBounds(21, 5, 700, 30);
-		SInformationService.setForeground(Color.blue);
+
+		JPanel inputPanel = new JPanel();
+		informationService.add(inputPanel);
+		inputPanel.setLayout(new FlowLayout());
 		
-		
-		InformationService.add(SInformationService);
-		
-		JPanel ActionBar1 = new JPanel();
-		ActionBar1.setBounds(21, 37, 800, 47);
-		InformationService.add(ActionBar1);
-		ActionBar1.setLayout(null);
-		
-		JLabel StudentNumber = new JLabel("Student Number:");
-		StudentNumber.setBounds(40, 6, 118, 35);
-		ActionBar1.add(StudentNumber);
+		JLabel StudentNumber = new JLabel("学号");
+		inputPanel.add(StudentNumber);
 		
 		studentnumber = new JTextField();
-		studentnumber.setBounds(155, 10, 130, 26);
-		ActionBar1.add(studentnumber);
+		inputPanel.add(studentnumber);
 		studentnumber.setColumns(10);
 		
-		JLabel StudentName = new JLabel("Student Name:");
-		StudentName.setBounds(307, 6, 118, 35);
-		ActionBar1.add(StudentName);
+		JLabel StudentName = new JLabel("学生姓名");
+		inputPanel.add(StudentName);
 		
 		studentname = new JTextField();
 		studentname.setColumns(10);
-		studentname.setBounds(409, 10, 130, 26);
-		ActionBar1.add(studentname);
+		inputPanel.add(studentname);
 		
 		
-		JButton search = new JButton("Search");
-		search.setBounds(569, 10, 117, 29);
-		ActionBar1.add(search);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(21, 84, 750, 408);
-		InformationService.add(panel);
+		JButton search = new JButton("搜索");
+		inputPanel.add(search);
 		
 		
-		/*String [][]data= {
-				{"09015101","Mary","Female","201509","CSE","Modify","Delete"},//new integer test
-				{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
-				{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
-				{"09015104","Amy","Female","201509","CSE","Modify","Delete"}
-		};*/
-		
-		
-		panel.setLayout(null);
-		table = new JTable(data,headName);
-//		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+		DefaultTableModel informationQueryTableModel=new DefaultTableModel(data,informationQueryTableHead);
+		informationQueryTable=new JTable(informationQueryTableModel);
+		informationQueryTable.setFillsViewportHeight(true);
+		informationQueryTable.setRowHeight(35);
+
+        TableCellRenderer buttonRenderer = new ButtonRenderer();
+        informationQueryTable.getColumn("编辑").setCellRenderer(buttonRenderer);
+        informationQueryTable.getColumn("编辑").setCellEditor(
+         new InformationQueryButtonEditor(new JCheckBox()));
+        informationQueryTable.getColumn("删除").setCellRenderer(buttonRenderer);
+        informationQueryTable.getColumn("删除").setCellEditor(
+         new InformationQueryButtonEditor(new JCheckBox()));
+        
+		informationQueryTable.addMouseListener(new DoubleClickModifyDelete());
+		informationQueryTable.setColumnSelectionAllowed(false);
+
 		
 		//Scroll implement
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(0, 6, 750, 396);
-		table.setFillsViewportHeight(true);
-		table.addMouseListener(new DoubleClickModifyDelete());
-		table.setColumnSelectionAllowed(false);
-		panel.add(scrollPane);
+		JScrollPane scrollPane = new JScrollPane(informationQueryTable);
+		scrollPane.setBounds(0, 0, 600, 350);
+
+		informationService.add(scrollPane);
 		
-		//The following code is about the "Information Import" bar.
-		JPanel InformationImport_1 = new JPanel();
-		tabbedPane.addTab("Information Import", null, InformationImport_1, null);
-		InformationImport_1.setLayout(null);
-		
-		JLabel SInformationImport = new JLabel("Student Information Import");
-		SInformationImport.setFont(new Font("Lucida Console", Font.PLAIN, 17));
-		SInformationImport.setBounds(21,10,750,34);
-		SInformationImport.setForeground(Color.blue);
-		InformationImport_1.add(SInformationImport);
-		
-		JPanel InfoImportActionBar = new JPanel();
-		InfoImportActionBar.setBounds(21, 43, 750, 427);
-		InformationImport_1.add(InfoImportActionBar);
-		InfoImportActionBar.setLayout(null);
-		
-//		JSeparator separatorVer = new JSeparator();
-//		separatorVer.setOrientation(SwingConstants.VERTICAL);
-//		separatorVer.setBounds(290, 20, 12, 239);
-//		InfoImportActionBar.add(separatorVer);
-//		
-//		JSeparator separator_1 = new JSeparator();
-//		separator_1.setBounds(6, 61, 738, 12);
-//		InfoImportActionBar.add(separator_1);
-//		
-//		JSeparator separator_2 = new JSeparator();
-//		separator_2.setBounds(6, 103, 738, 12);
-//		InfoImportActionBar.add(separator_2);
-//		
-//		JSeparator separator_3 = new JSeparator();
-//		separator_3.setBounds(6, 154, 738, 12);
-//		InfoImportActionBar.add(separator_3);
-//		
-//		JSeparator separator_4 = new JSeparator();
-//		separator_4.setBounds(6, 202, 738, 12);
-//		InfoImportActionBar.add(separator_4);
-//		
-//		JSeparator separator_5 = new JSeparator();
-//		separator_5.setBounds(6, 257, 738, 12);
-//		InfoImportActionBar.add(separator_5);
-		
-		JButton btnButton = new JButton("Summit");
-		btnButton.setBounds(140, 310, 117, 29);
-		InfoImportActionBar.add(btnButton);
-		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(320, 310, 117, 29);
-		InfoImportActionBar.add(btnCancel);
-		
-		JLabel lblStudentNumber2 = new JLabel("StudentNumber:");
-		lblStudentNumber2.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentNumber2.setBounds(123, 20, 142, 45);
-		InfoImportActionBar.add(lblStudentNumber2);
-		
-		JLabel lblStudentCardID = new JLabel("StudentCardID:");
-		lblStudentCardID.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentCardID.setBounds(123, 60, 142, 45);
-		InfoImportActionBar.add(lblStudentCardID);
-		
-		JLabel lblStudentname = new JLabel("StudentName:");
-		lblStudentname.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentname.setBounds(123, 100, 142, 45);
-		InfoImportActionBar.add(lblStudentname);
-		
-		JLabel lblSex = new JLabel("Gender:");
-		lblSex.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblSex.setBounds(123, 140, 142, 45);
-		InfoImportActionBar.add(lblSex);
-		
-		JLabel lblEnrollmenttime = new JLabel("Grade:");
-		lblEnrollmenttime.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblEnrollmenttime.setBounds(123, 180, 142, 45);
-		InfoImportActionBar.add(lblEnrollmenttime);
-		
-		JLabel lblSpecialty = new JLabel("Major:");
-		lblSpecialty.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblSpecialty.setBounds(123, 220, 142, 45);
-		InfoImportActionBar.add(lblSpecialty);
-		
-		rdbtnFemale = new JRadioButton("Female");
-		rdbtnFemale.setBounds(321, 119, 81, 23);
-		InfoImportActionBar.add(rdbtnFemale);
+    	//The following code is about the "Information Import" bar.
+		JPanel informationImportPanel = new JPanel();
+		informationImportPanel.setLayout(new BoxLayout(informationImportPanel,BoxLayout.Y_AXIS));
+		tabbedPane.addTab("信息录入", null, informationImportPanel, null);
 		
 		
-		rdbtnMale = new JRadioButton("Male");
-		rdbtnMale.setSelected(true);
-		rdbtnMale.setBounds(411, 119, 75, 23);
-		InfoImportActionBar.add(rdbtnMale);
+
 		
-		ButtonGroup buttonGroup = new ButtonGroup();
-		buttonGroup.add(rdbtnFemale);
-		buttonGroup.add(rdbtnMale);
+
+		JPanel informationImportContentPanel =new JPanel();
+		informationImportContentPanel.setLayout(new FlowLayout(50));
 		
+		JPanel informationImportLeftContentPanel =new JPanel(new SpringLayout());
+		JPanel informationImportRightContentPanel =new JPanel(new SpringLayout());
 		
-		textStudentNo = new JTextField();
-		textStudentNo.setBounds(311, 30, 130, 26);
-		InfoImportActionBar.add(textStudentNo);
-		textStudentNo.setColumns(10);
-		
+		JLabel lblStudentCardID = new JLabel("一卡通号",JLabel.TRAILING);
+		informationImportLeftContentPanel.add(lblStudentCardID);
 		textStudentCardID = new JTextField();
-		textStudentCardID.setBounds(311, 55, 130, 26);
-		InfoImportActionBar.add(textStudentCardID);
-		textStudentCardID.setColumns(10);
+		textStudentCardID.setColumns(15);
+		lblStudentCardID.setLabelFor(textStudentCardID);
+		informationImportLeftContentPanel.add(textStudentCardID);
 		
+		JLabel lblStudentNumber = new JLabel("学号",JLabel.TRAILING);
+		informationImportLeftContentPanel.add(lblStudentNumber);
+		textStudentNo = new JTextField();
+		textStudentNo.setColumns(15);
+		lblStudentNumber.setLabelFor(textStudentNo);
+		informationImportLeftContentPanel.add(textStudentNo);
+		
+		JLabel lblStudentname = new JLabel("学生姓名",JLabel.TRAILING);
+		informationImportLeftContentPanel.add(lblStudentname);
 		textStudentName = new JTextField();
-		textStudentName.setBounds(311, 80, 130, 26);
-		InfoImportActionBar.add(textStudentName);
 		textStudentName.setColumns(10);
+		lblStudentname.setLabelFor(textStudentName);
+		informationImportLeftContentPanel.add(textStudentName);
 		
+		JLabel lblEnrollmenttime = new JLabel("入学年份",JLabel.TRAILING);
+		informationImportRightContentPanel.add(lblEnrollmenttime);
+		textEnrollTime = new JFormattedTextField();
+		textEnrollTime.setText("2010");
+		lblEnrollmenttime.setLabelFor(textEnrollTime);
+		informationImportRightContentPanel.add(textEnrollTime);
+		
+		JLabel lblSpecialty = new JLabel("专业",JLabel.TRAILING);
+		informationImportRightContentPanel.add(lblSpecialty);
 		SpecialitySelection = new JComboBox();
 		SpecialitySelection.setModel(new DefaultComboBoxModel(majors));
-		SpecialitySelection.setMaximumRowCount(28);
-		SpecialitySelection.setBounds(314, 226, 218, 27);
-		InfoImportActionBar.add(SpecialitySelection);
+		SpecialitySelection.setMaximumRowCount(15);
+		lblSpecialty.setLabelFor(SpecialitySelection);
+		informationImportRightContentPanel.add(SpecialitySelection);
 		
-		textEnrollTime = new JFormattedTextField();
-		textEnrollTime.setText("2010-09");
-		textEnrollTime.setBounds(321, 171, 81, 26);
-		InfoImportActionBar.add(textEnrollTime);
+		JLabel lblSex = new JLabel("性别",JLabel.TRAILING);
+		informationImportRightContentPanel.add(lblSex);
+		rdbtnFemale = new JRadioButton("女");
+		rdbtnMale = new JRadioButton("男");
+		ButtonGroup bg=new ButtonGroup();
+		bg.add(rdbtnFemale);
+		bg.add(rdbtnMale);
+		JPanel genderPanel=new JPanel(new FlowLayout());
+		genderPanel.add(rdbtnFemale);
+		genderPanel.add(rdbtnMale);
+		lblSex.setLabelFor(genderPanel);
+		informationImportRightContentPanel.add(genderPanel);
+
+		SpringUtilities.makeCompactGrid(informationImportLeftContentPanel, 3, 2, 30, 20, 6, 26);
+		SpringUtilities.makeCompactGrid(informationImportRightContentPanel, 3, 2, 30, 20, 6, 22);
+		informationImportContentPanel.add(informationImportLeftContentPanel);
+		informationImportContentPanel.add(informationImportRightContentPanel);
+
 		
+		
+		
+		JPanel informationImportActionBar = new JPanel();
+		informationImportActionBar.setLayout(new FlowLayout());
+		
+		JButton btnButton = new JButton("提交");
+		informationImportActionBar.add(btnButton);
+		JButton btnCancel = new JButton("清空");
+		informationImportActionBar.add(btnCancel);
+		informationImportActionBar.setBounds(200, 0, 100, 50);
+		
+		
+		informationImportPanel.add(informationImportContentPanel);
+		informationImportPanel.add(informationImportActionBar);
 		frame.setVisible(true);
 
 		search.addActionListener(new SearchLister());
@@ -290,11 +244,8 @@ public class Registration {
 					information[i][6]= "Delete";
 					user_info_id[i] = hmList.get(i).get("user_info_id");
 			}
-			//create a window to show the searching student
-//			JFrame searchFrame = new JFrame("Search");
-//			searchFrame.setSize(800, 150);
-//			searchFrame.setLayout(null);
-			table.setModel(new DefaultTableModel(information,headName));
+
+				informationQueryTable.setModel(new DefaultTableModel(information,informationQueryTableHead));
 			
 			}
 			else
@@ -314,12 +265,10 @@ public class Registration {
 		public void mouseClicked(MouseEvent e) {
 			System.out.println("mouseClicked");
 			// TODO 自动生成的方法存根
-			for(int row=0,colModify=5,colDelete=6;row<table.getRowCount();row++)
+			for(int row=0,colModify=5,colDelete=6;row<informationQueryTable.getRowCount();row++)
 			{	
-				if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
+				if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colModify)
 				{
-					System.out.println("pop!!!!");
-					System.out.println("table.getSelectedRow() :"+table.getSelectedRow());
 					//修改学生信息
 					int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
 					if(result == 0)
@@ -327,16 +276,16 @@ public class Registration {
 						HashMap<String,String> hm= new HashMap<>();
 						ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
 						hm.put("op", "modify_student");
-						System.out.println((String)table.getValueAt(row, 0));
-						hm.put("student_id",(String)table.getValueAt(row, 0));
-						System.out.println((String)table.getValueAt(row, 1));
-						hm.put("nname", (String)table.getValueAt(row, 1));
-						System.out.println((String)table.getValueAt(row, 2));
-						hm.put("gender",(String)table.getValueAt(row, 2));
-						System.out.println((String)table.getValueAt(row, 3));
-						hm.put("grade", (String)table.getValueAt(row, 3));
-						System.out.println((String)table.getValueAt(row, 4));
-						hm.put("major", (String)table.getValueAt(row, 4));
+						System.out.println((String)informationQueryTable.getValueAt(row, 0));
+						hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
+						System.out.println((String)informationQueryTable.getValueAt(row, 1));
+						hm.put("nname", (String)informationQueryTable.getValueAt(row, 1));
+						System.out.println((String)informationQueryTable.getValueAt(row, 2));
+						hm.put("gender",(String)informationQueryTable.getValueAt(row, 2));
+						System.out.println((String)informationQueryTable.getValueAt(row, 3));
+						hm.put("grade", (String)informationQueryTable.getValueAt(row, 3));
+						System.out.println((String)informationQueryTable.getValueAt(row, 4));
+						hm.put("major", (String)informationQueryTable.getValueAt(row, 4));
 						hm.put("user_info_id", user_info_id[row]);
 						GUI.send(hm);
 					    //Modify the information of student[row] in the database
@@ -345,7 +294,7 @@ public class Registration {
 					}
 				}
 				//删除学生信息
-				else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
+				else if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colDelete)
 				{
 					int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
 					if(result == 0)
@@ -353,12 +302,12 @@ public class Registration {
 						//delete the information of student[row] from database
 						//TODO
 						HashMap<String,String> hm= new HashMap<>();
-						hm.put("student_id",(String)table.getValueAt(row, 0));
+						hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
 						hm.put("user_info_id", user_info_id[row]);
 						hm.put("op", "delete_student");
 						GUI.send(hm);
 						JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
-						DefaultTableModel dtm=(DefaultTableModel)table.getModel();
+						DefaultTableModel dtm=(DefaultTableModel)informationQueryTable.getModel();
 						dtm.removeRow(row);	
 						dtm.fireTableDataChanged();
 					}
@@ -427,6 +376,14 @@ public class Registration {
 			textStudentName.setText(null);
 			textStudentCardID.setText(null);
 			textEnrollTime.setText(null);
+		}
+		
+	}
+	class InformationQueryButtonEditor extends ButtonEditor{
+
+		public InformationQueryButtonEditor(JCheckBox checkBox) {
+			super(checkBox);
+			// TODO Auto-generated constructor stub
 		}
 		
 	}

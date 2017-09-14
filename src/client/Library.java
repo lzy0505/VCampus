@@ -298,7 +298,7 @@ public class Library {
 					};
 					table_return.setRowHeight(40);
 					sp_return.setViewportView(table_return);
-					sp_return.setPreferredSize(new Dimension(450,300));
+					sp_return.setPreferredSize(new Dimension(600,400));
 					return_p2.removeAll();
 					return_p2.add(sp_return);
 					return_p2.repaint();
@@ -316,7 +316,7 @@ public class Library {
 			};
 			table_return.setRowHeight(40);
 			sp_return.setViewportView(table_return);
-			sp_return.setPreferredSize(new Dimension(450,300));
+			sp_return.setPreferredSize(new Dimension(600,400));
 			return_p2.removeAll();
 			return_p2.add(sp_return);
 			return_p2.repaint();
@@ -389,7 +389,7 @@ public class Library {
 				};
 				table_borrow.setRowHeight(40);
 				sp_borrow.setViewportView(table_borrow);
-				sp_borrow.setPreferredSize(new Dimension(450,300));
+				sp_borrow.setPreferredSize(new Dimension(600,400));
 				borrow_p[2].removeAll();
 				borrow_p[2].add(sp_borrow);
 				borrow_p[2].repaint();

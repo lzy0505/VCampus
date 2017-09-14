@@ -143,13 +143,13 @@ public class LibManage {
 	 
 	 void addLis()
 	 {
-		 b_query.addActionListener(new ActionLis_Query());//查询按钮
-		 ok_add.addActionListener(new ActionLis_Add_Ok());//确认增加书按钮
-		 b_delete_single.addActionListener(new ActionLis_delete_single());//删除单个
-		 b_delete_all.addActionListener(new ActionLis_b_delete_all);//都删啦
-		 tab_library.addChangeListener(new ChangeLis_Tab());
-		 return_uplib1.addActionListener(new ActionLis_RepaintHomeScreen());//返回主界面
-		 return_uplib2.addActionListener(new ActionLis_RepaintHomeScreen());//返回主界面	 
+//		 b_query.addActionListener(new ActionLis_Query());//查询按钮
+//		 ok_add.addActionListener(new ActionLis_Add_Ok());//确认增加书按钮
+//		 b_delete_single.addActionListener(new ActionLis_delete_single());//删除单个
+//		 b_delete_all.addActionListener(new ActionLis_b_delete_all);//都删啦
+//		 tab_library.addChangeListener(new ChangeLis_Tab());
+//		 return_uplib1.addActionListener(new ActionLis_RepaintHomeScreen());//返回主界面
+//		 return_uplib2.addActionListener(new ActionLis_RepaintHomeScreen());//返回主界面	 
 	 }
 	 
 	/* void paint()
