@@ -62,6 +62,7 @@ public class Library {
 	    JTable table_return;//显示需要归还的书的表格
 	    JScrollPane sp_return;
 	    JButton b_return;//还书按钮
+	    
 	public Library(HomeScreen hs)
 	{
 		homeScreen=hs;
@@ -207,7 +208,7 @@ public class Library {
 			}
 			if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
 			
-			//刷新操作
+			//刷新操作,刷新两个表格。
 			flushFlag=true;
 			new ChangeLis_Tab().stateChanged(null);
 			new ActionLis_Query().actionPerformed(null);
@@ -306,10 +307,27 @@ public class Library {
 				}	
 			//if the first book is not a null,then show all the message of this book
 			else 
-			{     return_p2.setVisible(false);
-			      b_return.setEnabled(false);
-				  JOptionPane.showMessageDialog(null,"You haven't borrowed any book!",
-						"Notice",JOptionPane.WARNING_MESSAGE);								  
+			{  
+				rowData_Return =new String[1][3];
+			sp_return=new JScrollPane();
+			table_return=new JTable(rowData_Return,columnNames_Return) {
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
+			table_return.setRowHeight(40);
+			sp_return.setViewportView(table_return);
+			sp_return.setPreferredSize(new Dimension(450,300));
+			return_p2.removeAll();
+			return_p2.add(sp_return);
+			return_p2.repaint();
+			return_p2.revalidate();	
+				
+				
+				
+				      
+			 b_return.setEnabled(false);
+				 						  
 			}
 		}
 

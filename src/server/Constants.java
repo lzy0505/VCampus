@@ -20,6 +20,7 @@ class Constants {
 			put("course_details",new String[] {"course_id","course_max_number","course_selected_number","course_is_full","course_teacher","course_time","course_info_id","course_exam_time","course_exam_place"});
 			put("card_info",new String[]{"card_balance","card_info_id","card_id"} );
 			put("card_records",new String[] {"card_record_id","card_cost","card_content","card_info_id","card_is_paid","card_time"});
+			put("user_info",new String[] {"user_info_id","nname","gender","grade","major","student_id"});
 		}
 	};
 	

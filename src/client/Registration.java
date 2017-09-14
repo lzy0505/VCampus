@@ -5,13 +5,17 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.SystemColor;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.border.LineBorder;
 
 import java.awt.Color;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import client.Registration.DoubleClickModifyDelete;
 import client.Registration.CancelLister;
@@ -27,14 +31,21 @@ public class Registration {
 	private JTable table;
 	private JTextField textStudentNo;
 	private JTextField textStudentName;
-	
+	private JTextField textStudentCardID;
+	private String information[][] = null;
+	private String user_info_id[] =null;
+	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
+	           				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "cs", "物理系", "生物科学与医学工程学院", 
+	        				"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
+	        				"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
+	JTable searchTable =null;
 	JRadioButton rdbtnFemale;
 	JRadioButton rdbtnMale;
 	JFormattedTextField textEnrollTime;
 	JComboBox SpecialitySelection;
 	
 	//Information table construction
-	String[] headName= {"StudentNumber","StudentName","Sex","EnrollmentTime","Specialty","",""};
+	String[] headName= {"StudentNumber","StudentName","Gender","EnrollmentTime","Major","",""};
 
 	
 
@@ -108,12 +119,14 @@ public class Registration {
 		
 		panel.setLayout(null);
 		table = new JTable(data,headName);
-		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+//		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		
 		//Scroll implement
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(0, 6, 750, 396);
 		table.setFillsViewportHeight(true);
+		table.addMouseListener(new DoubleClickModifyDelete());
+		table.setColumnSelectionAllowed(false);
 		panel.add(scrollPane);
 		
 		//The following code is about the "Information Import" bar.
@@ -132,30 +145,30 @@ public class Registration {
 		InformationImport_1.add(InfoImportActionBar);
 		InfoImportActionBar.setLayout(null);
 		
-		JSeparator separatorVer = new JSeparator();
-		separatorVer.setOrientation(SwingConstants.VERTICAL);
-		separatorVer.setBounds(290, 20, 12, 239);
-		InfoImportActionBar.add(separatorVer);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(6, 61, 738, 12);
-		InfoImportActionBar.add(separator_1);
-		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(6, 103, 738, 12);
-		InfoImportActionBar.add(separator_2);
-		
-		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(6, 154, 738, 12);
-		InfoImportActionBar.add(separator_3);
-		
-		JSeparator separator_4 = new JSeparator();
-		separator_4.setBounds(6, 202, 738, 12);
-		InfoImportActionBar.add(separator_4);
-		
-		JSeparator separator_5 = new JSeparator();
-		separator_5.setBounds(6, 257, 738, 12);
-		InfoImportActionBar.add(separator_5);
+//		JSeparator separatorVer = new JSeparator();
+//		separatorVer.setOrientation(SwingConstants.VERTICAL);
+//		separatorVer.setBounds(290, 20, 12, 239);
+//		InfoImportActionBar.add(separatorVer);
+//		
+//		JSeparator separator_1 = new JSeparator();
+//		separator_1.setBounds(6, 61, 738, 12);
+//		InfoImportActionBar.add(separator_1);
+//		
+//		JSeparator separator_2 = new JSeparator();
+//		separator_2.setBounds(6, 103, 738, 12);
+//		InfoImportActionBar.add(separator_2);
+//		
+//		JSeparator separator_3 = new JSeparator();
+//		separator_3.setBounds(6, 154, 738, 12);
+//		InfoImportActionBar.add(separator_3);
+//		
+//		JSeparator separator_4 = new JSeparator();
+//		separator_4.setBounds(6, 202, 738, 12);
+//		InfoImportActionBar.add(separator_4);
+//		
+//		JSeparator separator_5 = new JSeparator();
+//		separator_5.setBounds(6, 257, 738, 12);
+//		InfoImportActionBar.add(separator_5);
 		
 		JButton btnButton = new JButton("Summit");
 		btnButton.setBounds(140, 310, 117, 29);
@@ -167,27 +180,32 @@ public class Registration {
 		
 		JLabel lblStudentNumber2 = new JLabel("StudentNumber:");
 		lblStudentNumber2.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentNumber2.setBounds(123, 18, 142, 45);
+		lblStudentNumber2.setBounds(123, 20, 142, 45);
 		InfoImportActionBar.add(lblStudentNumber2);
+		
+		JLabel lblStudentCardID = new JLabel("StudentCardID:");
+		lblStudentCardID.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
+		lblStudentCardID.setBounds(123, 60, 142, 45);
+		InfoImportActionBar.add(lblStudentCardID);
 		
 		JLabel lblStudentname = new JLabel("StudentName:");
 		lblStudentname.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblStudentname.setBounds(123, 62, 142, 45);
+		lblStudentname.setBounds(123, 100, 142, 45);
 		InfoImportActionBar.add(lblStudentname);
 		
-		JLabel lblSex = new JLabel("Sex:");
+		JLabel lblSex = new JLabel("Gender:");
 		lblSex.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblSex.setBounds(123, 110, 142, 45);
+		lblSex.setBounds(123, 140, 142, 45);
 		InfoImportActionBar.add(lblSex);
 		
-		JLabel lblEnrollmenttime = new JLabel("EnrollmentTime:");
+		JLabel lblEnrollmenttime = new JLabel("Grade:");
 		lblEnrollmenttime.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblEnrollmenttime.setBounds(123, 160, 142, 45);
+		lblEnrollmenttime.setBounds(123, 180, 142, 45);
 		InfoImportActionBar.add(lblEnrollmenttime);
 		
-		JLabel lblSpecialty = new JLabel("Speciality:");
+		JLabel lblSpecialty = new JLabel("Major:");
 		lblSpecialty.setFont(new Font("Lucida Fax", Font.ITALIC, 17));
-		lblSpecialty.setBounds(123, 216, 142, 45);
+		lblSpecialty.setBounds(123, 220, 142, 45);
 		InfoImportActionBar.add(lblSpecialty);
 		
 		rdbtnFemale = new JRadioButton("Female");
@@ -206,20 +224,22 @@ public class Registration {
 		
 		
 		textStudentNo = new JTextField();
-		textStudentNo.setBounds(311, 29, 130, 26);
+		textStudentNo.setBounds(311, 30, 130, 26);
 		InfoImportActionBar.add(textStudentNo);
 		textStudentNo.setColumns(10);
 		
+		textStudentCardID = new JTextField();
+		textStudentCardID.setBounds(311, 55, 130, 26);
+		InfoImportActionBar.add(textStudentCardID);
+		textStudentCardID.setColumns(10);
+		
 		textStudentName = new JTextField();
-		textStudentName.setBounds(311, 73, 130, 26);
+		textStudentName.setBounds(311, 80, 130, 26);
 		InfoImportActionBar.add(textStudentName);
 		textStudentName.setColumns(10);
 		
 		SpecialitySelection = new JComboBox();
-		SpecialitySelection.setModel(new DefaultComboBoxModel(new String[] {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
-				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
-				"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
-				"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"}));
+		SpecialitySelection.setModel(new DefaultComboBoxModel(majors));
 		SpecialitySelection.setMaximumRowCount(28);
 		SpecialitySelection.setBounds(314, 226, 218, 27);
 		InfoImportActionBar.add(SpecialitySelection);
@@ -232,34 +252,52 @@ public class Registration {
 		frame.setVisible(true);
 
 		search.addActionListener(new SearchLister());
-		table.addMouseListener(new DoubleClickModifyDelete());
 		btnButton.addActionListener(new SubmitLister());
 		btnCancel.addActionListener(new CancelLister());
 
 	}
-	
+	//查找学生功能
 	class SearchLister implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
-			String information[][]=null;
+			
 			//find whether there is a person searched in the database,if yes,
 			//give value to the array information[][]
-			//if()//if search successfully,show the searchFrame
+			////if search successfully,show the searchFrame
 			//TODO
+			HashMap<String,String> hm= new HashMap<>();
+			ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+			hm.put("student_id", studentnumber.getText());
+			hm.put("nname",studentname.getText());
+			hm.put("op", "search_student");
+			hmList = GUI.getList(hm);
+			if(hmList!=null)
 			{
-			//create a window to show the searching student
-			JFrame searchFrame = new JFrame("Search");
-			searchFrame.setSize(800, 150);
-			searchFrame.setLayout(null);
-			JTable searchTable = new JTable(information,headName);
-			searchTable.setBounds(5, 5, 740, 90);
-			searchFrame.add(searchTable);
-			searchFrame.setLocation(300, 250);
-
-			searchFrame.setVisible(true);
-			searchTable.addMouseListener(new DoubleClickModifyDelete());
+				String information[][]=new String[hmList.size()][7];
+				user_info_id=new String[hmList.size()];
+				for(int i = 0;i<hmList.size();i++) {	
+					information[i][0] = hmList.get(i).get("student_id");
+					System.out.println("hmList.get(i).get(student_id) :" + hmList.get(i).get("student_id"));
+					information[i][1] = hmList.get(i).get("nname");
+					System.out.println("student name :" + hmList.get(i).get("nname"));
+					information[i][2] = hmList.get(i).get("gender");
+					System.out.println("gender) :" + hmList.get(i).get("gender"));
+					information[i][3] = hmList.get(i).get("grade");
+					System.out.println("grade :" + hmList.get(i).get("grade"));
+					information[i][4] = hmList.get(i).get("major");
+					System.out.println("major:" + hmList.get(i).get("major"));
+					information[i][5] = "Modify";
+					information[i][6]= "Delete";
+					user_info_id[i] = hmList.get(i).get("user_info_id");
 			}
-			//else
+			//create a window to show the searching student
+//			JFrame searchFrame = new JFrame("Search");
+//			searchFrame.setSize(800, 150);
+//			searchFrame.setLayout(null);
+			table.setModel(new DefaultTableModel(information,headName));
+			
+			}
+			else
 			{
 				JOptionPane.showMessageDialog(null, "Search failed!","Search Failed",JOptionPane.ERROR_MESSAGE);
 			}
@@ -273,9 +311,60 @@ public class Registration {
 	{
 
 		@Override
-		public void mouseClicked(MouseEvent arg0) {
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("mouseClicked");
 			// TODO 自动生成的方法存根
-			
+			for(int row=0,colModify=5,colDelete=6;row<table.getRowCount();row++)
+			{	
+				if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
+				{
+					System.out.println("pop!!!!");
+					System.out.println("table.getSelectedRow() :"+table.getSelectedRow());
+					//修改学生信息
+					int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
+					if(result == 0)
+					{
+						HashMap<String,String> hm= new HashMap<>();
+						ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+						hm.put("op", "modify_student");
+						System.out.println((String)table.getValueAt(row, 0));
+						hm.put("student_id",(String)table.getValueAt(row, 0));
+						System.out.println((String)table.getValueAt(row, 1));
+						hm.put("nname", (String)table.getValueAt(row, 1));
+						System.out.println((String)table.getValueAt(row, 2));
+						hm.put("gender",(String)table.getValueAt(row, 2));
+						System.out.println((String)table.getValueAt(row, 3));
+						hm.put("grade", (String)table.getValueAt(row, 3));
+						System.out.println((String)table.getValueAt(row, 4));
+						hm.put("major", (String)table.getValueAt(row, 4));
+						hm.put("user_info_id", user_info_id[row]);
+						GUI.send(hm);
+					    //Modify the information of student[row] in the database
+						//TODO
+						JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
+					}
+				}
+				//删除学生信息
+				else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
+				{
+					int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
+					if(result == 0)
+					{					
+						//delete the information of student[row] from database
+						//TODO
+						HashMap<String,String> hm= new HashMap<>();
+						hm.put("student_id",(String)table.getValueAt(row, 0));
+						hm.put("user_info_id", user_info_id[row]);
+						hm.put("op", "delete_student");
+						GUI.send(hm);
+						JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
+						DefaultTableModel dtm=(DefaultTableModel)table.getModel();
+						dtm.removeRow(row);	
+						dtm.fireTableDataChanged();
+					}
+				}
+//				}	
+			}
 		}
 
 		@Override
@@ -292,33 +381,7 @@ public class Registration {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			for(int row=0,colModify=5,colDelete=6;row<table.getRowCount();row++)
-			{
-				if(e.getClickCount() == 2)
-				{
-					if(table.getSelectedRow() == row&&table.getSelectedColumn()==colModify)
-					{
-						int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
-						if(result == 0)
-						{
-						    //Modify the information of student[row] in the database
-							//TODO
-							JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
-
-						}
-					}
-					else if(table.getSelectedRow() == row&&table.getSelectedColumn()==colDelete)
-					{
-						int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
-						if(result == 0)
-						{
-							//delete the information of student[row] from database
-							//TODO
-							JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
-						}
-					}
-				}	
-			}
+			
 		}
 
 		@Override
@@ -328,7 +391,7 @@ public class Registration {
 		}
 		
 	}
-
+	//导入学生信息
 	//submit function in "information import"
 	class SubmitLister implements ActionListener
 	{
@@ -337,7 +400,20 @@ public class Registration {
 			//put textStudentNo.getText(),textStudentName.getText(),sex,textEnrollTime.getText(),
 			//SpecialitySelection.getSelectedItem() into the database
 			//TODO
-			
+			HashMap<String,String> hm = new HashMap<String,String>();
+			hm.put("op","import_student");
+			hm.put("nname", "\'"+textStudentName.getText()+"\'");
+			hm.put("student_id","\'"+ textStudentNo.getText()+"\'");
+			if(rdbtnMale.isSelected())hm.put("gender", "\'male\'");
+			else if(rdbtnFemale.isSelected()) hm.put("gender", "\'female\'");
+			else {
+				JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			hm.put("grade", textEnrollTime.getText());
+			hm.put("card_id", textStudentCardID.getText());
+			hm.put("major", "\'"+majors[SpecialitySelection.getSelectedIndex()]+"\'");
+			GUI.send(hm);
 			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);
 			
 		}	
@@ -349,6 +425,7 @@ public class Registration {
 
 			textStudentNo.setText(null);
 			textStudentName.setText(null);
+			textStudentCardID.setText(null);
 			textEnrollTime.setText(null);
 		}
 		
