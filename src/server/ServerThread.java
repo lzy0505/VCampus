@@ -357,6 +357,51 @@ public class ServerThread implements Runnable{
 				case "delete_book":
 					db.deleteWhere("book_info", "book_info_id =" +getOne.get("book_info_id"));
 					db.deleteWhere("book", "book_info_id =" +getOne.get("book_info_id"));
+				case "teacher_courselist":
+					getOne.remove("op");
+					ArrayList<HashMap<String,String>> list=db.selectWhere("course_details","course_teacher=\'"+getOne.get("card_id")+"\'");
+					ArrayList<HashMap<String,String>> result=new ArrayList<HashMap<String,String>>();
+					HashMap<String,String> courseInfo=null;
+					for(int i=0;i<list.size();i++) {
+						courseInfo=new HashMap<String,String>();
+						courseInfo.put("course_time",list.get(i).get("course_time"));
+						courseInfo.put("course_id", list.get(i).get("course_id"));
+						courseInfo.put("course_exam_time", list.get(i).get("course_exam_time"));
+						courseInfo.put("course_exam_place", list.get(i).get("course_exam_place"));
+						HashMap<String,String> tempHM=db.selectWhere("course_info", "course_info_id="+list.get(i).get("course_info_id")).get(0);
+						courseInfo.put("course_name",tempHM.get("course_name"));
+						courseInfo.put("course_credits",tempHM.get("course_credits"));
+						result.add(courseInfo);
+					}
+					soos.writeObject(result);
+					break;
+				case"teacher_query_studentlist":
+					getOne.remove("op");
+					ArrayList<HashMap<String,String>> sList=db.selectWhere("course_records", "course_id="+getOne.get("course_id"));
+					sendList=new ArrayList<HashMap<String,String>>();
+					HashMap<String,String> hm=null;
+					for(int i=0;i<sList.size();i++) {
+						if(sList.get(i).get("select_status").equals("TRUE")){
+							hm=new HashMap<String,String>();
+							ArrayList<HashMap<String,String>> sInfo=db.selectWhere("users","card_id=\'"+sList.get(i).get("course_student")+"\'");
+							hm.put("course_student",sList.get(i).get("course_student"));
+							hm.put("course_score",sList.get(i).get("course_score"));
+							sInfo=db.selectWhere("user_info","user_info_id="+sInfo.get(0).get("user_info_id"));
+							hm.put("nname",sInfo.get(0).get("nname"));
+							hm.put("student_id",sInfo.get(0).get("student_id"));
+							sendList.add(hm);
+						}
+					}
+					soos.writeObject(sendList);
+					break;
+				case "modify_score":
+					getOne.remove("op");
+					db.setWhere("course_records", "course_exam_status=TRUE,course_score="+getOne.get("course_score"), "course_id="+getOne.get("course_id")+" AND course_student=\'"+getOne.get("course_student")+"\'");
+					break;
+				case "teacher_modify_ExamInfo":
+					getOne.remove("op");
+					db.setWhere("course_details", "course_exam_time=\'"+getOne.get("course_exam_time")+"\' ,course_exam_place=\'"+getOne.get("course_exam_place")+"\'", "course_id="+getOne.get("course_id"));
+					break;
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);

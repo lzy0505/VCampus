@@ -226,50 +226,52 @@ public class GUI extends JFrame
 
 
 		
-		//the part of G6
-		G6 = new JFrame(title6);
-		G6.setSize(300,300);
-		G6.setLayout(new FlowLayout());
-		p16 = new JPanel();
-		p16.setLayout(new GridLayout(1,2,150,0));
-		l16 = new JLabel("Welcome!");
-		p16.add(l16);
-		l26 = new JLabel("Sign out");
-		p16.add(l26);
-		G6.add(p16);
-				
-		l36 = new JLabel("Library",new ImageIcon("library.png"),JLabel.LEFT);
-		l36.setHorizontalTextPosition(JLabel.CENTER);
-		l36.setVerticalTextPosition(JLabel.BOTTOM);
-		p26 = new JPanel();
-		p26.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p26.add(l36);
-				
-		l46 = new JLabel("Store",new ImageIcon("store.png"),JLabel.LEFT);
-		l46.setHorizontalTextPosition(JLabel.CENTER);
-		l46.setVerticalTextPosition(JLabel.BOTTOM);
-		p26.add(l46);
-		G6.add(p26);
-				
-		
-		l56 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
-		l56.setHorizontalTextPosition(JLabel.CENTER);
-		l56.setVerticalTextPosition(JLabel.BOTTOM);
-		p36 = new JPanel();
-		p36.setLayout(new FlowLayout(FlowLayout.CENTER));
-		p36.add(l56);
-				
-		l66 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
-		l66.setHorizontalTextPosition(JLabel.CENTER);
-		l66.setVerticalTextPosition(JLabel.BOTTOM);
-		p36.add(l66);
-		G6.add(p36);
-		
-		G6.setLocation(getWidth(G6.getWidth()),getHeight(G6.getHeight()));
-		
+//		//the part of G6
+//		G6 = new JFrame(title6);
+//		G6.setSize(300,300);
+//		G6.setLayout(new FlowLayout());
+//		p16 = new JPanel();
+//		p16.setLayout(new GridLayout(1,2,150,0));
+//		l16 = new JLabel("Welcome!");
+//		p16.add(l16);
+//		l26 = new JLabel("Sign out");
+//		p16.add(l26);
+//		G6.add(p16);
+//				
+//		l36 = new JLabel("Library",new ImageIcon("library.png"),JLabel.LEFT);
+//		l36.setHorizontalTextPosition(JLabel.CENTER);
+//		l36.setVerticalTextPosition(JLabel.BOTTOM);
+//		p26 = new JPanel();
+//		p26.setLayout(new FlowLayout(FlowLayout.CENTER));
+//		p26.add(l36);
+//				
+//		l46 = new JLabel("Store",new ImageIcon("store.png"),JLabel.LEFT);
+//		l46.setHorizontalTextPosition(JLabel.CENTER);
+//		l46.setVerticalTextPosition(JLabel.BOTTOM);
+//		p26.add(l46);
+//		G6.add(p26);
+//				
+//		
+////		l56 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
+////		l56.setHorizontalTextPosition(JLabel.CENTER);
+////		l56.setVerticalTextPosition(JLabel.BOTTOM);
+//		p36 = new JPanel();
+//		p36.setLayout(new FlowLayout(FlowLayout.CENTER));
+////		p36.add(l56);
+//				
+//		l66 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
+//		l66.setHorizontalTextPosition(JLabel.CENTER);
+//		l66.setVerticalTextPosition(JLabel.BOTTOM);
+//		p36.add(l66);
+//		G6.add(p36);
+//		
+//		G6.setLocation(getWidth(G6.getWidth()),getHeight(G6.getHeight()));
+//		
 
-		//调用Load类初始化所有类变量
-		new Load();
+		//初始化HomeScreeen类变量
+		homeScreen=new HomeScreen();	
+   	 	homeScreen.init();
+   	 	
 		
 		
 		//events and reaction
@@ -282,39 +284,38 @@ public class GUI extends JFrame
 		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		//l55.addMouseListener(new MyMouLister2());//open student affairs
 		//b18.addActionListener(new SearchBookFromDB());//search book
-		l56.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO 自动生成的方法存根
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO 自动生成的方法存根
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO 自动生成的方法存根
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO 自动生成的方法存根
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO 自动生成的方法存根
-				new Registration(new String [][]{
-				});
-			}
-		});
+//		l56.addMouseListener(new MouseListener() {
+//			
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//				// TODO 自动生成的方法存根
+//				
+//			}
+//			
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				// TODO 自动生成的方法存根
+//				
+//			}
+//			
+//			@Override
+//			public void mouseExited(MouseEvent e) {
+//				// TODO 自动生成的方法存根
+//				
+//			}
+//			
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				// TODO 自动生成的方法存根
+//				
+//			}
+//			
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				// TODO 自动生成的方法存根
+//				
+//			}
+//		});
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
@@ -336,52 +337,44 @@ public class GUI extends JFrame
 
 	//---------------------------------
 	//@初始化类-------------------------
-		 class Load{
-			 
-			 Load()
-			 {  			    		 
-				 //初始化时注意先后顺序
-				loadHomeScreen();
-				loadHSAdmin();
-				loadBank();
-				loadLibrary();
-			 }
-			 //初始化银行类
-			 void loadBank()
-			 {  
-				 bank=new Bank(homeScreen);
-				 bank.init();
-			 }
-			 //初始化主界面类
-		     void loadHomeScreen()
-		     {
-		    	 homeScreen=new HomeScreen();	
-		    	 homeScreen.init();		    	    	 
-		     }
-		     void loadLibrary()
-		     {
-		    	 library=new Library(homeScreen);
-		    	 library.init();
-	    	 
-		     }
-//		     void loadStudentAffairs()
+//		 class Load{
+//			 
+//			 Load()
+//			 {  			    		 
+//				 //初始化时注意先后顺序
+//				loadHomeScreen();
+//				loadHSAdmin();
+//				loadBank();
+//				loadLibrary();
+//			 }
+//			 //初始化银行类
+//			 void loadBank()
+//			 {  
+//				
+//			 }
+//			 //初始化主界面类
+//		     void loadHomeScreen()
 //		     {
-//		    	 studentAffairs=new StudentAffairs(homeScreen); 	 
+//		    	 	    	    	 
 //		     }
-		     void loadHSAdmin()
-		     {
-		    	 hsAdmin=new HSAdmin();
-		    	 hsAdmin.init();
-		    	 
-		     }
-		    
-		     //调用主界面的update函数将Library、Bank等变量传入
-		
-		     
-	   
-		     
-		 }
-		 //@初始化类结束--------------------------
+//		     void loadLibrary()
+//		     {
+//		    	 
+//	    	 
+//		     }
+//		     void loadHSAdmin()
+//		     {
+//		    	 
+//		    	 
+//		     }
+//		    
+//		     //调用主界面的update函数将Library、Bank等变量传入
+//		
+//		     
+//	   
+//		     
+//		 }
+//		 //@初始化类结束--------------------------
 		 //--------------------------------------
 	
 
@@ -491,11 +484,9 @@ public class GUI extends JFrame
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	//G5.setVisible(true);
+		    	homeScreen.update("student");
 		    	homeScreen.G5.setVisible(true);
-		    	homeScreen.update(library, bank, ci);
 		    	System.out.println("update card_id to : homeScreen!");
-		    	bank.update(ci);
-		    	library.update(ci);
 		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -505,7 +496,8 @@ public class GUI extends JFrame
 		    {
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
-		    	G6.setVisible(true);
+		    	homeScreen.update("teacher");
+		    	homeScreen.G5.setVisible(true);
 		    	G1.setVisible(false);
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		
@@ -515,9 +507,8 @@ public class GUI extends JFrame
 		    	System.out.println("Adminok");
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
-		    	hsAdmin.update(ci);		    	
-		    	hsAdmin.f_admin.setVisible(true);
-		    	hsAdmin.paint();
+		    	homeScreen.update("admin");
+		    	homeScreen.G5.setVisible(true);
 		    	G1.setVisible(false);
 		    	System.out.println("Adminok1");
 		    	
@@ -529,7 +520,6 @@ public class GUI extends JFrame
 						"Sign in unsuccessfully",JOptionPane.ERROR_MESSAGE);
 		    	
 		    }
-			
 			
 	//TODO
 			

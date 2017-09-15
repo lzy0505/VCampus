@@ -136,7 +136,7 @@ import java.net.Socket;
  		mainPanel.add(tabbedPane);
  		mainPanel.add(returnToHomeScreen);
  		homeScreen.G5.getContentPane().removeAll();
- 		homeScreen.G5.setTitle("Student Affairs");
+ 		homeScreen.G5.setTitle("学生教务");
  		homeScreen.G5.getContentPane().add(mainPanel);
  		homeScreen.G5.getContentPane().repaint();
  		homeScreen.G5.getContentPane().revalidate();

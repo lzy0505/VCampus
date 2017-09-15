@@ -29,7 +29,7 @@ public class TestTable {
 		{"09015102","Kate","Female","201509","CSE","Modify","Delete"},
 		{"09015103","Lili","Female","201509","CSE","Modify","Delete"},
 		{"09015104","Amy","Female","201509","CSE","Modify","Delete"}};
-		Registration r=new Registration(data);
+//		Registration r=new Registration(data);
 	}
 
 }

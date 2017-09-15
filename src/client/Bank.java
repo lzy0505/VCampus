@@ -88,12 +88,12 @@ class Bank
 
 	public Bank(HomeScreen hs){
 		homeScreen=hs;
-		ci=hs.ci;
+		ci=ClientInfo.getCi();
 	}
-	void update(String card_id)
-	 {
-		 ci=card_id;
-	 }
+//	void update(String card_id)
+//	 {
+//		 ci=card_id;
+//	 }
 	
 	//绘制银行的函数 
 	 void init()

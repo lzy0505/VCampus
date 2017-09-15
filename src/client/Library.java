@@ -66,7 +66,7 @@ public class Library {
 	public Library(HomeScreen hs)
 	{
 		homeScreen=hs;
-	
+		ci=ClientInfo.getCi();
 	}
 	void init()
 	{  		
@@ -167,12 +167,12 @@ public class Library {
 	}
 
 	
-	void update(String card_id)
-	{
-		ci=card_id;
-	
-	}
-	
+//	void update(String card_id)
+//	{
+//		ci=card_id;
+//	
+//	}
+//	
 	
 
 	//各种消息响应函数及中间函数
