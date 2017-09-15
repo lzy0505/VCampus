@@ -113,11 +113,10 @@ public class Registration {
 		informationQueryTable.setFillsViewportHeight(true);
 		informationQueryTable.setRowHeight(35);
 
-        TableCellRenderer buttonRenderer = new ButtonRenderer();
-        informationQueryTable.getColumn("编辑").setCellRenderer(buttonRenderer);
+        informationQueryTable.getColumn("编辑").setCellRenderer(new ButtonRenderer());
         informationQueryTable.getColumn("编辑").setCellEditor(
          new InformationQueryButtonEditor(new JCheckBox()));
-        informationQueryTable.getColumn("删除").setCellRenderer(buttonRenderer);
+        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
         informationQueryTable.getColumn("删除").setCellEditor(
          new InformationQueryButtonEditor(new JCheckBox()));
         
@@ -349,6 +348,12 @@ public class Registration {
 			}
 
 				informationQueryTable.setModel(new DefaultTableModel(information,informationQueryTableHead));
+		        informationQueryTable.getColumn("编辑").setCellRenderer(new ButtonRenderer());
+		        informationQueryTable.getColumn("编辑").setCellEditor(
+		         new InformationQueryButtonEditor(new JCheckBox()));
+		        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
+		        informationQueryTable.getColumn("删除").setCellEditor(
+		         new InformationQueryButtonEditor(new JCheckBox()));
 			
 			}
 			else
