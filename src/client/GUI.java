@@ -379,6 +379,9 @@ public class GUI extends JFrame
 		//l55.addMouseListener(new MyMouLister2());//open student affairs
 		b18.addActionListener(new SearchBookFromDB());//search book
 		
+		//TODO
+		//点击商店的出现商店主界面的响应
+		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
 		
 		pro1.addItemListener(new MyItemLister1());
