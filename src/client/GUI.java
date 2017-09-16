@@ -18,8 +18,9 @@ import java.util.HashMap;
 //implements ActionListener
 public class GUI extends JFrame 
 {
+	final static private double RATIO=0.33;
+	
 	private Client client;
-	//private String[] book_id = null;
 	private String ci; //card_id
 	static JFrame G1;
 	JPanel p1,p41;
@@ -123,19 +124,23 @@ public class GUI extends JFrame
 	public GUI(String title1,String title2,String title3)
 	{
 		//the part of G1
+		double width=Toolkit.getDefaultToolkit().getScreenSize().getWidth()*RATIO;
+		double height=Toolkit.getDefaultToolkit().getScreenSize().getHeight()*RATIO;
 		G1 = new JFrame(title1);
+		G1.setSize((int)(width), (int)(height));
 		G1.setResizable(false);
 		G1.setUndecorated(true);
-		G1.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
+		G1.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		G1.setIconImage(new ImageIcon("logo.png").getImage());
 		Container c1 = G1.getContentPane();
 		c1.setLayout(new BoxLayout(c1,BoxLayout.Y_AXIS));
 		
-		G1.setSize(400, 300);
+		
 		p1 = new JPanel();
 		JPanel bg=new JPanel();
 		p1.setLayout(new SpringLayout());
 		
-		profession1 = new JLabel("用户身份");
+		profession1 = new JLabel("用户身份",JLabel.RIGHT);
 		p1.add(profession1);
 		
 
@@ -148,21 +153,21 @@ public class GUI extends JFrame
 		
 		
 
-		id1 = new JLabel("一卡通");
+		id1 = new JLabel("一卡通",JLabel.RIGHT);
 		p1.add(id1);
-		i1 = new JTextField("",8);
+		i1 = new JTextField("");
 		id1.setLabelFor(i1);
 		p1.add(i1);
 
 
-		password1 = new JLabel("密码");
+		password1 = new JLabel("密码",JLabel.RIGHT);
 		p1.add(password1);
-		pass1 = new JPasswordField("",8);
+		pass1 = new JPasswordField("");
 		password1.setLabelFor(pass1);
 		p1.add(pass1);
-		SpringUtilities.makeCompactGrid(p1, 3, 2, 0, 20, 0, 25);
+		SpringUtilities.makeCompactGrid(p1, 3, 2, 0, (int)(height/11), 10, (int)(height/11));
 		
-		p1.setMaximumSize(new Dimension(300,300));
+		p1.setPreferredSize(new Dimension((int)(width*3/5),(int)(height*7/11)));
 		
 		bg.add(p1);
 		G1.add(bg);
@@ -184,18 +189,19 @@ public class GUI extends JFrame
 		
 		//the part of G2
 		G2 = new JFrame(title2);
-		G2.setSize(400,300);
-		G2.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
+		G2.setIconImage(new ImageIcon("logo.png").getImage());
+		G2.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()*RATIO), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*RATIO));
+		G2.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
 		Container c2 = G2.getContentPane();
 		c2.setLayout(new BoxLayout(c2,BoxLayout.Y_AXIS));
 		
 		JPanel bg2=new JPanel();
 		p2 = new JPanel();
 		p2.setLayout(new SpringLayout());
-		p2.setMaximumSize(new Dimension(350,400));
-		id2 = new JLabel("一卡通");
+		p2.setPreferredSize(new Dimension((int)(width*5/7),(int)(height*7/11)));
+		id2 = new JLabel("一卡通",JLabel.RIGHT);
 		p2.add(id2);
-		i2 = new JTextField("",8);
+		i2 = new JTextField("");
 		id2.setLabelFor(i2);
 		p2.add(i2);
 		l1 = new JLabel("(少于10个字符)");
@@ -204,8 +210,8 @@ public class GUI extends JFrame
 
 		
 
-		password2 = new JLabel("密码");
-		pass2 = new JPasswordField("",8);
+		password2 = new JLabel("密码",JLabel.RIGHT);
+		pass2 = new JPasswordField("");
 		p2.add(password2);
 		password2.setLabelFor(pass2);
 		p2.add(pass2);
@@ -214,8 +220,8 @@ public class GUI extends JFrame
 		p2.add(l2);
 		
 
-		ipassword2 = new JLabel("确认密码");
-		ipass2 = new JPasswordField("",8);
+		ipassword2 = new JLabel("确认密码",JLabel.RIGHT);
+		ipass2 = new JPasswordField("");
 		p2.add(ipassword2);
 		ipassword2.setLabelFor(ipass2);
 		p2.add(ipass2);
@@ -229,12 +235,16 @@ public class GUI extends JFrame
 		p42.setLayout(new FlowLayout(FlowLayout.CENTER));
 		reg2 = new JButton("注册");
 		p42.add(reg2);
-		SpringUtilities.makeCompactGrid(p2, 3, 3, 0, 20, 0, 25);
+		SpringUtilities.makeCompactGrid(p2, 3, 3, 0,(int)(height/13), 5, (int)(height/12));
 		bg2.add(p2);
 		G2.add(bg2);
 		G2.add(p42);
-		
+		G2.setResizable(false);
 		G2.setLocation(getWidth(G2.getWidth()),getHeight(G2.getHeight()));
+		
+		
+		
+		
 		
 		//the part of G3
 		G3 = new JFrame(title3);
@@ -279,11 +289,15 @@ public class GUI extends JFrame
         org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
         UIManager.put("RootPane.setupButtonVisible", false); 
         //更换所有字体
-        FontUIResource fontRes = new FontUIResource(new Font("Microsoft YaHei UI", Font.BOLD, 18));  
+        FontUIResource fontRes = new FontUIResource(new Font("Microsoft YaHei UI", Font.PLAIN, 17));
+        fontRes.canDisplay(ABORT);
+        
         for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {  
-            Object key = keys.nextElement();  
+            Object key = keys.nextElement(); 
             Object value = UIManager.get(key);  
-            if (value instanceof FontUIResource) {  
+            if (value instanceof FontUIResource) {
+//            	FontUIResource f=(FontUIResource)value;
+//            	System.out.println(f.getAvailableAttributes().toString());
                 UIManager.put(key, fontRes);  
             }  
         }
@@ -432,10 +446,10 @@ public class GUI extends JFrame
 		    {
 		    	JOptionPane.showMessageDialog(null,"用户名或密码错误",
 						"登陆失败",JOptionPane.ERROR_MESSAGE);
-		    	
 		    }
-			
-	//TODO
+		    i1.setText("");
+		    pass1.setText("");
+		    //TODO
 			
 		}
 		

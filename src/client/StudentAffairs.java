@@ -25,6 +25,7 @@ import table_component.SpringUtilities;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 
 //import client.GUI.ChooseCourseLister;
  
@@ -64,10 +65,10 @@ import java.net.Socket;
 	private JTextField textStudentCardID;
 	JRadioButton rdbtnFemale;
 	JRadioButton rdbtnMale;
-	JFormattedTextField textEnrollTime;
+	JTextField textEnrollTime;
 	JComboBox SpecialitySelection;
 	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
-				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "cs", "物理系", "生物科学与医学工程学院", 
+				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
 			"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
 			"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
  	JFrame courseDetails=null;
@@ -133,20 +134,20 @@ import java.net.Socket;
 		JLabel lblStudentNumber = new JLabel("学号",JLabel.TRAILING);
 		informationImportLeftContentPanel.add(lblStudentNumber);
 		textStudentNo = new JTextField();
-		textStudentNo.setColumns(10);
+
 		lblStudentNumber.setLabelFor(textStudentNo);
 		informationImportLeftContentPanel.add(textStudentNo);
 		
-		JLabel lblStudentname = new JLabel("学生姓名",JLabel.TRAILING);
+		JLabel lblStudentname = new JLabel("姓名",JLabel.TRAILING);
 		informationImportLeftContentPanel.add(lblStudentname);
 		textStudentName = new JTextField();
-		textStudentName.setColumns(10);
+		textStudentName.setColumns((int)(HomeScreen.width/100));
 		lblStudentname.setLabelFor(textStudentName);
 		informationImportLeftContentPanel.add(textStudentName);
 		
 		JLabel lblEnrollmenttime = new JLabel("入学年份",JLabel.TRAILING);
 		informationImportRightContentPanel.add(lblEnrollmenttime);
-		textEnrollTime = new JFormattedTextField();
+		textEnrollTime = new JTextField();
 		textEnrollTime.setText("2010");
 		lblEnrollmenttime.setLabelFor(textEnrollTime);
 		informationImportRightContentPanel.add(textEnrollTime);
@@ -172,8 +173,8 @@ import java.net.Socket;
 		lblSex.setLabelFor(genderPanel);
 		informationImportRightContentPanel.add(genderPanel);
 
-		SpringUtilities.makeCompactGrid(informationImportLeftContentPanel, 3, 2, 15, 40, 5, 26);
-		SpringUtilities.makeCompactGrid(informationImportRightContentPanel, 3, 2, 15, 40, 5, 22);
+		SpringUtilities.makeCompactGrid(informationImportLeftContentPanel, 3, 2, (int)(HomeScreen.width/8), (int)(HomeScreen.height/8),  (int)(HomeScreen.width/80), (int)(HomeScreen.height/10));
+		SpringUtilities.makeCompactGrid(informationImportRightContentPanel, 3, 2, (int)(HomeScreen.width/8), (int)(HomeScreen.height/8),  (int)(HomeScreen.width/80), (int)(HomeScreen.height/10));
 		informationImportContentPanel.add(informationImportLeftContentPanel);
 		informationImportContentPanel.add(informationImportRightContentPanel);
 
@@ -207,9 +208,11 @@ import java.net.Socket;
         selectCourseTable.getColumn("操作").setCellRenderer(buttonRenderer);
         selectCourseTable.getColumn("操作").setCellEditor(
          new SelectCourseButtonEditor(new JCheckBox()));	
-	
  		JScrollPane selectCoursePane = new JScrollPane(selectCourseTable);
- 		tabbedPane.addTab("选课", null, selectCoursePane, null);
+ 		JPanel test1=new JPanel();
+ 		selectCoursePane.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*4/5)));
+ 		test1.add(selectCoursePane);
+ 		tabbedPane.addTab("选课", null, test1, null);
  		//考试安排模块初始化
  		DefaultTableModel examArrangementTableModel=new DefaultTableModel();
  		examArrangementTableModel.setDataVector(examArrangementTableContent, examArrangementTableHead);
@@ -219,7 +222,10 @@ import java.net.Socket;
  		examArrangementTable.setEnabled(false);
  		
  		JScrollPane examArrangementPane = new JScrollPane(examArrangementTable);
- 		tabbedPane.addTab("考试安排", null, examArrangementPane, null);
+ 		JPanel test2=new JPanel();
+ 		test2.add(examArrangementPane);
+ 		examArrangementPane.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*5/6)));				
+ 		tabbedPane.addTab("考试安排", null, test2, null);
  		//成绩查询模块初始化
  		DefaultTableModel scoreQueryTableModel=new DefaultTableModel();
  		scoreQueryTableModel.setDataVector(scoreQueryTableContent, scoreQueryTableHead);
@@ -229,7 +235,10 @@ import java.net.Socket;
  		scoreQueryTable.setEnabled(false);
  		
  		JScrollPane scoreQueryPane = new JScrollPane(scoreQueryTable);
- 		tabbedPane.addTab("成绩查询", null, scoreQueryPane, null); 		
+ 		JPanel test3=new JPanel();
+ 		scoreQueryPane.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*5/6)));
+ 		test3.add(scoreQueryPane);
+ 		tabbedPane.addTab("成绩查询", null, test3, null); 		
   		
 
 		if(isCompleted.get("result").equals("false")) {
@@ -251,7 +260,7 @@ import java.net.Socket;
  	/**
  	 * Update the contents of the frame.
  	 */
-private void updateStudentCourse() {
+ 	private void updateStudentCourse() {
  		updateTableContent();
  		DefaultTableModel selectCourseTableModel= new DefaultTableModel();
  		selectCourseTableModel.setDataVector(selectCourseTableContent,selectCourseTableHead);
@@ -262,18 +271,18 @@ private void updateStudentCourse() {
         selectCourseTable.getColumn("操作").setCellEditor(
         new SelectCourseButtonEditor(new JCheckBox()));	
  
-        
+       
  		DefaultTableModel examArrangementTableModel=new DefaultTableModel();
  		examArrangementTableModel.setDataVector(examArrangementTableContent, examArrangementTableHead);
  		examArrangementTable.setModel(examArrangementTableModel); 
- 	 	
+ 		
+ 		
  		DefaultTableModel scoreQueryTableModel=new DefaultTableModel();
  		scoreQueryTableModel.setDataVector(scoreQueryTableContent, scoreQueryTableHead);
  		scoreQueryTable.setModel(scoreQueryTableModel);
-		
  	}
 	
-public void updateTableContent() {
+	public void updateTableContent() {
 		isCompleted=new HashMap<String,String>();
 		isCompleted.put("op", "isCompleted");
 		isCompleted.put("card_id",ClientInfo.getCi());
@@ -333,11 +342,12 @@ public void updateTableContent() {
 		}
 	}
 
- 	//tow
  	public void courseSelect(Object[][] selectTeacherTableContent)
  	{
  		courseDetails = new JFrame();
- 		courseDetails.setSize(480,300);
+ 		courseDetails.setTitle("课程选择");
+ 		courseDetails.setIconImage(new ImageIcon("logo.png").getImage());
+ 		courseDetails.setSize(new Dimension((int)(HomeScreen.width/2),(int)(HomeScreen.height)));
  		courseDetails.setLayout(new FlowLayout());
 
  		Object[] selectTeacherTableHead=new Object[] {"教师姓名","课程时间","状态","操作"};
@@ -345,17 +355,18 @@ public void updateTableContent() {
  		DefaultTableModel selectTeacherTableModel=new DefaultTableModel();
  		selectTeacherTableModel.setDataVector(selectTeacherTableContent, selectTeacherTableHead);
  		JTable selectTeacherTable= new JTable(selectTeacherTableModel);
- 		selectTeacherTable.setFillsViewportHeight(true); 
+ 		selectTeacherTable.setFillsViewportHeight(true);
+ 		selectTeacherTable.setRowHeight(40);
         selectTeacherTable.getColumn("操作").setCellRenderer(new SelectTeacherButtonRenderer());
         selectTeacherTable.getColumn("操作").setCellEditor(
          new SelectTeacherButtonEditor(new JCheckBox()));	
  		JScrollPane selectTeacherPane = new JScrollPane(selectTeacherTable);
+ 		selectTeacherPane.setPreferredSize(new Dimension((int)(HomeScreen.width/2)-10,(int)(HomeScreen.height)-30));
  		courseDetails.add(selectTeacherPane);
  		courseDetails.setLocation(getWidth(courseDetails.getWidth()),getHeight(courseDetails.getHeight()));
  		courseDetails.setVisible(true);
  	
  	}
- 	
 
  	class SelectCourseButtonEditor extends ButtonEditor{
  		int row;		
@@ -401,9 +412,7 @@ public void updateTableContent() {
 		 
  		
  	}
- 
- 
- 
+  
 	class SelectTeacherButtonEditor extends ButtonEditor{
 			int row;		
 			public SelectTeacherButtonEditor(JCheckBox checkBox) {
@@ -420,7 +429,7 @@ public void updateTableContent() {
 					button.setBackground(UIManager.getColor("Button.background"));
 //					button.setEnabled(false);
 					super.setIsPushed(false);
-					System.out.println("Editor-disable!!!!");
+//					System.out.println("Editor-disable!!!!");
 				}
 				return button;
 			}
@@ -432,17 +441,18 @@ public void updateTableContent() {
 		 			cohm.put("course_record_id", coList.get(row).get("course_record_id"));
 		 			cohm.put("op", "choose_ok");
 		 			cohm = GUI.getOne(cohm);
-		 			String result="Choosing course"+cohm.get("result")+"!";
+		 			String result="选课"+cohm.get("result")+"！";
 		 			courseDetails.dispose();
 		 			updateStudentCourse();
 		 			tabbedPane.repaint();
 		 	        tabbedPane.revalidate();
 					JOptionPane.showMessageDialog(null, result,
-		 					"Results",JOptionPane.INFORMATION_MESSAGE);
+		 					"操作结果",JOptionPane.INFORMATION_MESSAGE);
 			    }
 				return super.getCellEditorValue();
 			  }
 	}
+	
 	class SelectTeacherButtonRenderer extends ButtonRenderer{
 		public SelectTeacherButtonRenderer() {
 			super();
@@ -461,16 +471,7 @@ public void updateTableContent() {
 		    return this;
 		  }
 	}
-	
-	class ReturnActionListener implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			homeScreen.paint();
-		}
-	}
-	
+		
 	class CourseSelectJTable extends JTable{
 		public CourseSelectJTable(DefaultTableModel tableModel) {
 			// TODO Auto-generated constructor stub

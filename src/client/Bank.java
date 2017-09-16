@@ -23,6 +23,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -30,6 +31,7 @@ import javax.swing.table.TableCellEditor;
 
 import client.HomeScreen;
 import sun.security.util.Password;
+import table_component.SpringUtilities;
 
 /**
  * @author Mcdull
@@ -50,13 +52,9 @@ class Bank
 	JLabel l_money;//显示充值金额的标签
 	JTextField money_recharge;//充值金额
 	JButton ok_re;//确认按钮 	
-	JPanel recharge_p1;//放置充值金额标签和显示框
-	JPanel recharge_p2;//放置确实标签密码和确定按钮
 	JPanel p_recharge;
 	JLabel l_confirm1;
 	JPasswordField t_password_confirm1;
-	JPanel p_balance;//余额面板
-	JLabel l_ecard;//一卡通余额标签
 	JTextField t_balance;//一卡通余额显示
 	
 	
@@ -102,26 +100,41 @@ class Bank
 	 {		
 		
 		 	//充值界面	
-		    p_recharge = new JPanel();			    
-		 	money_recharge=new JTextField();
-		 	money_recharge.setColumns(20);
-		 	ok_re=new JButton("确定");
-		 	ok_re.setPreferredSize(new Dimension(70,30));
-		 	l_money=new JLabel("充值金额");
-		 	recharge_p1=new JPanel();
-		 	recharge_p2=new JPanel();
-		 	l_confirm1=new JLabel("确认密码");
+		    p_recharge = new JPanel(new SpringLayout());			    
+
+		 	JLabel l_ecard=new JLabel("一卡通余额",JLabel.RIGHT);
+		 	p_recharge.add(l_ecard);
+		 	t_balance=new JTextField();
+		 	t_balance.setColumns(15);
+		 	t_balance.setEditable(false);//设置文本框不可编辑
+		 	l_ecard.setLabelFor(t_balance);
+		 	p_recharge.add(t_balance);	    
+		    
+		 	l_money=new JLabel("充值金额",JLabel.RIGHT);
+		 	p_recharge.add(l_money);
+		    money_recharge=new JTextField();
+//		 	money_recharge.setColumns(20);
+		 	l_money.setLabelFor(money_recharge);
+		 	p_recharge.add(money_recharge);
+
+
+
+		 	l_confirm1=new JLabel("确认密码",JLabel.RIGHT);
+		 	p_recharge.add(l_confirm1);
 		 	t_password_confirm1=new JPasswordField();
-		 	t_password_confirm1.setColumns(17);
-		 	recharge_p1.setLayout(new FlowLayout());
-		 	recharge_p1.add(l_money);
-		 	recharge_p1.add(money_recharge);
-		 	recharge_p2.add(l_confirm1);
-		 	recharge_p2.add(t_password_confirm1);
-		 	recharge_p2.add(ok_re);
-		 	p_recharge.setLayout(new BoxLayout(p_recharge,BoxLayout.Y_AXIS));
+		 	l_confirm1.setLabelFor(t_password_confirm1);
+		 	p_recharge.add(t_password_confirm1);
+		 	
+			ok_re=new JButton("确定");
+		 	ok_re.setPreferredSize(new Dimension(70,30));
+		 	p_recharge.add(new JLabel());
+		 	p_recharge.add(ok_re);
 		 	
 		 	
+		 	SpringUtilities.makeCompactGrid(p_recharge, 4, 2, 0, 70, 10, 70);
+		 	JPanel test2=new JPanel();
+		 	test2.add(p_recharge);
+		 	test2.setPreferredSize(new Dimension((int)(HomeScreen.width/3),(int)(HomeScreen.height/2)));
 		 	
 		 	//缴费界面
 		 	clickflag=false;
@@ -159,37 +172,23 @@ class Bank
 		 	p_payment.add(payment_p2);
 		 	p_payment.add(payment_p3);
 		 	
-		 	
-		 	
-		 	
-		 	//查询界面
-		 	l_ecard=new JLabel("一卡通余额：");
-		 	t_balance=new JTextField();
-		 	t_balance.setColumns(10);
-		 	t_balance.setEditable(false);//设置文本框不可编辑
-		 	p_balance=new JPanel();		 	
-		 	p_balance.setLayout(new FlowLayout());
-		 	p_balance.add(l_ecard);
-		 	p_balance.add(t_balance);
-		 	
-		 	p_recharge.add(p_balance);
-		 	p_recharge.add(recharge_p1);
-		 	p_recharge.add(recharge_p2);
-		 	
+
 		 	
 		 	recordQueryTable=new JTable();
 		 	recordQueryTable.setFillsViewportHeight(true);
 		 	recordQueryTable.setEnabled(false);
+		 	
+		 	JPanel test = new JPanel();
+		 	
 		 	JScrollPane p_records=new JScrollPane(recordQueryTable);
-		 	
-		 	
+		 	p_records.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*4/5)));
+		 	test.add(p_records);
 		 	//银行tab
 		 	//return_upbank.setPreferredSize(new Dimension(300,80));
 		 	tab_bank=new JTabbedPane();			 	
-		 	tab_bank.addTab("查询与充值",p_recharge);
+		 	tab_bank.addTab("查询与充值",test2);
 		 	tab_bank.addTab("支付",p_payment);
-		 	tab_bank.addTab("消费流水",p_records);
-		 	tab_bank.setPreferredSize(new Dimension(300,280));
+		 	tab_bank.addTab("消费流水",test);
 	        p_bank=new JPanel();
 	        p_bank.setLayout(new BoxLayout(p_bank,BoxLayout.Y_AXIS));
 	        p_bank.add(tab_bank);
@@ -206,7 +205,9 @@ class Bank
 		 //payment_query.addActionListener(new ActionLis_Paymentquery());//缴费查询按钮
 		 chosePay.addActionListener(new ActionLis_Paymentquery());
 		 ok_pay.addActionListener(new ActionLis_Pay());//确认缴费按钮
-		 tab_bank.addChangeListener(new ChangeLis_tab());//Tab选项卡监听，当鼠标点击第三个选项卡（查询余额）,触发查询事件
+		 ChangeLis_tab cl=new ChangeLis_tab();
+		 tab_bank.addChangeListener(cl);//Tab选项卡监听，当鼠标点击第三个选项卡（查询余额）,触发查询事件
+		 cl.stateChanged(null);
 	 }
 		//-----------------------------------------------
 		//@@各种消息映射类的实现
@@ -217,8 +218,8 @@ class Bank
 		public void stateChanged(ChangeEvent e) {
 			// TODO Auto-generated method stub
 			
-		    JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-		    int selectedIndex = tabbedPane.getSelectedIndex();
+//		    JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+		    int selectedIndex = tab_bank.getSelectedIndex();
 		    if(selectedIndex==1){
 		    	new ActionLis_Paymentquery().actionPerformed(null);
 		    }else if(selectedIndex==0)
@@ -228,7 +229,7 @@ class Bank
 				hm.put("card_id", ci);
 				hm=GUI.getOne(hm);//GetOne是GUI的static函数，调用时要前缀" GUI. "
 				t_balance.setText(hm.get("card_balance"));
-				System.out.println("card_balance :" + hm.get("card_balance"));
+//				System.out.println("card_balance :" + hm.get("card_balance"));
 				
 				//---反馈部分交给李某
 				//...返回用户的一卡通余额，写进t_balance控件显示
@@ -241,7 +242,7 @@ class Bank
 				ArrayList<HashMap<String,String>> resultList=GUI.getList(hm);
 				String[][] data=new String[resultList.size()][3];
 				for(int i=0;i<resultList.size();i++) {
-					data[i][0]=resultList.get(i).get("purchase_time");
+					data[i][0]=resultList.get(i).get("purchase_time").substring(0,resultList.get(i).get("purchase_time").length()-7);
 					data[i][1]=resultList.get(i).get("purchase_content");
 					data[i][2]=resultList.get(i).get("purchase_cost");
 				}
@@ -466,7 +467,7 @@ class Bank
 		//bank.t.setPreferredSize(new Dimension(450,300));
 		t.setRowHeight(40);
 		sp.setViewportView(t);
-		sp.setPreferredSize(new Dimension(600,300));
+		sp.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*2/3)));
 		payment_p2.removeAll();
 		payment_p2.add(sp);
 		payment_p2.repaint();

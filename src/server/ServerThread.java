@@ -216,7 +216,7 @@ public class ServerThread implements Runnable{
 					db.setWhere("course_details", "course_selected_number = course_selected_number+1", "course_id=" + getOne.get("course_id"));
 					if(sendList.get(0).get("course_selected_number").equals(sendList.get(0).get("course_max_number")))
 						db.setWhere("course_details", "course_is_full ="+ "TRUE", "course_id=" + getOne.get("course_id"));
-					send.put("result", " successfully");
+					send.put("result", "成功");
 					soos.writeObject(send);
 					break;
 				case "QueryBalance":				

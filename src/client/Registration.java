@@ -18,7 +18,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
 import client.Registration.DoubleClickModifyDelete;
-import client.StudentAffairs.ReturnActionListener;
 import client.StudentAffairs.SelectCourseButtonEditor;
 import table_component.ButtonEditor;
 import table_component.ButtonRenderer;
@@ -71,10 +70,6 @@ public class Registration {
 		tabbedPane.setPreferredSize(new Dimension(500,360));
 		mainPanel=new JPanel();
 		mainPanel.add(tabbedPane);
-		JButton returnToHomeScreen = new JButton("返回");
- 		returnToHomeScreen.addActionListener(new ReturnActionListener());
- 		returnToHomeScreen.setPreferredSize(new Dimension(80,32));
-		mainPanel.add(returnToHomeScreen);
 		
 		JPanel informationService = new JPanel();
 		tabbedPane.addTab("信息管理", null, informationService, null);
@@ -372,15 +367,7 @@ public class Registration {
 		
 	}
 	
-	class ReturnActionListener implements ActionListener{
 
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			homeScreen.paint();
-		}
-		
-	}
 	
 	
 	class ChooseBoxActionListener implements ActionListener{

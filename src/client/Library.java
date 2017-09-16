@@ -56,7 +56,7 @@ public class Library {
 	    JPanel return_p1,return_p2;//用于布局的面板
 	    String[] columnNames_Return;//借书表的表头
 	    String[][] rowData_Return;//借书的数据
-	    JLabel l_return;//“你已借图书有”的按钮
+//	    JLabel l_return;//“你已借图书有”的按钮
 	    JTable table_return;//显示需要归还的书的表格
 	    JScrollPane sp_return;
 	    JButton b_return;//还书按钮
@@ -86,13 +86,13 @@ public class Library {
 
 	    l_method=new JLabel("查询方式");//“检索方式”的标签
 	    choseMethod=new JComboBox<String>();//检索方式的复选框
-	    choseMethod.setPreferredSize(new Dimension(170,25));
+//	    choseMethod.setPreferredSize(new Dimension(170,25));
 	    choseMethod.addItem("按作者");
 	    choseMethod.addItem("按书名");	    
 	    t_keyWord=new JTextField();//关键词编辑框
-	    t_keyWord.setPreferredSize(new Dimension(170,28));    
+	    t_keyWord.setColumns(20);   
 	    b_query=new JButton("查询");//查询按钮	  
-	    b_query.setPreferredSize(new Dimension(80,32));
+//	    b_query.setPreferredSize(new Dimension(80,32));
 	    b_borrow=new JButton("借阅");//借书按钮
 	    b_borrow.setVisible(false);
 	   
@@ -113,11 +113,12 @@ public class Library {
 	    p_return.setLayout(new BoxLayout(p_return,BoxLayout.Y_AXIS));
 	    return_p1=new JPanel(); 
 	    return_p2=new JPanel();
-	    l_return=new JLabel("已借图书");
+//	    l_return=new JLabel("已借图书",JLabel.LEFT);
+//	    l_return.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
 //	    l_return.setFont(new Font);//“你已借图书有”的按钮	   
 	    b_return=new JButton("还书");//还书按钮
 	    return_p1.add(b_return);
-	    p_return.add(l_return);
+//	    p_return.add(l_return);
 	    p_return.add(return_p2);
 	    p_return.add(return_p1);
 	    columnNames_Return=new String[4];//借书表的表头
@@ -129,11 +130,13 @@ public class Library {
 	    
 	    //将借书和还书面板加入tabbed中
 	    tab_library=new JTabbedPane();
-	    tab_library.addTab("查询图书",p_borrow);
+	    tab_library.addTab("查询与借阅",p_borrow);
 	    tab_library.addTab("还书",p_return);
-	    tab_library.setPreferredSize(new Dimension(600,500));
+//	    tab_library.setPreferredSize(new Dimension(600,500));
 	    p_library=new JPanel(); //顶层面板
+//	    p_library.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*4/5)));
 	    p_library.add(tab_library);
+	    
 	    addLis();
 	    
      
@@ -270,7 +273,7 @@ public class Library {
 					table_return.getColumnModel().getColumn(1).setPreferredWidth(6);
 					table_return.getColumnModel().getColumn(3).setPreferredWidth(35);
 					sp_return.setViewportView(table_return);
-					sp_return.setPreferredSize(new Dimension(600,500));
+					sp_return.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*3/4)));
 					return_p2.removeAll();
 					return_p2.add(sp_return);
 					return_p2.repaint();
@@ -288,7 +291,7 @@ public class Library {
 			};
 			table_return.setRowHeight(40);
 			sp_return.setViewportView(table_return);
-			sp_return.setPreferredSize(new Dimension(600,500));
+			sp_return.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*3/4)));
 			return_p2.removeAll();
 			return_p2.add(sp_return);
 			return_p2.repaint();
@@ -361,7 +364,7 @@ public class Library {
 				table_borrow.setRowHeight(40);
 				table_borrow.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				sp_borrow.setViewportView(table_borrow);
-				sp_borrow.setPreferredSize(new Dimension(600,500));
+				sp_borrow.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*2/3)));
 				borrow_p[2].removeAll();
 				borrow_p[2].add(sp_borrow);
 				borrow_p[2].repaint();
