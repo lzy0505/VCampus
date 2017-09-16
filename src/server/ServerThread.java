@@ -149,6 +149,7 @@ public class ServerThread implements Runnable{
 						{
 							ArrayList<HashMap<String,String>> idList = db.selectWhere("book_info", "book_info_id ="+sendList.get(i).get("book_info_id"));
 							idList.get(0).put("book_id", sendList.get(i).get("book_id"));
+							idList.get(0).put("borrow_date", sendList.get(i).get("borrow_date"));
 							cList.add(idList.get(0));						
 						}
 						soos.writeObject(cList);
@@ -183,7 +184,7 @@ public class ServerThread implements Runnable{
 						courseList.get(0).put("course_exam_status", scList.get(i).get("course_exam_status"));					
 						if(scList.get(i).get("select_status").equals("TRUE")) {
 							ArrayList<HashMap<String,String>> cdlList = db.selectWhere("course_details", "course_id ="+ scList.get(i).get("course_id"));
-							courseList.get(0).put("course_teacher", cdlList.get(0).get("course_teacher"));
+							courseList.get(0).put("course_teacher", db.selectWhere("user_info","user_info_id="+db.selectWhere("users","card_id=\'"+cdlList.get(0).get("course_teacher")+"\'").get(0).get("user_info_id")).get(0).get("nname"));
 							courseList.get(0).put("course_id", scList.get(i).get("course_id"));
 							courseList.get(0).put("course_score", scList.get(i).get("course_score"));
 							courseList.get(0).put("course_exam_time", cdlList.get(0).get("course_exam_time"));
@@ -200,6 +201,7 @@ public class ServerThread implements Runnable{
 						sendList.get(i).put("course_record_id", getOne.get("course_record_id"));
 						sendList.get(i).put("coure_name", getOne.get("course_name"));
 						sendList.get(i).put("select_status", getOne.get("select_status"));
+						sendList.get(i).replace("course_teacher", db.selectWhere("user_info","user_info_id="+db.selectWhere("users","card_id=\'"+sendList.get(i).get("course_teacher")+"\'").get(0).get("user_info_id")).get(0).get("nname"));
 					}
 					soos.writeObject(sendList);
 					break;
@@ -209,7 +211,7 @@ public class ServerThread implements Runnable{
 					if(sendList.get(0).get("select_status").equals("TRUE")) {
 						db.setWhere("course_details", "course_selected_number=course_selected_number-1,course_is_full=FALSE", "course_id="+sendList.get(0).get("course_id"));
 					}
-					db.setWhere("course_records", "course_id="+getOne.get("course_id")+",select_status=" + "TRUE", "course_record_id=" + getOne.get("course_record_id"));
+					db.setWhere("course_records", "course_id="+getOne.get("course_id")+",select_status=TRUE,course_exam_status=FALSE", "course_record_id=" + getOne.get("course_record_id"));
 					sendList=db.selectWhere("course_details", "course_id= "+getOne.get("course_id"));
 					db.setWhere("course_details", "course_selected_number = course_selected_number+1", "course_id=" + getOne.get("course_id"));
 					if(sendList.get(0).get("course_selected_number").equals(sendList.get(0).get("course_max_number")))
@@ -235,25 +237,43 @@ public class ServerThread implements Runnable{
 					switch (type) {
 					case "Tuition":
 						ArrayList<HashMap<String,String>> cardInfoList=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
-						for(int i= 0;i<cardInfoList.size();i++) {
-							if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
+						if(cardInfoList.isEmpty()) {
+							HashMap<String,String> re=new HashMap<String,String>();	
+							re.put("result","错误的一卡通号");
+							sendList.add(re);				
+						}else {
+							cardInfoList = db.selectWhere("card_records", "card_info_id="+cardInfoList.get(0).get("card_info_id"));
+							for(int i= 0;i<cardInfoList.size();i++) {
+								if(cardInfoList.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoList.get(i));
+							}
 						}
 						soos.writeObject(sendList);
 						break;
 					case "WandE":					
 						ArrayList<HashMap<String,String>> cardInfoListWanE=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						cardInfoListWanE = db.selectWhere("card_records", "card_info_id="+cardInfoListWanE.get(0).get("card_info_id"));
-						for(int i= 0;i<cardInfoListWanE.size();i++) {
-							if(cardInfoListWanE.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListWanE.get(i));
+						if(cardInfoListWanE.isEmpty()) {
+							HashMap<String,String> re=new HashMap<String,String>();	
+							re.put("result","错误的一卡通号");
+							sendList.add(re);
+						}else {
+							cardInfoListWanE = db.selectWhere("card_records", "card_info_id="+cardInfoListWanE.get(0).get("card_info_id"));
+							for(int i= 0;i<cardInfoListWanE.size();i++) {
+								if(cardInfoListWanE.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListWanE.get(i));
+							}
 						}
 						soos.writeObject(sendList);
 						break;
 					case "Afee":
 						ArrayList<HashMap<String,String>> cardInfoListAfee=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						cardInfoListAfee = db.selectWhere("card_records", "card_info_id="+cardInfoListAfee.get(0).get("card_info_id"));
-						for(int i= 0;i<cardInfoListAfee.size();i++) {
-							if(cardInfoListAfee.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListAfee.get(i));
+						if(cardInfoListAfee.isEmpty()) {
+							HashMap<String,String> re=new HashMap<String,String>();	
+							re.put("result","错误的一卡通号");
+							sendList.add(re);
+						}else {
+							cardInfoListAfee = db.selectWhere("card_records", "card_info_id="+cardInfoListAfee.get(0).get("card_info_id"));
+							for(int i= 0;i<cardInfoListAfee.size();i++) {
+								if(cardInfoListAfee.get(i).get("card_content").equals(getOne.get("type")))sendList.add(cardInfoListAfee.get(i));
+							}
 						}
 						soos.writeObject(sendList);
 						break;
@@ -411,6 +431,11 @@ public class ServerThread implements Runnable{
 						getOne.put("result", "true");
 					}
 					soos.writeObject(getOne);
+					break;
+				case "QueryRecords":
+					getOne.remove("op");
+					sendList=db.selectWhere("store_purchase_records", "card_id=\'"+getOne.get("card_id")+"\'");
+					soos.writeObject(sendList);
 					break;
 				default:
 					send.put("result","No such operation!");

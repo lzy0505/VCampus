@@ -84,7 +84,7 @@ public class Library {
 	    columnNames_Borrow[2]="出版社";
 	    columnNames_Borrow[3]="库存数量";
 
-	    l_method=new JLabel("查询方式：");//“检索方式”的标签
+	    l_method=new JLabel("查询方式");//“检索方式”的标签
 	    choseMethod=new JComboBox<String>();//检索方式的复选框
 	    choseMethod.setPreferredSize(new Dimension(170,25));
 	    choseMethod.addItem("按作者");
@@ -113,23 +113,25 @@ public class Library {
 	    p_return.setLayout(new BoxLayout(p_return,BoxLayout.Y_AXIS));
 	    return_p1=new JPanel(); 
 	    return_p2=new JPanel();
-	    l_return=new JLabel("已借图书");//“你已借图书有”的按钮	   
+	    l_return=new JLabel("已借图书");
+//	    l_return.setFont(new Font);//“你已借图书有”的按钮	   
 	    b_return=new JButton("还书");//还书按钮
 	    return_p1.add(b_return);
 	    p_return.add(l_return);
 	    p_return.add(return_p2);
 	    p_return.add(return_p1);
-	    columnNames_Return=new String[3];//借书表的表头
+	    columnNames_Return=new String[4];//借书表的表头
 	    columnNames_Return[0]="书名";
 	    columnNames_Return[1]="作者";
 	    columnNames_Return[2]="出版社";
+	    columnNames_Return[3]="借阅时间";
 	    
 	    
 	    //将借书和还书面板加入tabbed中
 	    tab_library=new JTabbedPane();
 	    tab_library.addTab("查询图书",p_borrow);
 	    tab_library.addTab("还书",p_return);
-//	    tab_library.setPreferredSize(new Dimension(500,450));
+	    tab_library.setPreferredSize(new Dimension(600,500));
 	    p_library=new JPanel(); //顶层面板
 	    p_library.add(tab_library);
 	    addLis();
@@ -230,13 +232,15 @@ public class Library {
 		 	ArrayList<HashMap<String,String>> alist = GUI.getList(hmlib);	
 			String[] bookNameR = new String[alist.size()];
 			String[] publisherR = new String[alist.size()];
-			String[] authorR = new String[alist.size()];//R means to return 
+			String[] authorR = new String[alist.size()];
+			String[] timeR=new String[alist.size()];//R means to return 
 			book_id = new String[alist.size()];
 			
 			for(int i=0;i<alist.size();i++) {
 				bookNameR[i]=alist.get(i).get("book_name");
 				authorR[i]=alist.get(i).get("author");
-				publisherR[i]=alist.get(i).get("publisher");	
+				publisherR[i]=alist.get(i).get("publisher");
+				timeR[i]=alist.get(i).get("borrow_date");
 				book_id[i] = alist.get(i).get("book_id");
 			}
 		 	
@@ -247,13 +251,13 @@ public class Library {
 				if(alist.size()>=1)
 				{   return_p2.setVisible(true);
 				    b_return.setEnabled(true);
-				   rowData_Return=new String[amount][3];
+				   rowData_Return=new String[amount][4];
 					for(int i=0;i<amount;i++)
 					{
 						rowData_Return[i][0]=bookNameR[i];
 						rowData_Return[i][1]=authorR[i];
 						rowData_Return[i][2]=publisherR[i];
-						//rowData_Return[i][3]=b[i];
+						rowData_Return[i][3]=timeR[i].substring(0,timeR[i].length()-7);
 					}
 					
 					sp_return=new JScrollPane();
@@ -263,8 +267,10 @@ public class Library {
 						}
 					};
 					table_return.setRowHeight(40);
+					table_return.getColumnModel().getColumn(1).setPreferredWidth(6);
+					table_return.getColumnModel().getColumn(3).setPreferredWidth(35);
 					sp_return.setViewportView(table_return);
-					sp_return.setPreferredSize(new Dimension(600,400));
+					sp_return.setPreferredSize(new Dimension(600,500));
 					return_p2.removeAll();
 					return_p2.add(sp_return);
 					return_p2.repaint();
@@ -273,7 +279,7 @@ public class Library {
 			//if the first book is not a null,then show all the message of this book
 			else 
 			{  
-				rowData_Return =new String[1][3];
+				rowData_Return =new String[1][4];
 			sp_return=new JScrollPane();
 			table_return=new JTable(rowData_Return,columnNames_Return) {
 				public boolean isCellEditable(int row, int column) {
@@ -282,7 +288,7 @@ public class Library {
 			};
 			table_return.setRowHeight(40);
 			sp_return.setViewportView(table_return);
-			sp_return.setPreferredSize(new Dimension(600,400));
+			sp_return.setPreferredSize(new Dimension(600,500));
 			return_p2.removeAll();
 			return_p2.add(sp_return);
 			return_p2.repaint();
@@ -353,8 +359,9 @@ public class Library {
 					}
 				};
 				table_borrow.setRowHeight(40);
+				table_borrow.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 				sp_borrow.setViewportView(table_borrow);
-				sp_borrow.setPreferredSize(new Dimension(600,400));
+				sp_borrow.setPreferredSize(new Dimension(600,500));
 				borrow_p[2].removeAll();
 				borrow_p[2].add(sp_borrow);
 				borrow_p[2].repaint();

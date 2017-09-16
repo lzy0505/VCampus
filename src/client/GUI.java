@@ -6,6 +6,8 @@ import javax.swing.plaf.FontUIResource;
 
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
 
+import table_component.SpringUtilities;
+
 import java.io.IOException;
 import java.lang.String;
 import java.net.Socket;
@@ -20,7 +22,7 @@ public class GUI extends JFrame
 	//private String[] book_id = null;
 	private String ci; //card_id
 	static JFrame G1;
-	JPanel p11,p21,p31,p41;
+	JPanel p1,p41;
 	JLabel profession1,id1,password1;
 	JComboBox pro1;
 	JTextField i1;
@@ -30,7 +32,7 @@ public class GUI extends JFrame
 	
 	//the elements of G2
 	static JFrame G2;
-	JPanel p12,p22,p32,p42;
+	JPanel p2,p42;
 	JLabel id2,password2,ipassword2,l1,l2,l3;
 	static JTextField i2;
 	static JPasswordField pass2;
@@ -73,6 +75,8 @@ public class GUI extends JFrame
 			client.sendMessage(sendmes);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null,"无法连接到服务器",
+					"致命的错误",JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -85,6 +89,8 @@ public class GUI extends JFrame
 			getmes = client.getMessage();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null,"无法连接到服务器",
+					"致命的错误",JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return getmes;
@@ -114,49 +120,58 @@ public class GUI extends JFrame
 	}
 	
 	
-	public GUI(String title1,String title2,String title3,String title4,String title5,String title6,
-			String title7,String title8,String title10)
+	public GUI(String title1,String title2,String title3)
 	{
 		//the part of G1
 		G1 = new JFrame(title1);
+		G1.setResizable(false);
+		G1.setUndecorated(true);
+		G1.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
 		Container c1 = G1.getContentPane();
 		c1.setLayout(new BoxLayout(c1,BoxLayout.Y_AXIS));
 		
-		G1.setSize(360, 270);
-		p11 = new JPanel();
-		p11.setLayout(new FlowLayout(FlowLayout.CENTER));
+		G1.setSize(400, 300);
+		p1 = new JPanel();
+		JPanel bg=new JPanel();
+		p1.setLayout(new SpringLayout());
 		
-		profession1 = new JLabel("Identity");
-		p11.add(profession1);
+		profession1 = new JLabel("用户身份");
+		p1.add(profession1);
 		
+
 		pro1 = new JComboBox();
-		pro1.addItem("Student");
-		pro1.addItem("Teacher");
-		pro1.addItem("Admin");
-		p11.add(pro1);
-		G1.add(p11);
+		pro1.addItem("学生");
+		pro1.addItem("教师");
+		pro1.addItem("管理员");
+		profession1.setLabelFor(pro1);
+		p1.add(pro1);
 		
-		p21 = new JPanel();
-		p21.setLayout(new FlowLayout(FlowLayout.CENTER));
-		id1 = new JLabel("card_id");
-		p21.add(id1);
 		
+
+		id1 = new JLabel("一卡通");
+		p1.add(id1);
 		i1 = new JTextField("",8);
-		p21.add(i1);
-		G1.add(p21);
-		
-		p31 = new JPanel();
-		p31.setLayout(new FlowLayout(FlowLayout.CENTER));
-		password1 = new JLabel("Password");
-		p31.add(password1);
+		id1.setLabelFor(i1);
+		p1.add(i1);
+
+
+		password1 = new JLabel("密码");
+		p1.add(password1);
 		pass1 = new JPasswordField("",8);
-		p31.add(pass1);
-		G1.add(p31);
+		password1.setLabelFor(pass1);
+		p1.add(pass1);
+		SpringUtilities.makeCompactGrid(p1, 3, 2, 0, 20, 0, 25);
+		
+		p1.setMaximumSize(new Dimension(300,300));
+		
+		bg.add(p1);
+		G1.add(bg);
+		
 		
 		p41 = new JPanel();
 		p41.setLayout(new FlowLayout(FlowLayout.CENTER));
-		reg1 = new JButton("Sign Up");
-		sign1 = new JButton("Sign In");
+		reg1 = new JButton("注册");
+		sign1 = new JButton("登陆");
 		p41.add(reg1);
 		p41.add(sign1);	
 		G1.add(p41);
@@ -169,44 +184,54 @@ public class GUI extends JFrame
 		
 		//the part of G2
 		G2 = new JFrame(title2);
-		G2.setSize(360,270);
+		G2.setSize(400,300);
+		G2.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
 		Container c2 = G2.getContentPane();
 		c2.setLayout(new BoxLayout(c2,BoxLayout.Y_AXIS));
 		
-		p12 = new JPanel();
-		p12.setLayout(new FlowLayout(FlowLayout.CENTER));
-		id2 = new JLabel("card_id");
-		p12.add(id2);
+		JPanel bg2=new JPanel();
+		p2 = new JPanel();
+		p2.setLayout(new SpringLayout());
+		p2.setMaximumSize(new Dimension(350,400));
+		id2 = new JLabel("一卡通");
+		p2.add(id2);
 		i2 = new JTextField("",8);
-		p12.add(i2);
-		l1 = new JLabel("(less than 10 characters)");
-		p12.add(l1);
-		G2.add(p12);
+		id2.setLabelFor(i2);
+		p2.add(i2);
+		l1 = new JLabel("(少于10个字符)");
+		l1.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+		p2.add(l1);
+
 		
-		p22 = new JPanel();
-		p22.setLayout(new FlowLayout(FlowLayout.CENTER));
-		password2 = new JLabel("Password");
+
+		password2 = new JLabel("密码");
 		pass2 = new JPasswordField("",8);
-		p22.add(password2);
-		p22.add(pass2);
-		l2 = new JLabel("(6 to 16 characters)");
-		p22.add(l2);
-		G2.add(p22);
+		p2.add(password2);
+		password2.setLabelFor(pass2);
+		p2.add(pass2);
+		l2 = new JLabel("(6-16个字符)");
+		l2.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+		p2.add(l2);
 		
-		p32 = new JPanel();
-		p32.setLayout(new FlowLayout(FlowLayout.CENTER));
-		ipassword2 = new JLabel("Comfirm password");
+
+		ipassword2 = new JLabel("确认密码");
 		ipass2 = new JPasswordField("",8);
-		p32.add(ipassword2);
-		p32.add(ipass2);
-		l3 = new JLabel("(6 to 16 characters)");
-		p32.add(l3);
-		G2.add(p32);
+		p2.add(ipassword2);
+		ipassword2.setLabelFor(ipass2);
+		p2.add(ipass2);
+		l3 = new JLabel("(6-16个字符)");
+		l3.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+		p2.add(l3);
+		
+		
 		
 		p42 = new JPanel();
 		p42.setLayout(new FlowLayout(FlowLayout.CENTER));
-		reg2 = new JButton("Sign Up");
+		reg2 = new JButton("注册");
 		p42.add(reg2);
+		SpringUtilities.makeCompactGrid(p2, 3, 3, 0, 20, 0, 25);
+		bg2.add(p2);
+		G2.add(bg2);
 		G2.add(p42);
 		
 		G2.setLocation(getWidth(G2.getWidth()),getHeight(G2.getHeight()));
@@ -215,13 +240,13 @@ public class GUI extends JFrame
 		G3 = new JFrame(title3);
 		G3.setSize(200,130);
 		G3.setLayout(new GridLayout(2,1));
-		la3 = new JLabel("Registered successfully!");
+		la3 = new JLabel("注册成功");
 		p13 = new JPanel();
 		p13.setLayout(new FlowLayout(FlowLayout.CENTER));
 		p13.add(la3);
 		G3.add(p13);
 		
-		close3 = new JButton("Close");
+		close3 = new JButton("关闭");
 		p23 = new JPanel();
 		p23.setLayout(new FlowLayout(FlowLayout.CENTER));
 		p23.add(close3);
@@ -231,53 +256,10 @@ public class GUI extends JFrame
 
 
 		
-//		//the part of G6
-//		G6 = new JFrame(title6);
-//		G6.setSize(300,300);
-//		G6.setLayout(new FlowLayout());
-//		p16 = new JPanel();
-//		p16.setLayout(new GridLayout(1,2,150,0));
-//		l16 = new JLabel("Welcome!");
-//		p16.add(l16);
-//		l26 = new JLabel("Sign out");
-//		p16.add(l26);
-//		G6.add(p16);
-//				
-//		l36 = new JLabel("Library",new ImageIcon("library.png"),JLabel.LEFT);
-//		l36.setHorizontalTextPosition(JLabel.CENTER);
-//		l36.setVerticalTextPosition(JLabel.BOTTOM);
-//		p26 = new JPanel();
-//		p26.setLayout(new FlowLayout(FlowLayout.CENTER));
-//		p26.add(l36);
-//				
-//		l46 = new JLabel("Store",new ImageIcon("store.png"),JLabel.LEFT);
-//		l46.setHorizontalTextPosition(JLabel.CENTER);
-//		l46.setVerticalTextPosition(JLabel.BOTTOM);
-//		p26.add(l46);
-//		G6.add(p26);
-//				
-//		
-////		l56 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
-////		l56.setHorizontalTextPosition(JLabel.CENTER);
-////		l56.setVerticalTextPosition(JLabel.BOTTOM);
-//		p36 = new JPanel();
-//		p36.setLayout(new FlowLayout(FlowLayout.CENTER));
-////		p36.add(l56);
-//				
-//		l66 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
-//		l66.setHorizontalTextPosition(JLabel.CENTER);
-//		l66.setVerticalTextPosition(JLabel.BOTTOM);
-//		p36.add(l66);
-//		G6.add(p36);
-//		
-//		G6.setLocation(getWidth(G6.getWidth()),getHeight(G6.getHeight()));
-//		
+
 
 		//初始化HomeScreeen类变量
 		homeScreen=new HomeScreen();	
-//   	 	homeScreen.init();
-   	 	
-		
 		
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());//sign up int the first GUI
@@ -297,7 +279,7 @@ public class GUI extends JFrame
         org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
         UIManager.put("RootPane.setupButtonVisible", false); 
         //更换所有字体
-        FontUIResource fontRes = new FontUIResource(new Font("Microsoft YaHei UI", Font.PLAIN, 15));  
+        FontUIResource fontRes = new FontUIResource(new Font("Microsoft YaHei UI", Font.BOLD, 18));  
         for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {  
             Object key = keys.nextElement();  
             Object value = UIManager.get(key);  
@@ -305,30 +287,20 @@ public class GUI extends JFrame
                 UIManager.put(key, fontRes);  
             }  
         }
-        
-        
-        
-        
-        
-	  }catch (Exception e) {
+  	  }catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher",
-				"Sign in failed","Library","Search unsuccessful");
+		GUI gui= new GUI("登陆","注册","成功");
 		//gui.init();
 	
 	}
-
-
-	
 
 	class MyActLister1 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
 			G2.setVisible(true);
 			//G2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//*************
 		}
 	}
 	
@@ -376,15 +348,15 @@ public class GUI extends JFrame
 				}
 				else if(hm.get("result").equals("fail"))
 				{
-					JOptionPane.showMessageDialog(G1,"User's name or password is unvalid!",
-							"Sign up unsuccessfully",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(G1,"用户名或密码无效",
+							"注册失败",JOptionPane.ERROR_MESSAGE);
 
 				}
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(G1,"User's name or password is unvalid!",
-						"Sign up unsuccessfully",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(G1,"用户名或密码无效",
+						"注册失败",JOptionPane.ERROR_MESSAGE);
 
 			}
 		}
@@ -423,6 +395,7 @@ public class GUI extends JFrame
 				hm.put("identity", "admin");
 			}
 			//send hm to server and get it back, check the result 
+			
 		    hm=getOne(hm);
 		    if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==0)
 		    {
@@ -452,14 +425,13 @@ public class GUI extends JFrame
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
 		    	homeScreen.update("admin");
 		    	G1.setVisible(false);
-		    	System.out.println("Adminok1");
 		    	
 		    }
 		    		    
 		    else if(hm.get("result").equals("fail"))
 		    {
-		    	JOptionPane.showMessageDialog(null,"User's name or password is incorrect!",
-						"Sign in unsuccessfully",JOptionPane.ERROR_MESSAGE);
+		    	JOptionPane.showMessageDialog(null,"用户名或密码错误",
+						"登陆失败",JOptionPane.ERROR_MESSAGE);
 		    	
 		    }
 			

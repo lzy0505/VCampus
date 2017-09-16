@@ -2,6 +2,7 @@ package client;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -50,37 +51,42 @@ class HomeScreen
 	 void update(String identity)
 	 {
 		 	G5 = new  JFrame();
-		 	G5.setSize(new Dimension(1000,800));
+		 	 Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		 	G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		 	G5.setSize((int) (screenSize.getHeight()*0.8),  (int) (screenSize.getWidth()*0.4));
+			G5.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
+//		 	G5.setSize(new Dimension(1000,800));
 		 	G5.setResizable(false);
 		 	p_HomeScreen=new JTabbedPane();
 		 	p_HomeScreen.setTabPlacement(JTabbedPane.LEFT);
 		 	JPanel backGround=new JPanel();
 		 	
-		  G5.setLocation(GUI.getWidth(G5.getWidth()),GUI.getHeight(G5.getHeight()));
-		  G5.add(p_HomeScreen);	
-		 ci=ClientInfo.getCi();
+			  G5.setLocation(GUI.getWidth(G5.getWidth()),GUI.getHeight(G5.getHeight()));
+			  G5.add(p_HomeScreen);	
+			  ci=ClientInfo.getCi();
 		 if(identity.equals("admin")) {
 			 hsAdmin=new HSAdmin();
 	    	 hsAdmin.init();
-	    	 p_HomeScreen.addTab("",new ImageIcon("bank.png"),hsAdmin.tab);
+//	    	 p_HomeScreen.addTab("管理员",new ImageIcon("bank.png"),hsAdmin.tab);
 		 }else {
 			 library=new Library(this);
 	    	 library.init();
-	    	 p_HomeScreen.addTab("",new ImageIcon("library.png"),library.tab_library);
+	    	 p_HomeScreen.addTab("图书馆",new ImageIcon("library.png"),library.tab_library);
 	    	 bank=new Bank(this);
 			 bank.init();
-			 p_HomeScreen.addTab("",new ImageIcon("bank.png"),bank.tab_bank);
+			 p_HomeScreen.addTab("银行",new ImageIcon("bank.png"),bank.tab_bank);
 			 if(identity.equals("student")) {
 				 studentAffairs=new StudentAffairs(this);
-				 p_HomeScreen.addTab("",new ImageIcon("courses.png"),studentAffairs.tabbedPane);
+				 p_HomeScreen.addTab("教务",new ImageIcon("courses.png"),studentAffairs.tabbedPane);
 			 }else {
 				 registration=new Registration(new String[][] {},this);
-				 p_HomeScreen.addTab("",new ImageIcon("studentMessage.png"),registration.tabbedPane);
+				 p_HomeScreen.addTab("教务",new ImageIcon("studentMessage.png"),registration.tabbedPane);
 			 }
+			 backGround.add(p_HomeScreen);
+			 G5.add(backGround);
+			 G5.setVisible(true);
 		 }
-		 backGround.add(p_HomeScreen);
-		 G5.add(backGround);
-		 G5.setVisible(true);
+		 
 		
 		 
 	 }

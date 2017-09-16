@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 
 import client.HomeScreen;
@@ -54,6 +55,9 @@ class Bank
 	JPanel p_recharge;
 	JLabel l_confirm1;
 	JPasswordField t_password_confirm1;
+	JPanel p_balance;//余额面板
+	JLabel l_ecard;//一卡通余额标签
+	JTextField t_balance;//一卡通余额显示
 	
 	
 	//缴费界面
@@ -81,9 +85,8 @@ class Bank
 	JScrollPane sp;//学费滚动面板
 		
 	//查询界面
-	JPanel p_balance;//余额面板
-	JLabel l_ecard;//一卡通余额标签
-	JTextField t_balance;//一卡通余额显示
+	JTable recordQueryTable;
+
 
 	public Bank(HomeScreen hs){
 		homeScreen=hs;
@@ -174,12 +177,18 @@ class Bank
 		 	p_recharge.add(recharge_p2);
 		 	
 		 	
+		 	recordQueryTable=new JTable();
+		 	recordQueryTable.setFillsViewportHeight(true);
+		 	recordQueryTable.setEnabled(false);
+		 	JScrollPane p_records=new JScrollPane(recordQueryTable);
+		 	
 		 	
 		 	//银行tab
 		 	//return_upbank.setPreferredSize(new Dimension(300,80));
 		 	tab_bank=new JTabbedPane();			 	
 		 	tab_bank.addTab("查询与充值",p_recharge);
 		 	tab_bank.addTab("支付",p_payment);
+		 	tab_bank.addTab("消费流水",p_records);
 		 	tab_bank.setPreferredSize(new Dimension(300,280));
 	        p_bank=new JPanel();
 	        p_bank.setLayout(new BoxLayout(p_bank,BoxLayout.Y_AXIS));
@@ -225,6 +234,18 @@ class Bank
 				//...返回用户的一卡通余额，写进t_balance控件显示
 				//--------------
 				//哦，写完了
+		    }else if(selectedIndex==2) {
+		    	HashMap<String,String> hm=new HashMap<String,String>();
+				hm.put("op", "QueryRecords");//查询一卡通余额操作
+				hm.put("card_id", ci);
+				ArrayList<HashMap<String,String>> resultList=GUI.getList(hm);
+				String[][] data=new String[resultList.size()][3];
+				for(int i=0;i<resultList.size();i++) {
+					data[i][0]=resultList.get(i).get("purchase_time");
+					data[i][1]=resultList.get(i).get("purchase_content");
+					data[i][2]=resultList.get(i).get("purchase_cost");
+				}
+		    	recordQueryTable.setModel(new DefaultTableModel(data,new String[] {"消费时间","内容","金额"}));
 		    }
 			
 			
@@ -316,13 +337,6 @@ class Bank
 	 
 	}
 	
-	
-	 	 
-	
-
-
-
-
 
 	  class ActionLis_Paymentquery implements ActionListener
 	  {
@@ -351,25 +365,25 @@ class Bank
 			System.out.println("now type:"+ hm.get("type"));
 			sign="Tuition";//表示交学费
 			ArrayList<HashMap<String,String>> TuitionList = GUI.getList(hm);
-			//@反馈部分--------
-			//...返回学费表的费用和是否缴清两列数据，显示
-			rowData=new String[TuitionList.size()][3];
-			
-			if(TuitionList.size()==0)
-				break;
-			for(int i=0;i<TuitionList.size();i++)
-			{
-					rowData[i][0]=TuitionList.get(i).get("card_time");
-					rowData[i][1]=TuitionList.get(i).get("card_cost");			
-					if(TuitionList.get(i).get("card_is_paid").equals("TRUE")) {
-						rowData[i][2]="已支付";
-					}
-					else {
-						rowData[i][2]="未支付";
-					}
-					card_record_id[i] = TuitionList.get(i).get("card_record_id");
-						
-			}
+				//@反馈部分--------
+				//...返回学费表的费用和是否缴清两列数据，显示
+				rowData=new String[TuitionList.size()][3];
+				
+				if(TuitionList.size()==0)
+					break;
+				for(int i=0;i<TuitionList.size();i++)
+				{
+						rowData[i][0]=TuitionList.get(i).get("card_time");
+						rowData[i][1]=TuitionList.get(i).get("card_cost");			
+						if(TuitionList.get(i).get("card_is_paid").equals("TRUE")) {
+							rowData[i][2]="已支付";
+						}
+						else {
+							rowData[i][2]="未支付";
+						}
+						card_record_id[i] = TuitionList.get(i).get("card_record_id");
+							
+				}
 			//
 			//-----------------
 			
