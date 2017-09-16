@@ -20,6 +20,7 @@ class HomeScreen
 	//需要传参的变量
 	    Bank bank;
 	    JFrame G8;
+	    Store store;
 	    String ci;
 	//init()变量    
 	    JFrame G5;
@@ -87,18 +88,69 @@ class HomeScreen
 		 
 		 l65.addMouseListener(new MyMouLister_bank());//open bank;(stduent)
 		 l35.addMouseListener(new MyMouLister1());//open library(student)
+		 l45.addMouseListener(new MyMouseLister_store());
 		 l55.addMouseListener(new MyMouLister2());//open student affairs
 		 
 	 }
 	//传参并且启用监听函数
-	 void update(JFrame lb,Bank bk,String card_id)
+	 void update(JFrame lb,Bank bk,String card_id,Store st)
 	 {
 		 G8=lb;	 
 		 bank=bk;
 		 ci=card_id;
+		 store=st;
 		 addLis();//HomeScreen的addLis()应写在update()里
 		 
 	 }
+	 class MyMouseLister_store implements MouseListener
+	 {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+			store.homeScreen.setVisible(true);
+			
+			
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+		}
+		 
+		 
+		 
+		 
+		 
+		 
+	 }
+	 
+	 
+	 
+	 
+	 
+	 
 	 
 	 //点击图书馆按钮
 	 class MyMouLister1 implements MouseListener

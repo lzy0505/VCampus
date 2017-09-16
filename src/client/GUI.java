@@ -1,10 +1,17 @@
 package client;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import java.io.File;
+
 import java.io.IOException;
 import java.lang.String;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -81,6 +88,7 @@ public class GUI extends JFrame
  	
  	//HomeScreen、Library等成员变量
  	Bank bank;
+ 	Store store;
  	HomeScreen homeScreen;
 	
 	public void init(){
@@ -103,6 +111,7 @@ public class GUI extends JFrame
 			e.printStackTrace();
 		}
 	}
+
 	//send and get message
 	public static HashMap<String, String> getOne(HashMap<String,String> sendmes){
 		HashMap<String, String> getmes=null;
@@ -129,6 +138,14 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
+	//给这个函数一个HashMap，里面装有操作和key，能给你返回服务器传到客户端的文件的路径数组。明明白白
+	public static String[] getImage(HashMap<String,String> sendmes)throws IOException{
+	
+			Client client = new Client();
+			String[] filename =client.getIcon(sendmes);
+			 return filename;
+	}
+	
 	
 	public static int getWidth(int frameWidth)
 	{
@@ -499,7 +516,8 @@ public class GUI extends JFrame
 			 {  			    		 
 				 //初始化时注意先后顺序
 				loadHomeScreen();
-				loadBank();							
+				loadBank();		
+				loadStore();
 			 }
 			 //初始化银行类
 			 void loadBank()
@@ -513,6 +531,11 @@ public class GUI extends JFrame
 		    	 homeScreen=new HomeScreen();	
 		    	 homeScreen.init();
 		    	    	 
+		     }
+		     void loadStore()
+		     { 
+		    	 store=new Store();
+		    	 
 		     }
 		     //调用主界面的update函数将Library、Bank等变量传入
 		
@@ -670,7 +693,7 @@ public class GUI extends JFrame
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	//G5.setVisible(true);
 		    	homeScreen.G5.setVisible(true);
-		    	homeScreen.update(G8, bank, ci);
+		    	homeScreen.update(G8, bank, ci,store);
 		    	System.out.println("update card_id to : homeScreen!");
 		    	bank.update(ci);
 		    	System.out.println("update card_id to : bank!");
@@ -693,7 +716,9 @@ public class GUI extends JFrame
 						"Sign in unsuccessfully",JOptionPane.ERROR_MESSAGE);
 		    	
 		    }
+	
 			
+		
 			
 	//TODO
 			

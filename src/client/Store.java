@@ -1,6 +1,10 @@
 package client;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -17,7 +21,12 @@ public class Store {
 	JFrame homeScreen;
 	JTextField searchText;
 	JButton search;
-	JLabel []product = new JLabel[8];//一开始随机放八个商品在主界面上
+	JLabel []product = new JLabel[4];//一开始随机放四个商品在主界面上
+	private ArrayList<HashMap<String , String>> getDetial=null;//用于存储商品的名字啊什么乱七八糟的
+	private ArrayList<HashMap<String , String>> getInitDetial=null;//用于装初始化商品的初始化信息
+	private String[] file_path= null;//用于记录文件路径方便查询
+	private ArrayList<String[]> shoppingCartArray=new ArrayList<String[]>();
+
 	
 	//搜索结果主界面
 	JFrame searchResult;
@@ -36,8 +45,8 @@ public class Store {
 	static int count[];
 	
 	
-	public Store(String productName[],String productIcon[])
-	{
+	public Store()
+	{	
 		homeScreen = new JFrame();
 		homeScreen.setBounds(100, 100, 900, 600);
 		homeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,28 +71,55 @@ public class Store {
 		homeScreen.getContentPane().add(search);
 		//Search bar end
 		
+		//为了强行初始化，加了一段，献丑了
+		
+		String[] productName = new String[4];
+		String[] productIcon = new String[4];
+		String details[] = new String[5];
+		HashMap<String, String> load_pro = new HashMap<>();//取信息
+		HashMap<String, String> load_pic = new HashMap<>();//取图片
+		load_pro.put("op", "init_product");
+		load_pic.put("op", "init_pic");
+		getInitDetial = GUI.getList(load_pro);
+		try {
+			productIcon=GUI.getImage(load_pic);
+		} catch (IOException e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		for(int i=0;i<4;i++) {
+			productName[i] =getInitDetial.get(i).get("item_name"); 
+		}
+		
 		//绘制主界面的商品
-		for(int i = 0;i<8;i++)
+		for(int i = 0;i<4;i++) 
 		{
 			product[i] = new JLabel(productName[i]);
 			product[i].setIcon(new ImageIcon(productIcon[i]));
-			product[i].setBounds(90+200*i%4, 110+(i/4)*220, 162, 217);
+			product[i].setBounds(90+250*i%4, 110+(i/4)*220, 162, 217);
 			product[i].setHorizontalTextPosition(JLabel.CENTER);
 			product[i].setVerticalTextPosition(JLabel.BOTTOM);
 			homeScreen.getContentPane().add(product[i]);
 			
 		}
-		homeScreen.setVisible(true);
+		//homeScreen.setVisible(true);
 		
 		//响应如下
 		search.addActionListener(new SearchLister());
-		for(index=0;index<8;index++)
+		for(index=0;index<4;index++)
 		{
 			product[index].addMouseListener(new MouseListener()
 					{
 
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
+							details[0] = getInitDetial.get(index).get("item_name");
+							System.out.println("点击的商品名.." +getInitDetial.get(index).get("item_name")); 
+							details[1] = file_path[index];
+							details[2] = getInitDetial.get(index).get("item_price");
+							System.out.println("点击的价格.." +getInitDetial.get(index).get("item_price"));
+							details[3] = getInitDetial.get(index).get("item_purchased_number");
+							details[4] = getInitDetial.get(index).get("item_stock");
 							//商品详情字符串数组，里面的内容参照productDetails()
 							String details[] = null;
 							//TODO
@@ -154,7 +190,7 @@ public class Store {
 		DisplayBar.add(scrollPane);
 		
 		//绘制搜索结果页面
-		if(productName[0] == null)
+		if(size == 0)
 		{
 			JOptionPane.showMessageDialog(null, "无此类商品！","搜索失败",JOptionPane.ERROR_MESSAGE);
 		}
@@ -165,7 +201,7 @@ public class Store {
 			{
 				productResultLabel[i] = new JLabel(productName[i]);
 				productResultLabel[i].setIcon(new ImageIcon(productIcon[i]));
-				productResultLabel[i].setBounds(90+200*i%4, 110+(i/4)*220, 162, 217);
+				productResultLabel[i].setBounds(90+250*i%4, 110+(i/4)*220, 162, 217);
 				productResultLabel[i].setHorizontalTextPosition(JLabel.CENTER);
 				productResultLabel[i].setVerticalTextPosition(JLabel.BOTTOM);
 				panel.add(productResultLabel[i]);
@@ -178,7 +214,7 @@ public class Store {
 		//搜索结果中点击某一个商品的响应
 		for(index=0;index<size;index++)
 		{
-			productResultLabel[index].addMouseListener(new searchResultLister());
+			productResultLabel[index].addMouseListener(new searchResultLister(index));
 			break;
 		}
 		
@@ -191,19 +227,19 @@ public class Store {
 		productDetails.setBounds(100, 100, 750, 500);
 		productDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		productDetails.getContentPane().setLayout(null);
-		
+		//价格
 		JLabel lblPrice = new JLabel("Price：");
 		lblPrice.setBounds(325, 96, 61, 16);
 		productDetails.getContentPane().add(lblPrice);
-		
+		//销售量
 		JLabel lblSalesVolume = new JLabel("SalesVolume：");
 		lblSalesVolume.setBounds(325, 136, 97, 16);
 		productDetails.getContentPane().add(lblSalesVolume);
-		
+		//库存
 		JLabel lblInventory = new JLabel("Inventory：");
 		lblInventory.setBounds(325, 176, 97, 16);
 		productDetails.getContentPane().add(lblInventory);
-		
+		//数量
 		JLabel lblQuantity = new JLabel("Quantity：");
 		lblQuantity.setBounds(325, 216, 85, 16);
 		productDetails.getContentPane().add(lblQuantity);
@@ -255,29 +291,58 @@ public class Store {
 		
 		productDetails.setVisible(true);
 		
-		//响应如下
+		//立即购买，响应如下
 		btnBuyNow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				double price = Double.parseDouble(details[2]);
 				int quantity = Integer.parseInt(quantityText.getText());
-				double total = price*quantity;
-				
-				int result = JOptionPane.showConfirmDialog(null, "总价为"+total+",确认购买？");
-				//若银行卡余额充足并且确认购买，则显示购买成功
-				//TODO
-				if(result == 0)
-				{
-					//库存量和银行卡余额相应的减少
-					//TODO
-					JOptionPane.showMessageDialog(null, "购买成功！");
+				if(quantity > Integer.parseInt(details[4])) {
+					JOptionPane.showMessageDialog(null,"数量超过了！","Warnning",JOptionPane.WARNING_MESSAGE);
+					return;
 				}
+				double total = price*quantity;
+				int result = JOptionPane.showConfirmDialog(null, "总价为"+total+",确认购买？");
+				if (result == 0) {
+					HashMap<String, String> hm= new HashMap<>();
+					hm.put("op", "buy");
+					hm.put("item_name", details[0]);
+					hm.put("card_id", ClientInfo.getCi());
+					hm.put("quantity", quantityText.getText());
+					hm.put("cost", total+"");
+					hm=GUI.getOne(hm);
+					//若银行卡余额充足并且确认购买，则显示购买成功
+					//TODO
+					if(hm.get("result").equals("success"))
+					{
+						//库存量和银行卡余额相应的减少
+						//TODO
+						JOptionPane.showMessageDialog(null, "购买成功！");
+					}
+					else {
+						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
+					}
+				}
+					
+				
 			}
 		});
-		
+		//添加至购物车
 		btnAddToShoppingCart.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e)
 			{
+				int quantity = Integer.parseInt(quantityText.getText());
+				double price = Double.parseDouble(details[2]);
+				if(quantity > Integer.parseInt(details[4])) {
+					JOptionPane.showMessageDialog(null,"数量超过了！","Warnning",JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+				String[] addProduct =new String[4];
+				addProduct[0] =details[0];
+				addProduct[1] = details[2];
+				addProduct[2] = quantity+"";
+				addProduct[3] = quantity*price + "";
+				shoppingCartArray.add(addProduct);
 				//把该类商品信息加入购物车
 				//TODO
 				Object[] options ={ "查看购物车", "返回页面" };
@@ -285,7 +350,7 @@ public class Store {
 						  JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 				 if(result == 0)
 				 {
-					 String shoppingCartArray[][] = null;
+					 
 					 /*shoppingCartArray的格式如下
 						//shoppingCartArray = {
 						{new Boolean(false),"商品名1","单价1","数量1","总价1"},
@@ -301,10 +366,17 @@ public class Store {
 		});
 	}
 	
-	public void shoppingCart(String [][]shoppingCartArray)
+	public void shoppingCart(ArrayList<String[]> shoppingCartArray)
 	{
+		
+		String [][] shopCart = new String[shoppingCartArray.size()][4];
+		for(int i=0;i<shoppingCartArray.size();i++) {
+			for(int j=0;j<4;j++) {
+				shopCart[i][j] = shoppingCartArray.get(i)[j];
+			}
+		}
 		/*shoppingCartArray的格式如下
-		//shoppingCartArray = {
+		//shopCartArray = {
 		{new Boolean(false),"商品名1","单价1","数量1","总价1"},
 		{new Boolean(false),"商品名2","单价2","数量2","总价2"},
 		{new Boolean(false),"商品名3","单价3","数量3","总价3"},
@@ -338,7 +410,7 @@ public class Store {
 		String[] headName = {"","Name","Unitprice","Quantity","Amout"};
 		
 		
-		JTable table = new JTable(shoppingCartArray,headName);
+		JTable table = new JTable(shopCart,headName);
 		table.setPreferredScrollableViewportSize(new Dimension(831, 300));
 		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
        /* table.getColumnModel().getSelectionModel().
@@ -507,7 +579,8 @@ public class Store {
 					}
 			
 				});
-		btnSettle.addActionListener(new ActionListener()
+			//购物车一块购买
+				btnSettle.addActionListener(new ActionListener()
 				{
 
 					@Override
@@ -516,16 +589,29 @@ public class Store {
 						int result = JOptionPane.showConfirmDialog(null, "总价为"+TotalPriceLabel.getText()+",确认购买？");
 						//若银行卡余额充足并且确认购买，则显示购买成功
 						//TODO
-						if(result == 0)
-						{
-							//库存量和银行卡余额相应的减少
-							//TODO
-							JOptionPane.showMessageDialog(null, "购买成功！");
-						}
-						//若银行卡余额不足，提醒他账户余额不够，请尽快充值
-						//JOptionPane.showMessageDialog(null,"账户余额不足，请尽快充值！",
-						//		"购买失败！",JOptionPane.WARNING_MESSAGE);
-						
+						if(result == 0) {						
+							for(int i=0;i<shoppingCartArray.size();i++) {
+								HashMap<String, String> hm=new HashMap<String, String>();
+								hm.put("op", "buy");
+								hm.put("card_id", ClientInfo.getCi());
+								hm.put("cost", shoppingCartArray.get(i)[3]);
+								hm.put("item_name", shoppingCartArray.get(i)[0]);
+								hm.put("quantity", shoppingCartArray.get(i)[2]);
+								hm=GUI.getOne(hm);
+								if(hm.get("result").equals("success"))
+								{
+									//库存量和银行卡余额相应的减少
+									//TODO
+									JOptionPane.showMessageDialog(null, "购买成功！");
+								}else {
+									JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
+									break;
+								}
+								//若银行卡余额不足，提醒他账户余额不够，请尽快充值
+								//JOptionPane.showMessageDialog(null,"账户余额不足，请尽快充值！",
+								//		"购买失败！",JOptionPane.WARNING_MESSAGE);
+							}
+						}					
 					}
 			
 				});
@@ -534,9 +620,30 @@ public class Store {
 	class SearchLister implements ActionListener
 	{
 		public void actionPerformed(ActionEvent arg0) {
-			String productName[] = null;
-			String productIcon[] = null;
 			int size = 0;
+			//先找到商品名和商品的细节
+			HashMap<String , String> sendkeyfordetial = new HashMap<String , String>();
+			sendkeyfordetial.put("op", "search_product");
+			sendkeyfordetial.put("key", searchText.getText());
+			getDetial = GUI.getList(sendkeyfordetial);
+			//找到商品的图片,接收到的图片文件存在clientpng文件夹内
+			HashMap<String, String> sendkeyforpicture = new HashMap<String,String>();
+			sendkeyforpicture.put("op", "search_picture");
+			sendkeyforpicture.put("key",searchText.getText());
+			try {
+				file_path=GUI.getImage(sendkeyforpicture);
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+			size = getDetial.size();
+			String productName[] = new String[size];
+			String productIcon[] = file_path;
+			for(int i=0;i<size;i++) {
+				productName[i] = getDetial.get(i).get("item_name");
+			}
+			
+			
 			//从数据库那里得到商品名字及商品图片的字符串数组及数组们的大小，将其作为参数
 			//传到搜索结果界面的构造函数中
 			//TODO
@@ -547,12 +654,24 @@ public class Store {
 	}
 	class searchResultLister implements MouseListener
 	{
-
+		int index=0;
+		public searchResultLister(int i) {
+			super();
+			index=i;
+		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			//商品详情字符串数组，里面的内容参照productDetails()
-			String details[] = null;
+			String details[] = new String[5];
+			details[0] = getDetial.get(index).get("item_name");
+			System.out.println("点击的商品名.." +getDetial.get(index).get("item_name")); 
+			details[1] = file_path[index];
+			details[2] = getDetial.get(index).get("item_price");
+			System.out.println("点击的价格.." +getDetial.get(index).get("item_price"));
+			details[3] = getDetial.get(index).get("item_purchased_number");
+			details[4] = getDetial.get(index).get("item_stock");
 			//TODO
+			
 			//把详情传到details里，将details作为参数传递到商品详情界面
 			productDetails(details);
 		}
