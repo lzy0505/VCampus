@@ -402,6 +402,16 @@ public class ServerThread implements Runnable{
 					getOne.remove("op");
 					db.setWhere("course_details", "course_exam_time=\'"+getOne.get("course_exam_time")+"\' ,course_exam_place=\'"+getOne.get("course_exam_place")+"\'", "course_id="+getOne.get("course_id"));
 					break;
+				case "isCompleted":
+					getOne.remove("op");
+					String infoId=db.selectWhere("users","card_id=\'"+getOne.get("card_id")+"\'").get(0).get("user_info_id");
+					if(infoId.equals("")||infoId.equals("0")) {
+						getOne.put("result", "false");
+					}else {
+						getOne.put("result", "true");
+					}
+					soos.writeObject(getOne);
+					break;
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);

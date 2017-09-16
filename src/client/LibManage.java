@@ -15,11 +15,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import client.Library.ActionLis_RepaintHomeScreen;
 
 public class LibManage {
 	HomeScreen homeScreen=null;
-	JTabbedPane tab_library;//tab面板
+	public JTabbedPane tab_library;//tab面板
 	JPanel  p_lib;//中间面板
 	JButton return_uplib1;//返回按钮
 	JButton return_uplib2;

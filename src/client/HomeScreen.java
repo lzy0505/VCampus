@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,6 +12,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.RootPaneUI;
 
 //----------------------------------------
 //@主界面类--------------------------------
@@ -26,58 +30,13 @@ class HomeScreen
 	    String ci;
 	   //init()变量    
 	    JFrame G5;
-		JPanel p15,p25,p35;
-		Container p_HomeScreen; //主面板内容容器
-		JLabel l15,l25,l35,l45,l55,l56,l65;
+//		JPanel p15,p25,p35;
+		JTabbedPane p_HomeScreen; //主面板内容容器
+//		JLabel l15,l25,l35,l45,l55,l56,l65;
 		
 
 	 	 
-	 void init()
-	 {
-		  G5 = new  JFrame();
-		  p_HomeScreen=new JPanel();
-		  p_HomeScreen.setLayout(new BoxLayout(p_HomeScreen,BoxLayout.Y_AXIS));
-		  p15 = new JPanel();
-		  p15.setLayout(new BoxLayout(p15,BoxLayout.X_AXIS));
-		  //l15 = new JLabel("Welcome,"+ci+"!");
-		  //l25 = new JLabel("Sign out");
-		  p35 = new JPanel();
-		  l35 = new JLabel("Library",new ImageIcon("library.png"),JLabel.LEFT);
-		  l45 = new JLabel("Store",new ImageIcon("store.png"),JLabel.LEFT);
-		  
-		  p25 = new JPanel();
-		  p25.setLayout(new BoxLayout(p25,BoxLayout.X_AXIS));
-		  l65 = new JLabel("Bank",new ImageIcon("bank.png"),JLabel.LEFT);
-		  G5.setSize(500,500);
-		  
-		  
-		  
-		  			
-		  
-		  //p15.add(l25);
-		  p_HomeScreen.add(p15);		
-		  l35.setHorizontalTextPosition(JLabel.CENTER);
-		  l35.setVerticalTextPosition(JLabel.BOTTOM);
-     	  
-		  p25.add(l35);
-		  l45.setHorizontalTextPosition(JLabel.CENTER);
-		  l45.setVerticalTextPosition(JLabel.BOTTOM);
-		  p25.add(l45);
-		  p_HomeScreen.add(p25);
-		  
-		  p35.setLayout(new BoxLayout(p35,BoxLayout.X_AXIS));
-		  
-		  l65.setHorizontalTextPosition(JLabel.CENTER);
-		  l65.setVerticalTextPosition(JLabel.BOTTOM);
-		  p35.add(l65);
-		  p_HomeScreen.add(p35);			
-		  G5.setLocation(GUI.getWidth(G5.getWidth()),GUI.getHeight(G5.getHeight()));
-		  G5.add(p_HomeScreen);		  
-		  
-		  
-		  
-	 }
-	 
+	
 	 //重绘函数
 	 void paint()
 	 {
@@ -90,189 +49,42 @@ class HomeScreen
 	//传参并且启用监听函数
 	 void update(String identity)
 	 {
+		 	G5 = new  JFrame();
+		 	G5.setSize(new Dimension(1000,800));
+		 	G5.setResizable(false);
+		 	p_HomeScreen=new JTabbedPane();
+		 	p_HomeScreen.setTabPlacement(JTabbedPane.LEFT);
+		 	JPanel backGround=new JPanel();
+		 	
+		  G5.setLocation(GUI.getWidth(G5.getWidth()),GUI.getHeight(G5.getHeight()));
+		  G5.add(p_HomeScreen);	
 		 ci=ClientInfo.getCi();
 		 if(identity.equals("admin")) {
 			 hsAdmin=new HSAdmin();
 	    	 hsAdmin.init();
+	    	 p_HomeScreen.addTab("",new ImageIcon("bank.png"),hsAdmin.tab);
 		 }else {
 			 library=new Library(this);
 	    	 library.init();
+	    	 p_HomeScreen.addTab("",new ImageIcon("library.png"),library.tab_library);
 	    	 bank=new Bank(this);
 			 bank.init();
+			 p_HomeScreen.addTab("",new ImageIcon("bank.png"),bank.tab_bank);
 			 if(identity.equals("student")) {
 				 studentAffairs=new StudentAffairs(this);
-				 l55 = new JLabel("Courses",new ImageIcon("courses.png"),JLabel.LEFT);
-				 l55.addMouseListener(new StudentAffairesMouLister());//open student affairs
+				 p_HomeScreen.addTab("",new ImageIcon("courses.png"),studentAffairs.tabbedPane);
 			 }else {
 				 registration=new Registration(new String[][] {},this);
-				 l55 = new JLabel("Courses",new ImageIcon("studentMessage.png"),JLabel.LEFT);
-				 l55.addMouseListener(new RegistrationMouLister());
+				 p_HomeScreen.addTab("",new ImageIcon("studentMessage.png"),registration.tabbedPane);
 			 }
 		 }
-		 
-		 l55.setHorizontalTextPosition(JLabel.CENTER);
-		 l55.setVerticalTextPosition(JLabel.BOTTOM);				
-		 p35.add(l55);	
-		 
-		 l15 = new JLabel("Welcome, "+ci+" ! ");
-		 p15.add(l15);
-		 l15.repaint();
-		 
-		 l65.addMouseListener(new MyMouLister_bank());//open bank;(stduent)
-		 l35.addMouseListener(new MyMouLister1());//open library(student)		 
+		 backGround.add(p_HomeScreen);
+		 G5.add(backGround);
+		 G5.setVisible(true);
+		
 		 
 	 }
 	 
-	 //点击图书馆按钮
-	 class MyMouLister1 implements MouseListener
-	 	{
-	 
-	 		@Override
-	 		public void mouseClicked(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseEntered(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseExited(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mousePressed(MouseEvent arg0) {
-	 			
-	 			library.paint();
-	 			
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseReleased(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 		
-	 	}
-	 
-	 
-	 //点击课程按钮(学生)
-	 class StudentAffairesMouLister implements MouseListener
-	 	{
-	 		public void mouseClicked(MouseEvent arg0) {
-	 			
-
-	 			//get information from database and give value to this above parameters
-	 			studentAffairs.paint();
-	  		}
-	 
-	 		@Override
-	 		public void mouseEntered(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseExited(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mousePressed(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseReleased(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	}
-	 
-	 class RegistrationMouLister implements MouseListener
-	 	{
-	 		public void mouseClicked(MouseEvent arg0) {
-	 			
-
-	 			//get information from database and give value to this above parameters
-	 			registration.paint();
-	  		}
-	 
-	 		@Override
-	 		public void mouseEntered(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseExited(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mousePressed(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseReleased(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	}
-	 
-	 
-	 
-	 
-	 
-	//点击银行按钮
-	 class MyMouLister_bank implements MouseListener
-	 	{
-	 
-	 		@Override
-	 		public void mouseClicked(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 		
-	 		}
-	 
-	 		@Override
-	 		public void mouseEntered(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseExited(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mousePressed(MouseEvent arg0) {
-	 		
-	 			bank.paint();
-	 			//virtualBank.setVisible(true);
-	 			
-	 		}
-	 
-	 		@Override
-	 		public void mouseReleased(MouseEvent arg0) {
-	 			// TODO 自动生成的方法存根
-	 			
-	 		}
-	 		
-	 	}
-
 	 
 }
 //@主界面类结束-----------------------------

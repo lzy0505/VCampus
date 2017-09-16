@@ -30,13 +30,13 @@ public class ButtonEditor extends DefaultCellEditor {
 
 	  public Component getTableCellEditorComponent(JTable table, Object value,
 	      boolean isSelected, int row, int column) {
-	    if (isSelected) {
-	      button.setForeground(table.getSelectionForeground());
-	      button.setBackground(table.getSelectionBackground());
-	    } else {
+//	    if (isSelected) {
+//	      button.setForeground(table.getSelectionForeground());
+//	      button.setBackground(table.getSelectionBackground());
+//	    } else {
 	      button.setForeground(table.getForeground());
 	      button.setBackground(table.getBackground());
-	    }
+//	    }
 	    content=value.toString();
 	    button.setText(content);
 	    isPushed = true;

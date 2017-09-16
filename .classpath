@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="libs/jackcess-2.1.6.jar"/>
 	<classpathentry kind="lib" path="libs/ucanaccess-4.0.2.jar"/>
 	<classpathentry kind="lib" path="libs/JTattoo-1.6.11.jar"/>
+	<classpathentry kind="lib" path="libs/SwingSets3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

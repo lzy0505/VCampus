@@ -9,7 +9,8 @@ import java.awt.EventQueue;
  import java.awt.Toolkit;
  
  import javax.swing.JPanel;
- import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JLabel;
  import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -19,15 +20,22 @@ import com.sun.javafx.stage.EmbeddedWindow;
 
 import table_component.ButtonEditor;
 import table_component.ButtonRenderer;
+import table_component.SpringUtilities;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 
 //import client.GUI.ChooseCourseLister;
  
  import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
- import java.awt.event.ActionListener;
+import javax.swing.SpringLayout;
+
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JSeparator;
@@ -49,7 +57,19 @@ import java.net.Socket;
  	private String ci;
  	private ArrayList<HashMap<String,String>> csList =null;
  	private ArrayList<HashMap<String,String>> coList =new ArrayList<HashMap<String,String>>();
-
+ 	
+ 	
+	private JTextField textStudentNo;
+	private JTextField textStudentName;
+	private JTextField textStudentCardID;
+	JRadioButton rdbtnFemale;
+	JRadioButton rdbtnMale;
+	JFormattedTextField textEnrollTime;
+	JComboBox SpecialitySelection;
+	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
+				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "cs", "物理系", "生物科学与医学工程学院", 
+			"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
+			"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
  	JFrame courseDetails=null;
  	//tab表中的内容
  	Object[][] selectCourseTableContent=null;
@@ -60,13 +80,14 @@ import java.net.Socket;
 	final Object[] scoreQueryTableHead=new Object[] {"课程名称","学分","考试分数"};
 	final Object[] examArrangementTableHead=new Object[] {"课程名称","考试地点","考试时间"};
 	//tab表
-	JTable selectCourseTable=null;
+	CourseSelectJTable selectCourseTable=null;
 	JTable examArrangementTable=null;
 	JTable scoreQueryTable=null;
 	//tab
-	JTabbedPane tabbedPane=null;
+	public JTabbedPane tabbedPane=null;
 	//已选课的信息（用于disable button）
 	HashMap<String,String> selectedCourse=null;
+	HashMap<String,String>isCompleted=null;
 	
 
  	
@@ -82,16 +103,103 @@ import java.net.Socket;
  	
  	public StudentAffairs(HomeScreen homeScreen) {
  		this.homeScreen=homeScreen;
- 	
+ 		
+ 		
+ 		
   		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
  		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
- 		tabbedPane.setBounds(7, 21, 437, 251);
+
+ 		
+ 		
+    	//The following code is about the "Information Import" bar.
+		JPanel informationImportPanel = new JPanel();
+		informationImportPanel.setLayout(new BoxLayout(informationImportPanel,BoxLayout.Y_AXIS));
+		tabbedPane.addTab("信息录入", null, informationImportPanel, null);
+		
+
+		JPanel informationImportContentPanel =new JPanel();
+		informationImportContentPanel.setLayout(new FlowLayout(50));
+		
+		JPanel informationImportLeftContentPanel =new JPanel(new SpringLayout());
+		JPanel informationImportRightContentPanel =new JPanel(new SpringLayout());
+		
+		JLabel lblStudentCardID = new JLabel("一卡通号",JLabel.TRAILING);
+		informationImportLeftContentPanel.add(lblStudentCardID);
+		textStudentCardID = new JTextField(ClientInfo.getCi());
+		textStudentCardID.setEnabled(false);
+		lblStudentCardID.setLabelFor(textStudentCardID);
+		informationImportLeftContentPanel.add(textStudentCardID);
+		
+		JLabel lblStudentNumber = new JLabel("学号",JLabel.TRAILING);
+		informationImportLeftContentPanel.add(lblStudentNumber);
+		textStudentNo = new JTextField();
+		textStudentNo.setColumns(10);
+		lblStudentNumber.setLabelFor(textStudentNo);
+		informationImportLeftContentPanel.add(textStudentNo);
+		
+		JLabel lblStudentname = new JLabel("学生姓名",JLabel.TRAILING);
+		informationImportLeftContentPanel.add(lblStudentname);
+		textStudentName = new JTextField();
+		textStudentName.setColumns(10);
+		lblStudentname.setLabelFor(textStudentName);
+		informationImportLeftContentPanel.add(textStudentName);
+		
+		JLabel lblEnrollmenttime = new JLabel("入学年份",JLabel.TRAILING);
+		informationImportRightContentPanel.add(lblEnrollmenttime);
+		textEnrollTime = new JFormattedTextField();
+		textEnrollTime.setText("2010");
+		lblEnrollmenttime.setLabelFor(textEnrollTime);
+		informationImportRightContentPanel.add(textEnrollTime);
+		
+		JLabel lblSpecialty = new JLabel("专业",JLabel.TRAILING);
+		informationImportRightContentPanel.add(lblSpecialty);
+		SpecialitySelection = new JComboBox();
+		SpecialitySelection.setModel(new DefaultComboBoxModel(majors));
+		SpecialitySelection.setMaximumRowCount(10);
+		lblSpecialty.setLabelFor(SpecialitySelection);
+		informationImportRightContentPanel.add(SpecialitySelection);
+		
+		JLabel lblSex = new JLabel("性别",JLabel.TRAILING);
+		informationImportRightContentPanel.add(lblSex);
+		rdbtnFemale = new JRadioButton("女");
+		rdbtnMale = new JRadioButton("男");
+		ButtonGroup bg=new ButtonGroup();
+		bg.add(rdbtnFemale);
+		bg.add(rdbtnMale);
+		JPanel genderPanel=new JPanel(new FlowLayout());
+		genderPanel.add(rdbtnFemale);
+		genderPanel.add(rdbtnMale);
+		lblSex.setLabelFor(genderPanel);
+		informationImportRightContentPanel.add(genderPanel);
+
+		SpringUtilities.makeCompactGrid(informationImportLeftContentPanel, 3, 2, 15, 40, 5, 26);
+		SpringUtilities.makeCompactGrid(informationImportRightContentPanel, 3, 2, 15, 40, 5, 22);
+		informationImportContentPanel.add(informationImportLeftContentPanel);
+		informationImportContentPanel.add(informationImportRightContentPanel);
+
+		
+		
+		
+		JPanel informationImportActionBar = new JPanel();
+		informationImportActionBar.setLayout(new FlowLayout());
+		
+		JButton btnButton = new JButton("提交");
+		informationImportActionBar.add(btnButton);
+		JButton btnCancel = new JButton("清空");
+		informationImportActionBar.add(btnCancel);
+		informationImportActionBar.setPreferredSize(new Dimension(200,100));
+		
+		
+		informationImportPanel.add(informationImportContentPanel);
+		informationImportPanel.add(informationImportActionBar);
+		btnButton.addActionListener(new SubmitLister());
+		btnCancel.addActionListener(new CancelLister());
  		
  		updateTableContent();
  		
  		DefaultTableModel selectCourseTableModel= new DefaultTableModel();
  		selectCourseTableModel.setDataVector(selectCourseTableContent,selectCourseTableHead);
- 		selectCourseTable=new JTable(selectCourseTableModel);
+ 		selectCourseTable=new CourseSelectJTable(selectCourseTableModel);
  		selectCourseTable.setFillsViewportHeight(true);
  		selectCourseTable.setRowHeight(40);
 
@@ -108,6 +216,7 @@ import java.net.Socket;
  		examArrangementTable=new JTable(examArrangementTableModel);
  		examArrangementTable.setFillsViewportHeight(true); 
  		examArrangementTable.setRowHeight(40);
+ 		examArrangementTable.setEnabled(false);
  		
  		JScrollPane examArrangementPane = new JScrollPane(examArrangementTable);
  		tabbedPane.addTab("考试安排", null, examArrangementPane, null);
@@ -117,30 +226,27 @@ import java.net.Socket;
  		scoreQueryTable=new JTable(scoreQueryTableModel);
  		scoreQueryTable.setFillsViewportHeight(true);
  		scoreQueryTable.setRowHeight(40);
+ 		scoreQueryTable.setEnabled(false);
  		
  		JScrollPane scoreQueryPane = new JScrollPane(scoreQueryTable);
  		tabbedPane.addTab("成绩查询", null, scoreQueryPane, null); 		
   		
 
+		if(isCompleted.get("result").equals("false")) {
+			tabbedPane.setEnabledAt(1, false);
+			tabbedPane.setEnabledAt(2, false);
+			tabbedPane.setEnabledAt(3, false);
+		}else {
+			tabbedPane.remove(0);
+			tabbedPane.setEnabledAt(0, true);
+			tabbedPane.setEnabledAt(1, true);
+			tabbedPane.setEnabledAt(2, true);
+		}
  		
 
  	}
  	
- 	public void paint() {
 
- 		JButton returnToHomeScreen = new JButton("返回");
- 		returnToHomeScreen.addActionListener(new ReturnActionListener());
- 		returnToHomeScreen.setPreferredSize(new Dimension(80,32));
- 		JPanel mainPanel=new JPanel();
- 		mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));
- 		mainPanel.add(tabbedPane);
- 		mainPanel.add(returnToHomeScreen);
- 		homeScreen.G5.getContentPane().removeAll();
- 		homeScreen.G5.setTitle("学生教务");
- 		homeScreen.G5.getContentPane().add(mainPanel);
- 		homeScreen.G5.getContentPane().repaint();
- 		homeScreen.G5.getContentPane().revalidate();
- 	}
  	 	
  	/**
  	 * Update the contents of the frame.
@@ -164,10 +270,14 @@ private void updateStudentCourse() {
  		DefaultTableModel scoreQueryTableModel=new DefaultTableModel();
  		scoreQueryTableModel.setDataVector(scoreQueryTableContent, scoreQueryTableHead);
  		scoreQueryTable.setModel(scoreQueryTableModel);
- 		
+		
  	}
 	
 public void updateTableContent() {
+		isCompleted=new HashMap<String,String>();
+		isCompleted.put("op", "isCompleted");
+		isCompleted.put("card_id",ClientInfo.getCi());
+		isCompleted=GUI.getOne(isCompleted);
  		HashMap<String,String> hm = new HashMap<String,String>();
 	 	hm.put("card_id", ClientInfo.getCi());
 	 	hm.put("op", "search_course");
@@ -187,10 +297,10 @@ public void updateTableContent() {
  	 		selectCourseTableContent[i][0] = csList.get(i).get("course_name");
  	 		selectCourseTableContent[i][1] = csList.get(i).get("course_credits");
  	 		if(csList.get(i).get("select_status").equals("TRUE")) {
- 	 			selectCourseTableContent[i][2] = "Selected: " + csList.get(i).get("course_teacher");
+ 	 			selectCourseTableContent[i][2] = "已选： " + csList.get(i).get("course_teacher");
  	 		}
  	 		else {
- 	 			selectCourseTableContent[i][2] = "Unselected";
+ 	 			selectCourseTableContent[i][2] = "未选";
  	 		}
  	 		selectCourseTableContent[i][3]="选课";
  	 		
@@ -306,8 +416,8 @@ public void updateTableContent() {
 				this.row=row;
 				Component button=super.getTableCellEditorComponent(table, value, isSelected, row, column);
 				if (table.getValueAt(row, column-1).equals("已满")||selectedCourse.get("select_status").equals("TRUE")&&selectedCourse.get("course_id").equals(coList.get(row).get("course_id"))) {
-					button.setForeground(table.getBackground());
-					button.setBackground(table.getBackground());
+					button.setForeground(table.getSelectionForeground());
+					button.setBackground(UIManager.getColor("Button.background"));
 //					button.setEnabled(false);
 					super.setIsPushed(false);
 					System.out.println("Editor-disable!!!!");
@@ -340,17 +450,12 @@ public void updateTableContent() {
 		@Override public Component getTableCellRendererComponent(JTable table, Object value,
 			      boolean isSelected, boolean hasFocus, int row, int column) {
 			if (table.getValueAt(row, column-1).equals("已满")||selectedCourse.get("select_status").equals("TRUE")&&selectedCourse.get("course_id").equals(coList.get(row).get("course_id"))) {  
-				setForeground(table.getSelectionBackground());
+				setForeground(table.getSelectionForeground());
 			    setBackground(UIManager.getColor("Button.background"));
 			    System.out.println("Render-disable!!!!");
 			}else {
-				if (isSelected) {
-			      setForeground(table.getSelectionForeground());
-			      setBackground(table.getSelectionBackground());
-			    } else {
 			      setForeground(table.getForeground());
 			      setBackground(UIManager.getColor("Button.background"));
-			    }
 			}
 		    setText((value == null) ? "" : value.toString());
 		    return this;
@@ -364,6 +469,76 @@ public void updateTableContent() {
 			// TODO Auto-generated method stub
 			homeScreen.paint();
 		}
+	}
+	
+	class CourseSelectJTable extends JTable{
+		public CourseSelectJTable(DefaultTableModel tableModel) {
+			// TODO Auto-generated constructor stub
+			super(tableModel);
+		}
+		@Override
+		public boolean isCellEditable(int row, int col) {
+		     switch (col) {
+		         case 3:
+		             return true;
+		         default:
+		             return false;
+		      }
+		}
+	}
+	
+	class SubmitLister implements ActionListener
+	{
+
+		public void actionPerformed(ActionEvent e) {
+			//put textStudentNo.getText(),textStudentName.getText(),sex,textEnrollTime.getText(),
+			//SpecialitySelection.getSelectedItem() into the database
+			//TODO
+			HashMap<String,String> hm = new HashMap<String,String>();
+			hm.put("op","import_student");
+			hm.put("nname", "\'"+textStudentName.getText()+"\'");
+			hm.put("student_id","\'"+ textStudentNo.getText()+"\'");
+			if(rdbtnMale.isSelected())hm.put("gender", "\'male\'");
+			else if(rdbtnFemale.isSelected()) hm.put("gender", "\'female\'");
+			else {
+				JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			hm.put("grade", textEnrollTime.getText());
+			hm.put("card_id", textStudentCardID.getText());
+			hm.put("major", "\'"+majors[SpecialitySelection.getSelectedIndex()]+"\'");
+			GUI.send(hm);
+			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);
+			
+			isCompleted=new HashMap<String,String>();
+			isCompleted.put("op", "isCompleted");
+			isCompleted.put("card_id",ClientInfo.getCi());
+			isCompleted=GUI.getOne(isCompleted);
+	 		if(isCompleted.get("result").equals("false")) {
+				tabbedPane.setEnabledAt(1, false);
+				tabbedPane.setEnabledAt(2, false);
+				tabbedPane.setEnabledAt(3, false);
+			}else {
+				tabbedPane.remove(0);
+				tabbedPane.setEnabledAt(1, true);
+				tabbedPane.setEnabledAt(2, true);
+				tabbedPane.setEnabledAt(0, true);
+			}
+	 		
+			
+		}	
+	}
+	
+	class CancelLister implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+
+			textStudentNo.setText(null);
+			textStudentName.setText(null);
+			textStudentCardID.setText(null);
+			textEnrollTime.setText(null);
+		}
 		
 	}
+	
 }

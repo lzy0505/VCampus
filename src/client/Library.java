@@ -33,13 +33,11 @@ public class Library {
 	   
 	    //the elements of Library 
 	    JPanel p_library; //顶层面板
-	    JButton return_uplib1;//返回主界面的按钮
-	    JButton return_uplib2;
 	    //借书部分
 	    boolean flag;
 	    JPanel p_borrow;//借书面板
 	    JPanel borrow_p[];//用于布局的四个面板
-	    JTabbedPane tab_library;//tab面板
+	    public JTabbedPane tab_library;//tab面板
 	    String[] columnNames_Borrow;//借书表的表头
 	    String[][] rowData_Borrow;//借书的数据
 	    JLabel l_method;//“检索方式”的标签
@@ -69,7 +67,8 @@ public class Library {
 		ci=ClientInfo.getCi();
 	}
 	void init()
-	{  		
+	{  	
+		
 	   //借书部分
 		flag=false;
 	    p_borrow=new JPanel();
@@ -80,62 +79,57 @@ public class Library {
 	    	borrow_p[i]=new JPanel();
 	    }  
 	    columnNames_Borrow=new String[4];
-	    columnNames_Borrow[0]="Book Name";
-	    columnNames_Borrow[1]="Author";
-	    columnNames_Borrow[2]="Publish";
-	    columnNames_Borrow[3]="Quantity";
+	    columnNames_Borrow[0]="书名";
+	    columnNames_Borrow[1]="作者";
+	    columnNames_Borrow[2]="出版社";
+	    columnNames_Borrow[3]="库存数量";
 
-        return_uplib1=new JButton("Return");//返回主界面的按钮
-	    l_method=new JLabel("Retrieval method : ");//“检索方式”的标签
-	    l_method.setFont(new Font ("Arial", Font.PLAIN , 15));
+	    l_method=new JLabel("查询方式：");//“检索方式”的标签
 	    choseMethod=new JComboBox<String>();//检索方式的复选框
 	    choseMethod.setPreferredSize(new Dimension(170,25));
-	    choseMethod.addItem("Author");
-	    choseMethod.addItem("Book Name");	    
+	    choseMethod.addItem("按作者");
+	    choseMethod.addItem("按书名");	    
 	    t_keyWord=new JTextField();//关键词编辑框
 	    t_keyWord.setPreferredSize(new Dimension(170,28));    
-	    b_query=new JButton("Query");//查询按钮	  
+	    b_query=new JButton("查询");//查询按钮	  
 	    b_query.setPreferredSize(new Dimension(80,32));
-	    b_borrow=new JButton("Borrow");//借书按钮
+	    b_borrow=new JButton("借阅");//借书按钮
 	    b_borrow.setVisible(false);
 	   
+	    borrow_p[0].setLayout(new FlowLayout());
 	    borrow_p[0].add(l_method);
 	    borrow_p[0].add(choseMethod);
-	    borrow_p[1].add(t_keyWord);
-	    borrow_p[1].add(b_query);
+	    borrow_p[0].add(t_keyWord);
+	    borrow_p[0].add(b_query);
 	    borrow_p[3].add(b_borrow);
-	    borrow_p[3].add(return_uplib1);
 	    //将四个布局面板加到借书面板
 	    p_borrow.add(borrow_p[0]);
-	    p_borrow.add(borrow_p[1]);
 	    p_borrow.add(borrow_p[2]);
 	    p_borrow.add(borrow_p[3]);
     
 	    //还书部分
 	    flushFlag=false;
-	    return_uplib2=new JButton("Return");//返回主界面的按钮
 	    p_return=new JPanel();
 	    p_return.setLayout(new BoxLayout(p_return,BoxLayout.Y_AXIS));
 	    return_p1=new JPanel(); 
 	    return_p2=new JPanel();
-	    l_return=new JLabel("Borrowed books : ");//“你已借图书有”的按钮	   
-	    b_return=new JButton("Return Book");//还书按钮
+	    l_return=new JLabel("已借图书");//“你已借图书有”的按钮	   
+	    b_return=new JButton("还书");//还书按钮
 	    return_p1.add(b_return);
-	    return_p1.add(return_uplib2);
 	    p_return.add(l_return);
 	    p_return.add(return_p2);
 	    p_return.add(return_p1);
 	    columnNames_Return=new String[3];//借书表的表头
-	    columnNames_Return[0]="Book Name";
-	    columnNames_Return[1]="Author";
-	    columnNames_Return[2]="Publish";
+	    columnNames_Return[0]="书名";
+	    columnNames_Return[1]="作者";
+	    columnNames_Return[2]="出版社";
 	    
 	    
 	    //将借书和还书面板加入tabbed中
 	    tab_library=new JTabbedPane();
-	    tab_library.addTab("Borrow",p_borrow);
-	    tab_library.addTab("Return",p_return);
-	    tab_library.setPreferredSize(new Dimension(500,450));
+	    tab_library.addTab("查询图书",p_borrow);
+	    tab_library.addTab("还书",p_return);
+//	    tab_library.setPreferredSize(new Dimension(500,450));
 	    p_library=new JPanel(); //顶层面板
 	    p_library.add(tab_library);
 	    addLis();
@@ -148,23 +142,10 @@ public class Library {
 		b_query.addActionListener(new ActionLis_Query());//查询按钮
 		b_borrow.addActionListener(new ActionLis_Borrow());
 		tab_library.addChangeListener(new ChangeLis_Tab());
-		return_uplib1.addActionListener(new ActionLis_RepaintHomeScreen());//返回主界面
-		return_uplib2.addActionListener(new ActionLis_RepaintHomeScreen());//返回主界面
 		b_return.addActionListener(new ActionLis_Return());//还书按钮
 	}	
 	
 	//重绘函数
-	void paint()
-	{
-		
-		 homeScreen.G5.getContentPane().removeAll();
-		 homeScreen.G5.setTitle("Library");
-		 homeScreen.G5.getContentPane().add(p_library);
-		 homeScreen.G5.getContentPane().repaint();
-		 homeScreen.G5.getContentPane().revalidate();
-		
-		
-	}
 
 	
 //	void update(String card_id)
@@ -203,9 +184,9 @@ public class Library {
 			booknames= hmbook.keySet().toArray(booknames);
 			String result="";
 			for(int i=0;i<hmbook.size();i++){
-				result+=(booknames[i]+ " is returned "+hmbook.get(booknames[i])+"!\n");
+				result+=(booknames[i]+ "还书"+hmbook.get(booknames[i])+"！\n");
 			}
-			if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
+			if(flag)JOptionPane.showMessageDialog(null,result,"操作结果",JOptionPane.INFORMATION_MESSAGE);
 			
 			//刷新操作,刷新两个表格。
 			flushFlag=true;
@@ -218,21 +199,6 @@ public class Library {
 
 	}
 	
-	
-	
-	
-	
-	class ActionLis_RepaintHomeScreen implements ActionListener
-	 {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			homeScreen.paint();
-			
-			
-		}	 	 
-	 }
 	
 	
 	class ChangeLis_Tab implements ChangeListener
@@ -339,16 +305,15 @@ public class Library {
 		{   
 		    
 			
-			System.out.println("Query1 ok");
 			HashMap<String,String> hmlib=new HashMap<String,String>();
-			if(choseMethod.getSelectedItem() == "Author")
+			if(choseMethod.getSelectedIndex() == 0)
 			{
 				//search book according to Author
 				hmlib.put("op", "searchbook");
 				hmlib.put("search_type", "author");
 				hmlib.put("keyword", t_keyWord.getText());					
 			}
-			else if(choseMethod.getSelectedItem() == "Book Name")
+			else if(choseMethod.getSelectedIndex() == 1)
 			{
 				//search book according to BookName
 				hmlib.put("op", "searchbook");
@@ -372,7 +337,7 @@ public class Library {
 				
 			rowData_Borrow=new String[amount][4];
 			if(alist.size()>=1)
-			{ System.out.println("Query2 ok");
+			{ 
 				for(int i=0;i<amount;i++)
 				{
 					rowData_Borrow[i][0]=bookName[i];
@@ -403,8 +368,8 @@ public class Library {
 				//SearchUnSuccessful.setVisible(true);
 				//show the GUI of searching unsuccessfully
 				//TODO
-				JOptionPane.showMessageDialog(null,"The book that you searched is not found!",
-						"search unsuccessful",JOptionPane.WARNING_MESSAGE);							  
+				JOptionPane.showMessageDialog(null,"未搜索到图书",
+						"操作结果",JOptionPane.WARNING_MESSAGE);							  
 			}
 			
 		}
@@ -439,9 +404,9 @@ public class Library {
 				String result="";
 
 				for(int i=0;i<hmbook.size();i++){
-					result+=(booknames[i]+ " is borrowed "+hmbook.get(booknames[i])+"!\n");
+					result+=(booknames[i]+ "借阅"+hmbook.get(booknames[i])+"!\n");
 				}
-				if(flag)JOptionPane.showMessageDialog(null,result,"Results",JOptionPane.INFORMATION_MESSAGE);
+				if(flag)JOptionPane.showMessageDialog(null,result,"操作结果",JOptionPane.INFORMATION_MESSAGE);
 				
 				new ActionLis_Query().actionPerformed(null);
 				

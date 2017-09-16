@@ -41,9 +41,8 @@ class Bank
 {
 	HomeScreen homeScreen=null;
 	String ci=null;
-	JTabbedPane tab_bank;
+	public JTabbedPane tab_bank;
 	JPanel  p_bank;//中间面板
-	JButton return_upbank;//返回按钮
    
 	
 	//充值界面
@@ -99,20 +98,16 @@ class Bank
 	 void init()
 	 {		
 		
-		    //返回到上一层按钮
-			return_upbank=new JButton("return");
-			
-			
 		 	//充值界面	
 		    p_recharge = new JPanel();			    
 		 	money_recharge=new JTextField();
 		 	money_recharge.setColumns(20);
-		 	ok_re=new JButton("ensure");
+		 	ok_re=new JButton("确定");
 		 	ok_re.setPreferredSize(new Dimension(70,30));
-		 	l_money=new JLabel("Recharge amount:");
+		 	l_money=new JLabel("充值金额");
 		 	recharge_p1=new JPanel();
 		 	recharge_p2=new JPanel();
-		 	l_confirm1=new JLabel("confirm password :");
+		 	l_confirm1=new JLabel("确认密码");
 		 	t_password_confirm1=new JPasswordField();
 		 	t_password_confirm1.setColumns(17);
 		 	recharge_p1.setLayout(new FlowLayout());
@@ -122,8 +117,7 @@ class Bank
 		 	recharge_p2.add(t_password_confirm1);
 		 	recharge_p2.add(ok_re);
 		 	p_recharge.setLayout(new BoxLayout(p_recharge,BoxLayout.Y_AXIS));
-		 	p_recharge.add(recharge_p1);
-		 	p_recharge.add(recharge_p2);
+		 	
 		 	
 		 	
 		 	//缴费界面
@@ -131,23 +125,23 @@ class Bank
 		    sign="Tuition";//默认缴学费
 		    p_payment=new JPanel();		  
 		    p_payment.setLayout(new BoxLayout(p_payment,BoxLayout.Y_AXIS));
-		 	l_chosePay=new JLabel("Pay Type : ");
+		 	l_chosePay=new JLabel("付款项目 ");
 		 	chosePay=new JComboBox<String>();//选择缴费的种类
-		 	chosePay.addItem("Tuition");//学费选项
-		 	chosePay.addItem("Water and electricity");//水电费
-		 	chosePay.addItem("Accommodation fee");//住宿费	 	
+		 	chosePay.addItem("学费");//学费选项
+		 	chosePay.addItem("水电费");//水电费
+		 	chosePay.addItem("住宿费");//住宿费	 	
 		 	//payment_query=new JButton("Query");//查询相应缴费项目欠款金额的按钮
 		 	//payment_query.setPreferredSize(new Dimension(70,30));
-		 	l_needtopay=new JLabel("need to pay : ");//
+		 	l_needtopay=new JLabel("需支付");//
 		 	t_needtopay=new JTextField();//需要交多少钱的文本框显示
 		 	t_needtopay.setColumns(10);
 		 	t_needtopay.setEditable(false);
-		 	l_confirm2=new JLabel("confirm password : ");
+		 	l_confirm2=new JLabel("确认密码");
 		 	l_confirm2.setVisible(false);
 		 	t_password_confirm2=new JPasswordField();
 		 	t_password_confirm2.setColumns(15);
 		 	t_password_confirm2.setVisible(false);
-		 	ok_pay=new JButton("Ensure Payment");//确认缴费
+		 	ok_pay=new JButton("缴费");//确认缴费
 		 	ok_pay.setVisible(false);;//必须至少查询一次才可以出现，否则表没出来点击导致异常
 		 	payment_p3=new JPanel();
 		 	payment_p3.add(l_confirm2);
@@ -163,8 +157,10 @@ class Bank
 		 	p_payment.add(payment_p3);
 		 	
 		 	
+		 	
+		 	
 		 	//查询界面
-		 	l_ecard=new JLabel("e-card balance : ");
+		 	l_ecard=new JLabel("一卡通余额：");
 		 	t_balance=new JTextField();
 		 	t_balance.setColumns(10);
 		 	t_balance.setEditable(false);//设置文本框不可编辑
@@ -173,36 +169,30 @@ class Bank
 		 	p_balance.add(l_ecard);
 		 	p_balance.add(t_balance);
 		 	
+		 	p_recharge.add(p_balance);
+		 	p_recharge.add(recharge_p1);
+		 	p_recharge.add(recharge_p2);
+		 	
+		 	
 		 	
 		 	//银行tab
 		 	//return_upbank.setPreferredSize(new Dimension(300,80));
 		 	tab_bank=new JTabbedPane();			 	
-		 	tab_bank.addTab("Recharge",p_recharge);
-		 	tab_bank.addTab("Payment",p_payment);
-		 	tab_bank.addTab("Balance",p_balance);
+		 	tab_bank.addTab("查询与充值",p_recharge);
+		 	tab_bank.addTab("支付",p_payment);
 		 	tab_bank.setPreferredSize(new Dimension(300,280));
 	        p_bank=new JPanel();
 	        p_bank.setLayout(new BoxLayout(p_bank,BoxLayout.Y_AXIS));
 	        p_bank.add(tab_bank);
-	        p_bank.add(return_upbank);
 	        
 		 	//启用监听函数
 		 	addLis();
 		 			 
 	 }
-	 //银行类的重绘函数 
-	 void paint()
-	 {
-	 homeScreen.G5.getContentPane().removeAll();
-	 homeScreen.G5.setTitle("Bank");
-	 homeScreen.G5.getContentPane().add(p_bank);
-	 homeScreen.G5.getContentPane().repaint();
-	 homeScreen.G5.getContentPane().revalidate();
-	 }
+
 	 //为银行类的相关控件增加监听函数
 	 void addLis()
 	 {   
-		 return_upbank.addActionListener(new ActionLis_RepaintHomeScreen());//返回重绘按钮（已完成）
 		 ok_re.addActionListener(new ActionLis_recharge());	//确认充值按钮	
 		 //payment_query.addActionListener(new ActionLis_Paymentquery());//缴费查询按钮
 		 chosePay.addActionListener(new ActionLis_Paymentquery());
@@ -221,10 +211,8 @@ class Bank
 		    JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
 		    int selectedIndex = tabbedPane.getSelectedIndex();
 		    if(selectedIndex==1){
-		    	//ActionEvent e=new ActionEvent(e, selectedIndex, ci);
-		    	//chosePay.actionPerformed(new ActionEvent(chosePay,ActionEvent.ACTION_PERFORMED,null));
 		    	new ActionLis_Paymentquery().actionPerformed(null);
-		    }else if(selectedIndex==2)
+		    }else if(selectedIndex==0)
 		    {
 		    	HashMap<String,String> hm=new HashMap<String,String>();
 				hm.put("op", "QueryBalance");//查询一卡通余额操作
@@ -257,11 +245,11 @@ class Bank
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if(t.getSelectedRow()==-1){
-					JOptionPane.showMessageDialog(null, "尚未选择付款项！","ERROR:",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "尚未选择付款项！","操作错误",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if(rowData[t.getSelectedRow()][2].equals("Yes"))
-					{JOptionPane.showMessageDialog(null, "This cost has already been paid","Warnning",JOptionPane.WARNING_MESSAGE);
+					{JOptionPane.showMessageDialog(null, "已支付","操作结果",JOptionPane.WARNING_MESSAGE);
 					return;
 					}
 				
@@ -269,7 +257,6 @@ class Bank
 				hm.put("op", "Payment");	
 				hm.put("card_id", ci);
 				String password = t_password_confirm2.getText();
-				System.out.println(password +" life mima ");
 				hm.put("password", password);
 				
 				//hm.put("type", sign);//注：sign分别可能为 "Tuition" ,"WandE", "Afee"用来标识缴费的种类
@@ -288,7 +275,7 @@ class Bank
                     
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "原因："+hm.get("reason"),"缴费失败!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,hm.get("reason"),"缴费失败", JOptionPane.ERROR_MESSAGE);
 				}
 				//---反馈部分交给李某		
 				//...返回是否交钱成功，建议弄一个小弹窗
@@ -316,10 +303,10 @@ class Bank
 			hm.put("password", password);
 			hm=GUI.getOne(hm);
 			if(hm.get("result").equals("success")){
-				JOptionPane.showMessageDialog(null, "缴费成功！");
+				JOptionPane.showMessageDialog(null, "缴费成功");
 			}
 			else {
-				JOptionPane.showMessageDialog(null, "原因："+hm.get("reason"),"/n 缴费失败!", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, hm.get("reason"),"缴费失败", JOptionPane.ERROR_MESSAGE);
 			}
 			//---反馈部分交给李某
 			//...返回是否充值成功，建议弄一个小弹窗
@@ -330,17 +317,8 @@ class Bank
 	}
 	
 	
-	 class ActionLis_RepaintHomeScreen implements ActionListener
-	 {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			homeScreen.paint();
-			
-			
-		}	 	 
-	 }
+	 	 
+	
 
 
 
@@ -357,10 +335,9 @@ class Bank
 			
 			columnNames=new String[3];
 			//表头
-			columnNames[0]="Semester";
-			columnNames[1]="Cost";
-			
-			columnNames[2]="Has paid?";	
+			columnNames[0]="学期";
+			columnNames[1]="费用";
+			columnNames[2]="支付状态";	
 			//初始化年级和学期方格的内容
 
 			
@@ -373,7 +350,6 @@ class Bank
 			hm.put("type", "Tuition");
 			System.out.println("now type:"+ hm.get("type"));
 			sign="Tuition";//表示交学费
-			columnNames[1]="Tution";
 			ArrayList<HashMap<String,String>> TuitionList = GUI.getList(hm);
 			//@反馈部分--------
 			//...返回学费表的费用和是否缴清两列数据，显示
@@ -386,10 +362,10 @@ class Bank
 					rowData[i][0]=TuitionList.get(i).get("card_time");
 					rowData[i][1]=TuitionList.get(i).get("card_cost");			
 					if(TuitionList.get(i).get("card_is_paid").equals("TRUE")) {
-						rowData[i][2]="Yes";
+						rowData[i][2]="已支付";
 					}
 					else {
-						rowData[i][2]="No";
+						rowData[i][2]="未支付";
 					}
 					card_record_id[i] = TuitionList.get(i).get("card_record_id");
 						
@@ -405,7 +381,6 @@ class Bank
 			hm.put("type", "WandE");
 			System.out.println("now type:"+ hm.get("type"));
 			sign="WandE";//表示交水电费
-			columnNames[1]="Water and electricty fee";
 			//@反馈部分--------
 			//...返回水电表的费用和是否缴清两列数据，显示
 			//
@@ -437,7 +412,6 @@ class Bank
 			hm.put("type", "Afee");
 			System.out.println("now type:"+ hm.get("type"));
 			sign="Afee";//表示交住宿费
-			columnNames[1]="Accommodation fee";
 			//@反馈部分--------
 			//...返回住宿表的费用和是否缴清两列数据，显示
 			//
@@ -478,7 +452,7 @@ class Bank
 		//bank.t.setPreferredSize(new Dimension(450,300));
 		t.setRowHeight(40);
 		sp.setViewportView(t);
-		sp.setPreferredSize(new Dimension(450,300));
+		sp.setPreferredSize(new Dimension(600,300));
 		payment_p2.removeAll();
 		payment_p2.add(sp);
 		payment_p2.repaint();

@@ -2,10 +2,15 @@ package client;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
+
 import java.io.IOException;
 import java.lang.String;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 //implements ActionListener
@@ -270,112 +275,52 @@ public class GUI extends JFrame
 
 		//初始化HomeScreeen类变量
 		homeScreen=new HomeScreen();	
-   	 	homeScreen.init();
+//   	 	homeScreen.init();
    	 	
 		
 		
 		//events and reaction
 		reg1.addActionListener(new MyActLister1());//sign up int the first GUI
 		reg2.addActionListener(new MyActLister2());//the GUI of sign up
-		//b28.addActionListener(new MyActLister3());//turn to the GUI ReturnBook
 		close3.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
-		//l35.addMouseListener(new MyMouLister1());//open library(student)
-		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
-		//l55.addMouseListener(new MyMouLister2());//open student affairs
-		//b18.addActionListener(new SearchBookFromDB());//search book
-//		l56.addMouseListener(new MouseListener() {
-//			
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//				// TODO 自动生成的方法存根
-//				
-//			}
-//			
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				// TODO 自动生成的方法存根
-//				
-//			}
-//			
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//				// TODO 自动生成的方法存根
-//				
-//			}
-//			
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				// TODO 自动生成的方法存根
-//				
-//			}
-//			
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				// TODO 自动生成的方法存根
-//				
-//			}
-//		});
-		
-		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
+
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
 	{  try{//定义界面风格
-		UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
-	  }catch(UnsupportedLookAndFeelException e)
-	    {
-		  
-	    }
+//		UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
+        org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
+        BeautyEyeLNFHelper.frameBorderStyle = BeautyEyeLNFHelper.FrameBorderStyle.translucencySmallShadow;  
+        org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
+        UIManager.put("RootPane.setupButtonVisible", false); 
+        //更换所有字体
+        FontUIResource fontRes = new FontUIResource(new Font("Microsoft YaHei UI", Font.PLAIN, 15));  
+        for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {  
+            Object key = keys.nextElement();  
+            Object value = UIManager.get(key);  
+            if (value instanceof FontUIResource) {  
+                UIManager.put(key, fontRes);  
+            }  
+        }
+        
+        
+        
+        
+        
+	  }catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 		GUI gui= new GUI("Sign In","Sign Up","Success","Fail","Student","Teacher",
 				"Sign in failed","Library","Search unsuccessful");
 		//gui.init();
 	
 	}
 
-	//---------------------------------
-	//@初始化类-------------------------
-//		 class Load{
-//			 
-//			 Load()
-//			 {  			    		 
-//				 //初始化时注意先后顺序
-//				loadHomeScreen();
-//				loadHSAdmin();
-//				loadBank();
-//				loadLibrary();
-//			 }
-//			 //初始化银行类
-//			 void loadBank()
-//			 {  
-//				
-//			 }
-//			 //初始化主界面类
-//		     void loadHomeScreen()
-//		     {
-//		    	 	    	    	 
-//		     }
-//		     void loadLibrary()
-//		     {
-//		    	 
-//	    	 
-//		     }
-//		     void loadHSAdmin()
-//		     {
-//		    	 
-//		    	 
-//		     }
-//		    
-//		     //调用主界面的update函数将Library、Bank等变量传入
-//		
-//		     
-//	   
-//		     
-//		 }
-//		 //@初始化类结束--------------------------
-		 //--------------------------------------
+
 	
 
 	class MyActLister1 implements ActionListener
@@ -484,8 +429,7 @@ public class GUI extends JFrame
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	//G5.setVisible(true);
-		    	homeScreen.update("student");
-		    	homeScreen.G5.setVisible(true);
+		    	homeScreen.update("student");	    	
 		    	System.out.println("update card_id to : homeScreen!");
 		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
@@ -497,7 +441,6 @@ public class GUI extends JFrame
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
 		    	homeScreen.update("teacher");
-		    	homeScreen.G5.setVisible(true);
 		    	G1.setVisible(false);
 		    	//G6.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    		
@@ -508,7 +451,6 @@ public class GUI extends JFrame
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
 		    	homeScreen.update("admin");
-		    	homeScreen.G5.setVisible(true);
 		    	G1.setVisible(false);
 		    	System.out.println("Adminok1");
 		    	
