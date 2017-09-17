@@ -26,13 +26,13 @@ public class Store {
 	private ArrayList<HashMap<String , String>> getInitDetial=null;//用于装初始化商品的初始化信息
 	private String[] file_path= null;//用于记录文件路径方便查询
 	private ArrayList<String[]> shoppingCartArray=new ArrayList<String[]>();
-
+	private String[] file_init_path= null;//用于记录文件路径方便查询
 	
 	//搜索结果主界面
 	JFrame searchResult;
 	JLabel[] productResultLabel;
 
-	
+	JLabel TotalPriceLabel;
 	//一个索引
 	static int index = 0;
 	
@@ -41,7 +41,6 @@ public class Store {
 	JTextField quantityText;//用于计算选中某种商品的数量
 	
 	//购物车
-	static double totalPrice = 0;
 	static int count[];
 	
 	
@@ -82,7 +81,7 @@ public class Store {
 		load_pic.put("op", "init_pic");
 		getInitDetial = GUI.getList(load_pro);
 		try {
-			productIcon=GUI.getImage(load_pic);
+			file_init_path=GUI.getImage(load_pic);
 		} catch (IOException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
@@ -90,7 +89,7 @@ public class Store {
 		for(int i=0;i<4;i++) {
 			productName[i] =getInitDetial.get(i).get("item_name"); 
 		}
-		
+		productIcon=file_init_path;
 		//绘制主界面的商品
 		for(int i = 0;i<4;i++) 
 		{
@@ -116,7 +115,7 @@ public class Store {
 							String details[] = new String[5];
 							details[0] = getInitDetial.get(index).get("item_name");
 							System.out.println("点击的商品名.." +getInitDetial.get(index).get("item_name")); 
-							details[1] = file_path[index];
+							details[1] = file_init_path[index];
 							details[2] = getInitDetial.get(index).get("item_price");
 							System.out.println("点击的价格.." +getInitDetial.get(index).get("item_price"));
 							details[3] = getInitDetial.get(index).get("item_purchased_number");
@@ -360,20 +359,24 @@ public class Store {
 						{new Boolean(false),"商品名4","单价4","数量4","总价4"}
 						……
 						};*/
-					 shoppingCart(shoppingCartArray);
+					 shoppingCart();
 				 }
 				 
 			 }			
 		});
 	}
 	
-	public void shoppingCart(ArrayList<String[]> shoppingCartArray)
+	public void shoppingCart()
 	{
 		
-		String [][] shopCart = new String[shoppingCartArray.size()][4];
+		String [][] shopCart = new String[shoppingCartArray.size()][5];
 		for(int i=0;i<shoppingCartArray.size();i++) {
-			for(int j=0;j<4;j++) {
-				shopCart[i][j] = shoppingCartArray.get(i)[j];
+			for(int j=0;j<5;j++) {
+				if(j==0) {
+					shopCart[i][j] = "false";
+					continue;
+				}
+				shopCart[i][j] = shoppingCartArray.get(i)[j-1];
 			}
 		}
 		/*shoppingCartArray的格式如下
@@ -456,7 +459,7 @@ public class Store {
 		lblTotal.setBounds(490, 29, 88, 37);
 		TotalBar.add(lblTotal);
 		
-		JLabel TotalPriceLabel = new JLabel("¥0.00");
+		TotalPriceLabel = new JLabel("¥0.00");
 		TotalPriceLabel.setForeground(Color.RED);
 		TotalPriceLabel.setFont(new Font("Lucida Console", Font.PLAIN, 16));
 		TotalPriceLabel.setBounds(561, 30, 88, 37);
@@ -471,27 +474,28 @@ public class Store {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				JTable t=(JTable)e.getComponent();
 				if(e.getClickCount()==2)
 				{
 					for(int j=0;j<2;j++)
 					{
-					for(int i=0;i<table.getRowCount();i++)
+					for(int i=0;i<t.getRowCount();i++)
 					{
-						if(table.isCellSelected(i, 3))
+						if(t.isCellSelected(i, 3))
 						{
-							double amountPrice = Double.parseDouble((String)table.getValueAt(i,2))
-									*Double.parseDouble((String)table.getValueAt(i,3));
-							table.setValueAt(""+amountPrice,i,4);
+							double amountPrice = Double.parseDouble((String)t.getValueAt(i,2))
+									*Double.parseDouble((String)t.getValueAt(i,3));
+							t.setValueAt(""+amountPrice,i,4);
 						}
 						
 					}
 					}
 				}
-				for(int i=0;i<table.getRowCount();i++)
+				for(int i=0;i<t.getRowCount();i++)
 				{
-						double amountPrice = Double.parseDouble((String)table.getValueAt(i,2))
-								*Double.parseDouble((String)table.getValueAt(i,3));
-						table.setValueAt(""+amountPrice,i,4);
+						double amountPrice = Double.parseDouble((String)t.getValueAt(i,2))
+								*Double.parseDouble((String)t.getValueAt(i,3));
+						t.setValueAt(""+amountPrice,i,4);
 												
 				}
 				
@@ -523,99 +527,15 @@ public class Store {
 	
 		});
 		
-		table.addMouseListener(new MouseListener()
-				{
-
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("ok");
-						System.out.println(""+count[0]);
-							
-						for(int i = 0;i<table.getRowCount();i++)
-						{
-							//if (table.isCellSelected(i, 0))
-							if(table.getSelectedColumn() == 0&&table.getSelectedRow()==i)
-							{
-								count[i]+=1;
-								if( count[i]%2==1)
-								{
-									
-									totalPrice += Double.parseDouble((String)table.getValueAt(i,4));
-									TotalPriceLabel.setText("¥"+totalPrice);
-								}
-								else
-								{
-									totalPrice -= Double.parseDouble((String)table.getValueAt(i,4));
-									TotalPriceLabel.setText("¥"+totalPrice);
-								}
-							}
-									
-						}
-						
-					}
-
-					@Override
-					public void mouseEntered(MouseEvent e) {
-						
-						
-					}
-
-					@Override
-					public void mouseExited(MouseEvent e) {
-						// TODO 自动生成的方法存根
-						
-					}
-
-					@Override
-					public void mousePressed(MouseEvent e) {
-						
-						
-					
-					}
-
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						// TODO 自动生成的方法存根
-						
-					}
-			
-				});
-			//购物车一块购买
-				btnSettle.addActionListener(new ActionListener()
-				{
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						
-						int result = JOptionPane.showConfirmDialog(null, "总价为"+TotalPriceLabel.getText()+",确认购买？");
-						//若银行卡余额充足并且确认购买，则显示购买成功
-						//TODO
-						if(result == 0) {						
-							for(int i=0;i<shoppingCartArray.size();i++) {
-								HashMap<String, String> hm=new HashMap<String, String>();
-								hm.put("op", "buy");
-								hm.put("card_id", ClientInfo.getCi());
-								hm.put("cost", shoppingCartArray.get(i)[3]);
-								hm.put("item_name", shoppingCartArray.get(i)[0]);
-								hm.put("quantity", shoppingCartArray.get(i)[2]);
-								hm=GUI.getOne(hm);
-								if(hm.get("result").equals("success"))
-								{
-									//库存量和银行卡余额相应的减少
-									//TODO
-									JOptionPane.showMessageDialog(null, "购买成功！");
-								}else {
-									JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
-									break;
-								}
-								//若银行卡余额不足，提醒他账户余额不够，请尽快充值
-								//JOptionPane.showMessageDialog(null,"账户余额不足，请尽快充值！",
-								//		"购买失败！",JOptionPane.WARNING_MESSAGE);
-							}
-						}					
-					}
-			
-				});
+		table.addMouseListener(new calculatePriceLister());
+		
+		
+		
+		//购物车一块购买
+		btnSettle.addActionListener(new BuyAllLister());
+		
+		
+		
 	}
 	
 	class SearchLister implements ActionListener
@@ -702,5 +622,86 @@ public class Store {
 		}
 		
 	}
+	
+
+	class calculatePriceLister implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("ok");
+			System.out.println(""+count[0]);
+			JTable t=(JTable)e.getComponent();
+			Double totalPrice=0.0;
+			for(int i = 0;i<t.getRowCount();i++)
+			{
+				totalPrice += Double.parseDouble((String)t.getValueAt(i,4));
+				TotalPriceLabel.setText("¥"+totalPrice);
+			}
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			
+			
+		
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO 自动生成的方法存根
+			
+		}
+
+	}
+	
+	
+	
+	class BuyAllLister implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			int result = JOptionPane.showConfirmDialog(null, "总价为"+TotalPriceLabel.getText()+",确认购买？");
+			//若银行卡余额充足并且确认购买，则显示购买成功
+			//TODO
+			if(result == 0) {						
+				for(int i=0;i<shoppingCartArray.size();i++) {
+					HashMap<String, String> hm=new HashMap<String, String>();
+					hm.put("op", "buy");
+					hm.put("card_id", ClientInfo.getCi());
+					hm.put("cost",TotalPriceLabel.getText());
+					hm.put("item_name", shoppingCartArray.get(i)[0]);
+					hm.put("quantity", shoppingCartArray.get(i)[2]);
+					hm=GUI.getOne(hm);
+					if(hm.get("result").equals("success"))
+					{
+						//库存量和银行卡余额相应的减少
+						//TODO
+						JOptionPane.showMessageDialog(null, "购买成功！");
+					}else {
+						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
+						break;
+					}
+					//若银行卡余额不足，提醒他账户余额不够，请尽快充值
+					//JOptionPane.showMessageDialog(null,"账户余额不足，请尽快充值！",
+					//		"购买失败！",JOptionPane.WARNING_MESSAGE);
+				}
+			}					
+		}
+	}
+	
 	
 }
