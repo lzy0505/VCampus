@@ -68,7 +68,7 @@ public class GUI extends JFrame
 			e.printStackTrace();
 		}
 	}
-	//send message
+	//send message 可乐
 	public static void send(HashMap<String,String> sendmes){
 		try {
 			Client client = new Client();
@@ -109,6 +109,21 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
+	//给新商品的名字、数量、路径、价格。返回一个HashMap，如果成功返回success，失败返回false和相应的原因。
+	public static HashMap<String, String> upLoad(HashMap<String, String> hm) {
+		HashMap<String, String> getmes=null;
+		try {
+			Client client = new Client();
+			getmes = client.upLoad(hm);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null,"无法连接到服务器",
+					"致命的错误",JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		return getmes;
+	}
+	
 	
 	public static int getWidth(int frameWidth)
 	{

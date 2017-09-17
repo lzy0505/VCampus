@@ -13,6 +13,7 @@ public class HSAdmin {
     //传进来的参数
 	String ci;
 	LibManage lm;
+	StoreManage sManage=null;
 	//部件
     JFrame f_admin;
     JTabbedPane tab;
@@ -52,7 +53,8 @@ public class HSAdmin {
 		 //费用管理界面
 		 lm=new LibManage();
 		 lm.init();
-		 
+		 sManage=new StoreManage();
+		 sManage.init();
 		    p_fee =new JPanel();
 		    p_fee.setLayout(new BoxLayout(p_fee,BoxLayout.Y_AXIS));
 			fee_p1=new JPanel();
@@ -82,6 +84,7 @@ public class HSAdmin {
 			tab.addTab("费用管理",p_fee);
 			tab.addTab("添加图书",lm.addMain);
 			tab.addTab("删除图书",lm.p_delete);
+			tab.addTab("商店管理", sManage.tab);
 //			tab.setPreferredSize(new Dimension(300,280));
 			bg.add(tab);
 			f_admin.add(bg);

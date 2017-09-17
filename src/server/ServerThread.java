@@ -25,17 +25,21 @@ import utils.User;
 public class ServerThread implements Runnable{
 	private boolean flag;
 	private Socket socket=null;
-	private ObjectInputStream sois = null;
+	private ObjectInputStream sois = null;//对象输入流
 	private ObjectOutputStream soos = null;
 	private DataBase db=null;
+	private String dir_path = "serverpic/";//指定文件存放处
 	
 	HashMap<String,String> send =new HashMap<String,String>();//send is used to send message 
 	ArrayList<HashMap<String,String>> sendList=null;//a HashMap array
 	ArrayList<HashMap<String,String>> getList =new ArrayList<HashMap<String,String>>();
-	HashMap<String,String> getOne =new HashMap<String,String>();//get is used to get message	
+	HashMap<String,String> getOne =new HashMap<String,String>();//get is used to get message		
+	//初始化
 	public ServerThread(Socket socket) {
 		this.socket = socket;
 	}
+	
+	//run函数
 	public void run() {
 			try {
 				db=new DataBase();
@@ -43,7 +47,6 @@ public class ServerThread implements Runnable{
 				sois = new ObjectInputStream(socket.getInputStream());
 				soos = new ObjectOutputStream(socket.getOutputStream());				
 				getOne = (HashMap<String,String>) sois.readObject();	
-				
 				//op is used to decide what user will do 
 				String op = getOne.get("op");
 				String type = getOne.get("type");
@@ -362,21 +365,89 @@ public class ServerThread implements Runnable{
 					System.out.println("user_info_id :"+user_info_list.get(0).get("user_info_id"));
 					db.setWhere("users", "user_info_id =" + user_info_list.get(0).get("user_info_id"), "card_id =\'" +card_id +"\'");
 					break;
+					//管理员加书	
 				case "add_book":
-					getOne.remove("op");
+					getOne.remove("op");					
 					db.insert("book_info", getOne);
-					ArrayList<HashMap<String,String>> book_info_list = db.selectWhere("book_info", "book_name =\'"+getOne.get("book_name")+"\'");
-					for(int i = 0;i< book_info_list.size(); i++) {
-						send.put("book_info_id", book_info_list.get(i).get("book_info_id"));
+					ArrayList<HashMap<String,String>> book_info_list = db.selectWhere("book_info", "book_name ="+getOne.get("book_name"));
+					for(int i = 0;i<Integer.parseInt( book_info_list.get(0).get("quantity")); i++) {
+						send.put("book_info_id", book_info_list.get(0).get("book_info_id"));
 						send.put("reader", null);
 						send.put("borrow_date", null);
 						send.put("is_borrowed", "FALSE");
 						db.insert("book", send);
 					} 
 					break;
-				case "delete_book":
-					db.deleteWhere("book_info", "book_info_id =" +getOne.get("book_info_id"));
-					db.deleteWhere("book", "book_info_id =" +getOne.get("book_info_id"));
+				//管理员删书,全部删除
+				case "delete_all_book":
+					ArrayList<HashMap<String,String>> book_info_delete = db.selectWhere("book", "book_info_id ="+getOne.get("book_info_id"));
+					for(int i=0;i<book_info_delete.size();i++){
+						if(book_info_delete.get(i).get("is_borrowed").equals("FALSE")){
+							db.deleteWhere("book", "book_id =" +book_info_delete.get(i).get("book_id"));
+							db.setWhere("book_info", "quantity =quantity -1", "book_info_id="+getOne.get("book_info_id"));
+						}
+					}
+					ArrayList<HashMap<String,String>> book_delete = db.selectWhere("book", "book_info_id ="+getOne.get("book_info_id"));
+					//如果没有外借的书
+					if(book_delete.size()==0){
+						db.deleteWhere("book_info",  "book_info_id ="+getOne.get("book_info_id"));		
+						send.put("result", "success");
+						soos.writeObject(send);
+						break;
+					}else{
+						send.put("result", "unsuccess");
+						soos.writeObject(send);
+						break;
+					}	
+					
+				//管理员删单个书
+				case "delete_single_book":
+					ArrayList<HashMap<String,String>> book_info_delete_single = db.selectWhere("book_info", "book_info_id ="+getOne.get("book_info_id"));
+					System.out.println("图书馆里书的数量： "+book_info_delete_single.get(0).get("quantity"));
+					ArrayList<HashMap<String,String>> book_id = db.selectWhere("book", "book_info_id ="+getOne.get("book_info_id"));
+					boolean book_is_borrowed =false;
+					for(int i=0;i<book_id.size();i++){
+						if(book_id.get(i).get("is_borrowed").equals("TRUE"))
+							book_is_borrowed=true;
+					}//如果图书馆剩超过两本，就直接删
+					System.out.println("是否外借 ："+book_is_borrowed);
+					if(Integer.parseInt(book_info_delete_single.get(0).get("quantity"))>=2) {
+						for(int i=0;i<book_id.size();i++){
+							if(book_id.get(i).get("is_borrowed").equals("FALSE")){
+								db.deleteWhere("book", "book_id="+book_id.get(i).get("book_id"));
+								db.setWhere("book_info", "quantity =quantity -1", "book_info_id="+getOne.get("book_info_id"));
+								break;
+							}
+						}
+						send.put("result", "success");
+						soos.writeObject(send);
+						break;
+						//如果剩一本了，但外面还有，就只改数量
+					}else if((Integer.parseInt(book_info_delete_single.get(0).get("quantity"))==1)&&book_is_borrowed){
+						for(int i=0;i<book_id.size();i++){
+							if(book_id.get(i).get("is_borrowed").equals("FALSE")){
+								db.deleteWhere("book", "book_id="+book_id.get(i).get("book_id"));
+								db.setWhere("book_info", "quantity =0", "book_info_id="+getOne.get("book_info_id"));
+								break;
+							}
+						}
+						send.put("result", "success");
+						soos.writeObject(send);
+						break;
+						//如果还剩一本，且外面没有了，就都删除
+					}else if((Integer.parseInt(book_info_delete_single.get(0).get("quantity"))==1)&&!book_is_borrowed){
+						db.deleteWhere("book_info", "book_info_id =" +getOne.get("book_info_id"));
+						db.deleteWhere("book", "book_info_id =" +getOne.get("book_info_id"));
+						send.put("result", "success");
+						soos.writeObject(send);
+						break;
+					}
+					//如果馆里没有了，就不能删除
+					else{
+						send.put("result", "unsuccess");
+						soos.writeObject(send);
+						break;
+					}
 				case "teacher_courselist":
 					getOne.remove("op");
 					ArrayList<HashMap<String,String>> list=db.selectWhere("course_details","course_teacher=\'"+getOne.get("card_id")+"\'");
@@ -437,6 +508,76 @@ public class ServerThread implements Runnable{
 					sendList=db.selectWhere("store_purchase_records", "card_id=\'"+getOne.get("card_id")+"\'");
 					soos.writeObject(sendList);
 					break;
+				//新商品上传
+				case "up_load":
+					//接收到要传的指令后先检查是否已经存在该商品
+					System.out.println("要上传的商品名字： "+getOne.get("item_name"));
+					ArrayList<HashMap<String,String>> chackList = db.selectWhere("store_item_info", "item_name =\'" + getOne.get("item_name")+"\'");
+					//如果已经存在
+					if(chackList.size()!=0) {
+						send.put("result", "false");
+						send.put("reason", "该商品已经存在了！");
+						soos.writeObject(send);
+						break;
+					}
+					//先将一部分信息插入数据库
+					
+					getOne.remove("op");
+					getOne.put("item_details", null);
+					getOne.put("item_picture_url", null);
+					getOne.put("item_purchased_number", "0");
+					getOne.put("item_name","\'" +getOne.get("item_name")+"\'");
+					db.insert("store_item_info", getOne);
+					//先把名字存起来，怕后面接收到的getOne出事情
+					String name = getOne.get("item_name");
+					send.put("result", "success");
+					soos.writeObject(send);
+					//接收图片,从这里开始就接受不到杂流（HashMap）,所以在此处重新建立链接
+				//	file_sois =new ObjectInputStream(socket.getInputStream());
+					File getFile = (File)sois.readObject();
+					File file = new File(dir_path+getFile.getName());
+					if(!file.exists()) {
+						System.out.println("开始接收图片了");
+						FileInputStream fis = new FileInputStream(getFile);//文件输入流
+						FileOutputStream fos = new FileOutputStream(new File(dir_path+getFile.getName()));//文件输出流
+						byte[] buffer =new byte[1];
+						while(fis.read(buffer)!=-1){
+							fos.write(buffer);
+						}
+						fos.flush();
+						if(fis!=null)fis.close();
+						if(fos!=null)fos.close();
+					}
+					System.out.println("如果没看到开始就GG，如果有就完事儿了！");
+					//最后一步，更新表中的url数据
+					db.setWhere("store_item_info", "item_picture_url =\'"+dir_path+getFile.getName()+"\'", "item_name="+name);
+					break;
+				
+				//商品删除确认
+				case "DeleteGoods":
+					System.out.println("文件路径： "+getOne.get("item_picture_url"));
+					//删除图片和对应的商品
+					File delete_file = new File(getOne.get("item_picture_url"));
+					if(delete_file.exists())delete_file.delete();			
+					db.deleteWhere("store_item_info", "item_name=\'" + getOne.get("item_name")+"\'");
+					break;
+				//修改货物查询数量
+				case "QueryGoodsAmount":				
+				//修改货物查询价格
+				case "QueryGoodsPrice":
+				//商品删除查询，这三种情况都一样
+				case "GoodsInfoQuery":
+					sendList=db.selectWhere("store_item_info", "item_name LIKE \'%"+getOne.get("item_name")+"%\'");	
+					soos.writeObject(sendList);
+					break;
+				//商品库存修改
+				case "GoodsAmountRevise":
+					db.setWhere("store_item_info", "item_stock ="+getOne.get("item_stock"), "item_name=\'" + getOne.get("item_name")+"\'");
+					break;
+				//商品价格修改
+				case "GoodsPriceRevise":
+					db.setWhere("store_item_info", "item_price ="+getOne.get("item_price"), "item_name=\'" + getOne.get("item_name")+"\'");
+					break;
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);
@@ -444,7 +585,8 @@ public class ServerThread implements Runnable{
 			
 				}		
 				db.finalize();	
-				
+				if(sois!=null)sois.close();
+				if(socket!=null)socket.close();
 			} catch (IOException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();

@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 
 import client.Library.ActionLis_Query;
 import client.Library.ChangeLis_Tab;
@@ -214,6 +215,7 @@ public class LibManage {
 				}//if the first book is not a null,then show all the message of this book
 				else 
 				{
+					table_delete.setModel(new DefaultTableModel(new String[][] {},new String[] {}));
 					JOptionPane.showMessageDialog(null,"未找到该图书",
 							"搜索失败",JOptionPane.ERROR_MESSAGE);							  
 				}
@@ -253,7 +255,7 @@ public class LibManage {
 				boolean flag_delete=false;//标识删除是否成功
 				for (int i = 0;i < table_delete.getRowCount();i++) {
 					 hmlib=new HashMap<String,String>();
-					 flag_delete=false;
+					
 					 if(has(table_delete.getSelectedRows(),table_delete.getSelectedRowCount(),i)) {				 
 						flag=true;
 					 	hmlib.put("book_name", rowData_Delete[i][0]);
@@ -261,6 +263,7 @@ public class LibManage {
 					 	hmlib.put("book_info_id", book_info_id[i]);
 					 	hmlib=GUI.getOne(hmlib);
 					 	if(hmlib.get("result").equals("success"))flag_delete = true;
+					 	else flag_delete=false;
 					 }
 				}
 				if(flag&&flag_delete)JOptionPane.showMessageDialog(null,"删除成功！","操作结果",JOptionPane.INFORMATION_MESSAGE);
