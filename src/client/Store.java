@@ -8,9 +8,13 @@ import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableModel;
+
+import com.healthmarketscience.jackcess.Table;
 //import javax.swing.event.ListSelectionEvent;
 //import javax.swing.event.ListSelectionListener;
 //import javax.swing.table.TableModel;
+import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
 
 //import ShoppingCart.ColumnListener;
 //import ShoppingCart.MyTableModel;
@@ -27,6 +31,7 @@ public class Store {
 	private String[] file_path= null;//用于记录文件路径方便查询
 	private ArrayList<String[]> shoppingCartArray=new ArrayList<String[]>();
 	private String[] file_init_path= null;//用于记录文件路径方便查询
+	calculatePriceLister calListener= null;
 	
 	//搜索结果主界面
 	JFrame searchResult;
@@ -42,6 +47,8 @@ public class Store {
 	
 	//购物车
 	static int count[];
+	JFrame shoppingCart =null;
+	JTable table=null;
 	
 	
 	public Store()
@@ -210,7 +217,7 @@ public class Store {
 			
 			searchResult.setVisible(true);
 		}
-		
+	
 		//搜索结果中点击某一个商品的响应
 		for(index=0;index<size;index++)
 		{
@@ -331,18 +338,31 @@ public class Store {
 			
 			public void actionPerformed(ActionEvent e)
 			{
+				boolean sameflag =false;//判断购物车里是否已经有相同的商品
 				int quantity = Integer.parseInt(quantityText.getText());
 				double price = Double.parseDouble(details[2]);
 				if(quantity > Integer.parseInt(details[4])) {
 					JOptionPane.showMessageDialog(null,"数量超过了！","Warnning",JOptionPane.WARNING_MESSAGE);
 					return;
 				}
-				String[] addProduct =new String[4];
-				addProduct[0] =details[0];
-				addProduct[1] = details[2];
-				addProduct[2] = quantity+"";
-				addProduct[3] = quantity*price + "";
-				shoppingCartArray.add(addProduct);
+				for(int i=0;i<shoppingCartArray.size();i++) {
+					if(details[0].equals(shoppingCartArray.get(i)[0])) {
+						shoppingCartArray.get(i)[2] = quantity +Integer.parseInt(shoppingCartArray.get(i)[2])+"";
+						shoppingCartArray.get(i)[3] = quantity*price + Double.parseDouble(shoppingCartArray.get(i)[3])+"";
+						sameflag =true;
+						break;
+					}			
+					
+				}
+				if(!sameflag) {
+					String[] addProduct =new String[4];
+					addProduct[0] =details[0];//mingzi
+					addProduct[1] = details[2];//danjia
+					addProduct[2] = quantity+"";
+					addProduct[3] = quantity*price + "";
+					shoppingCartArray.add(addProduct);
+				}
+			
 				//把该类商品信息加入购物车
 				//TODO
 				Object[] options ={ "查看购物车", "返回页面" };
@@ -360,6 +380,7 @@ public class Store {
 						……
 						};*/
 					 shoppingCart();
+					 
 				 }
 				 
 			 }			
@@ -368,8 +389,8 @@ public class Store {
 	
 	public void shoppingCart()
 	{
-		
-		String [][] shopCart = new String[shoppingCartArray.size()][5];
+//		calListener.mouseClicked(null);
+		String [][] shopCart = new String[shoppingCartArray.size()][5];	
 		for(int i=0;i<shoppingCartArray.size();i++) {
 			for(int j=0;j<5;j++) {
 				if(j==0) {
@@ -388,7 +409,7 @@ public class Store {
 		……
 		};*/
 		
-		JFrame shoppingCart = new JFrame("ShoppingCart");
+		shoppingCart = new JFrame("ShoppingCart");
 		shoppingCart.setBounds(100, 100, 900, 600);
 		shoppingCart.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		shoppingCart.getContentPane().setLayout(null);
@@ -414,7 +435,7 @@ public class Store {
 		String[] headName = {"","Name","Unitprice","Quantity","Amout"};
 		
 		
-		JTable table = new JTable(shopCart,headName);
+		table = new JTable(shopCart,headName);
 		table.setPreferredScrollableViewportSize(new Dimension(831, 300));
 		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
        /* table.getColumnModel().getSelectionModel().
@@ -474,6 +495,7 @@ public class Store {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
 				JTable t=(JTable)e.getComponent();
 				if(e.getClickCount()==2)
 				{
@@ -526,9 +548,9 @@ public class Store {
 			}
 	
 		});
-		
-		table.addMouseListener(new calculatePriceLister());
-		
+		calListener= new calculatePriceLister();
+		table.addMouseListener(calListener);
+		calListener.mouseClicked(null);
 		
 		
 		//购物车一块购买
@@ -590,7 +612,9 @@ public class Store {
 			details[2] = getDetial.get(index).get("item_price");
 			System.out.println("点击的价格.." +getDetial.get(index).get("item_price"));
 			details[3] = getDetial.get(index).get("item_purchased_number");
+			System.out.println("点击的销售量.." + getDetial.get(index).get("item_purchased_number"));
 			details[4] = getDetial.get(index).get("item_stock");
+			System.out.println("点击的库存数.." +getDetial.get(index).get("item_stock"));
 			//TODO
 			
 			//把详情传到details里，将details作为参数传递到商品详情界面
@@ -630,13 +654,14 @@ public class Store {
 		public void mouseClicked(MouseEvent e) {
 			System.out.println("ok");
 			System.out.println(""+count[0]);
-			JTable t=(JTable)e.getComponent();
+//			JTable t=(JTable)e.getComponent();
 			Double totalPrice=0.0;
-			for(int i = 0;i<t.getRowCount();i++)
+			for(int i = 0;i<table.getRowCount();i++)
 			{
-				totalPrice += Double.parseDouble((String)t.getValueAt(i,4));
-				TotalPriceLabel.setText("¥"+totalPrice);
+				totalPrice += Double.parseDouble((String)table.getValueAt(i,4));
+				
 			}
+			TotalPriceLabel.setText("¥"+totalPrice);
 			
 		}
 
@@ -673,32 +698,51 @@ public class Store {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			boolean flag =true;
 			int result = JOptionPane.showConfirmDialog(null, "总价为"+TotalPriceLabel.getText()+",确认购买？");
 			//若银行卡余额充足并且确认购买，则显示购买成功
 			//TODO
+			int i=0;
 			if(result == 0) {						
-				for(int i=0;i<shoppingCartArray.size();i++) {
+				for(;i<table.getRowCount();i++) {
 					HashMap<String, String> hm=new HashMap<String, String>();
 					hm.put("op", "buy");
 					hm.put("card_id", ClientInfo.getCi());
-					hm.put("cost",TotalPriceLabel.getText());
-					hm.put("item_name", shoppingCartArray.get(i)[0]);
-					hm.put("quantity", shoppingCartArray.get(i)[2]);
+					hm.put("cost",(String) table.getValueAt(i, 4));
+					hm.put("item_name", (String) table.getValueAt(i, 1));
+					hm.put("quantity", (String) table.getValueAt(i, 3));
 					hm=GUI.getOne(hm);
 					if(hm.get("result").equals("success"))
 					{
+						shoppingCartArray.remove(0);					
+						
 						//库存量和银行卡余额相应的减少
 						//TODO
-						JOptionPane.showMessageDialog(null, "购买成功！");
 					}else {
+						flag =false;
 						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
 						break;
 					}
+				
 					//若银行卡余额不足，提醒他账户余额不够，请尽快充值
 					//JOptionPane.showMessageDialog(null,"账户余额不足，请尽快充值！",
 					//		"购买失败！",JOptionPane.WARNING_MESSAGE);
 				}
+				if(flag) {
+					JOptionPane.showMessageDialog(null,"购买成功");
+					shoppingCart.setVisible(false);
+				}else {
+					String[] headName = {"","Name","Unitprice","Quantity","Amout"};
+					String[][] newTable = new String[table.getRowCount()-i][5];
+					for(int x=i;x<table.getRowCount();x++) {
+						for(int y=0;y<5;y++) {
+							newTable[x][y] = (String) table.getValueAt(x, y);
+						}
+						
+					}
+					table.setModel(new DefaultTableModel(newTable,headName));
+				}			
+	
 			}					
 		}
 	}
