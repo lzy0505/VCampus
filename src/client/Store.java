@@ -75,7 +75,7 @@ public class Store {
 		
 		String[] productName = new String[4];
 		String[] productIcon = new String[4];
-		String details[] = new String[5];
+
 		HashMap<String, String> load_pro = new HashMap<>();//取信息
 		HashMap<String, String> load_pic = new HashMap<>();//取图片
 		load_pro.put("op", "init_product");
@@ -110,9 +110,10 @@ public class Store {
 		{
 			product[index].addMouseListener(new MouseListener()
 					{
-
+						
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
+							String details[] = new String[5];
 							details[0] = getInitDetial.get(index).get("item_name");
 							System.out.println("点击的商品名.." +getInitDetial.get(index).get("item_name")); 
 							details[1] = file_path[index];
@@ -121,10 +122,10 @@ public class Store {
 							details[3] = getInitDetial.get(index).get("item_purchased_number");
 							details[4] = getInitDetial.get(index).get("item_stock");
 							//商品详情字符串数组，里面的内容参照productDetails()
-							String details[] = null;
+//							String details[] = null;
 							//TODO
 							//把详情传到details里，将details作为参数传递到商品详情界面
-							productDetails(details);
+							productDetail(details);
 							
 						}
 
@@ -221,7 +222,7 @@ public class Store {
 	}
 	
 	//商品详情显示页面
-	public void productDetails(String details[])
+	public void productDetail(final String details[])
 	{
 		productDetails = new JFrame();
 		productDetails.setBounds(100, 100, 750, 500);
@@ -673,7 +674,7 @@ public class Store {
 			//TODO
 			
 			//把详情传到details里，将details作为参数传递到商品详情界面
-			productDetails(details);
+			productDetail(details);
 		}
 
 		@Override

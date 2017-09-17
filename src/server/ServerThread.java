@@ -366,11 +366,12 @@ public class ServerThread implements Runnable{
 						//将购买记录打包查到记录表里
 						record.put("purchase_time","#"+ sdf +"#");
 						record.put("purchase_cost", getOne.get("cost"));
-						record.put("card_id", getOne.get("card_id"));
-						record.put("purchase_content", "网络商店购物");
+						record.put("card_id", "\'"+getOne.get("card_id")+"\'");
+						record.put("purchase_content", "\'网络商店购物\'");
 						db.insert("store_purchase_records", record);
 						//将购买的物品相应减少数量
-						db.setWhere("store_item_info", "item_stock ="+getOne.get("quantity_now"), "item_name =\'"+getOne.get("item_name")+"\'");
+						int quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_stock")) - Integer.parseInt(getOne.get("quantity"));
+						db.setWhere("store_item_info", "item_stock ="+quantity_now, "item_name =\'"+getOne.get("item_name")+"\'");
 						//返回结果
 						send.put("result", "success");
 						send.put("item_name", getOne.get("item_name"));
