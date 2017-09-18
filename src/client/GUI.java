@@ -2,20 +2,12 @@ package client;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-<<<<<<< HEAD
 import javax.swing.plaf.FontUIResource;
-
 import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
-
 import table_component.SpringUtilities;
-=======
-
 import java.io.File;
->>>>>>> refs/remotes/origin/database
-
 import java.io.IOException;
 import java.lang.String;
 import java.net.Socket;
@@ -64,11 +56,9 @@ public class GUI extends JFrame
  	
  	//HomeScreen、Library等成员变量
  	Bank bank;
-<<<<<<< HEAD
  	Library library;
-=======
  	Store store;
->>>>>>> refs/remotes/origin/database
+
  	HomeScreen homeScreen;
  	HSAdmin hsAdmin;
 	
@@ -123,7 +113,7 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
-<<<<<<< HEAD
+
 	//给新商品的名字、数量、路径、价格。返回一个HashMap，如果成功返回success，失败返回false和相应的原因。
 	public static HashMap<String, String> upLoad(HashMap<String, String> hm) {
 		HashMap<String, String> getmes=null;
@@ -137,14 +127,13 @@ public class GUI extends JFrame
 			e.printStackTrace();
 		}
 		return getmes;
-=======
+	}
 	//给这个函数一个HashMap，里面装有操作和key，能给你返回服务器传到客户端的文件的路径数组。明明白白
 	public static String[] getImage(HashMap<String,String> sendmes)throws IOException{
 	
 			Client client = new Client();
 			String[] filename =client.getIcon(sendmes);
 			 return filename;
->>>>>>> refs/remotes/origin/database
 	}
 	
 	
@@ -314,19 +303,17 @@ public class GUI extends JFrame
 		reg2.addActionListener(new MyActLister2());//the GUI of sign up
 		close3.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
-<<<<<<< HEAD
 
-=======
 		//l35.addMouseListener(new MyMouLister1());//open library(student)
 		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
 		//l55.addMouseListener(new MyMouLister2());//open student affairs
-		b18.addActionListener(new SearchBookFromDB());//search book
+//		b18.addActionListener(new SearchBookFromDB());//search book
 		
 		//TODO
 		//点击商店的出现商店主界面的响应
 		
 		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
->>>>>>> refs/remotes/origin/database
+
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
@@ -360,48 +347,7 @@ public class GUI extends JFrame
 	
 	}
 
-<<<<<<< HEAD
-=======
-	//---------------------------------
-	//@初始化类-------------------------
-		 class Load{
-			 
-			 Load()
-			 {  			    		 
-				 //初始化时注意先后顺序
-				loadHomeScreen();
-				loadBank();		
-				loadStore();
-			 }
-			 //初始化银行类
-			 void loadBank()
-			 {  
-				 bank=new Bank(homeScreen);
-				 bank.init();
-			 }
-			 //初始化主界面类
-		     void loadHomeScreen()
-		     {
-		    	 homeScreen=new HomeScreen();	
-		    	 homeScreen.init();
-		    	    	 
-		     }
-		     void loadStore()
-		     { 
-		    	 store=new Store();
-		    	 
-		     }
-		     //调用主界面的update函数将Library、Bank等变量传入
-		
-		     
-	   
-		     
-		 }
-		 //@初始化类结束--------------------------
-		 //--------------------------------------
-	
 
->>>>>>> refs/remotes/origin/database
 	class MyActLister1 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
@@ -508,14 +454,8 @@ public class GUI extends JFrame
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	ci =ClientInfo.getCi() ;//un is used to identify user,a global variable
 		    	//G5.setVisible(true);
-<<<<<<< HEAD
 		    	homeScreen.update("student");	    	
-=======
 		    	homeScreen.G5.setVisible(true);
-		    	homeScreen.update(G8, bank, ci,store);
->>>>>>> refs/remotes/origin/database
-		    	System.out.println("update card_id to : homeScreen!");
-		    	System.out.println("update card_id to : bank!");
 		    	G1.setVisible(false);
 		    	//G5.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    	
@@ -538,7 +478,6 @@ public class GUI extends JFrame
 		    	G1.setVisible(false);
 		    	
 		    }
-<<<<<<< HEAD
 		    		    
 		    else if(hm.get("result").equals("fail"))
 		    {
@@ -547,14 +486,7 @@ public class GUI extends JFrame
 		    }
 		    i1.setText("");
 		    pass1.setText("");
-		    //TODO
-=======
-	
-			
-		
-			
-	//TODO
->>>>>>> refs/remotes/origin/database
+
 			
 		}
 		

@@ -21,7 +21,8 @@ public class testMain {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new StoreManage(); 
+		ClientInfo.setCi("liumou");
+		new Store();
 	}
 
 }

@@ -93,6 +93,8 @@ class HomeScreen
 	    	 bank=new Bank(this);
 			 bank.init();
 			 p_HomeScreen.addTab("银   行",new ImageIcon("bank.png"),bank.tab_bank);
+			 store=new Store();
+			 p_HomeScreen.addTab("商   店",new ImageIcon("store.png"),store.mainPanel);
 			 if(identity.equals("student")) {
 				 studentAffairs=new StudentAffairs(this);
 				 p_HomeScreen.addTab("教   务",new ImageIcon("courses.png"),studentAffairs.tabbedPane);

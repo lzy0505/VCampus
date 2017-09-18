@@ -16,13 +16,15 @@ import com.healthmarketscience.jackcess.Table;
 //import javax.swing.table.TableModel;
 import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
 
+import table_component.SpringUtilities;
+
 //import ShoppingCart.ColumnListener;
 //import ShoppingCart.MyTableModel;
 
 public class Store {
 
 	//主界面的组件
-	JFrame homeScreen;
+	public JTabbedPane mainPanel;
 	JTextField searchText;
 	JButton search;
 	JLabel []product = new JLabel[4];//一开始随机放四个商品在主界面上
@@ -34,47 +36,47 @@ public class Store {
 	calculatePriceLister calListener= null;
 	
 	//搜索结果主界面
-	JFrame searchResult;
+	JPanel searchPanel;
 	JLabel[] productResultLabel;
 
 	JLabel TotalPriceLabel;
 	//一个索引
-	static int index = 0;
+//	static int index = 0;
 	
 	//某商品详细信息主界面及有响应组件
-	JFrame productDetails;
 	JTextField quantityText;//用于计算选中某种商品的数量
 	
 	//购物车
 	static int count[];
-	JFrame shoppingCart =null;
 	JTable table=null;
 	
 	
 	public Store()
 	{	
-		homeScreen = new JFrame();
-		homeScreen.setBounds(100, 100, 900, 600);
-		homeScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		homeScreen.getContentPane().setLayout(null);
+		mainPanel=new JTabbedPane();
+//TODO
+		JPanel p=new JPanel();
+		p.setName("gouwuche");
+		mainPanel.addTab("购物车",p);
 		
-		//Welcome bar start
-		JLabel lblWelcome = new JLabel("Welcome!");
-		lblWelcome.setForeground(Color.red);
-		lblWelcome.setFont(new Font("Lucida Fax", Font.PLAIN, 15));
-		lblWelcome.setBounds(18, 6, 109, 27);
-		homeScreen.add(lblWelcome);
-		//Welcome bar end
+		
+		searchPanel=new JPanel();
+		searchPanel.setLayout(new BoxLayout(searchPanel,BoxLayout.Y_AXIS));
+		
+		
+		JPanel searchInput=new JPanel(new FlowLayout(FlowLayout.CENTER));
 		
 		//Search bar start
 		searchText = new JTextField();
-		searchText.setBounds(292, 55, 270, 32);
-		homeScreen.getContentPane().add(searchText);
-		searchText.setColumns(10);
+		searchText.setColumns(20);
 		
-		search = new JButton("Search");
-		search.setBounds(574, 58, 117, 29);
-		homeScreen.getContentPane().add(search);
+		search = new JButton("搜索");
+		
+		searchInput.add(searchText);
+		searchInput.add(search);
+		
+		
+		searchPanel.add(searchInput);
 		//Search bar end
 		
 		//为了强行初始化，加了一段，献丑了
@@ -90,7 +92,6 @@ public class Store {
 		try {
 			file_init_path=GUI.getImage(load_pic);
 		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
 		for(int i=0;i<4;i++) {
@@ -98,103 +99,43 @@ public class Store {
 		}
 		productIcon=file_init_path;
 		//绘制主界面的商品
+		
+		JPanel productPreviewPanel =new JPanel(new SpringLayout());
+		
 		for(int i = 0;i<4;i++) 
 		{
 			product[i] = new JLabel(productName[i]);
 			product[i].setIcon(new ImageIcon(productIcon[i]));
-			product[i].setBounds(90+250*i%4, 110+(i/4)*220, 162, 217);
 			product[i].setHorizontalTextPosition(JLabel.CENTER);
 			product[i].setVerticalTextPosition(JLabel.BOTTOM);
-			homeScreen.getContentPane().add(product[i]);
-			
+			product[i].addMouseListener(new InitDetailsListener(i));
+			productPreviewPanel.add(product[i]);
 		}
-		//homeScreen.setVisible(true);
+		
+		SpringUtilities.makeCompactGrid(productPreviewPanel, 1, 4, 0, 0, 50, 0);
+		searchPanel.add(productPreviewPanel);
+		
 		
 		//响应如下
 		search.addActionListener(new SearchLister());
-		for(index=0;index<4;index++)
-		{
-			product[index].addMouseListener(new MouseListener()
-					{
-						
-						@Override
-						public void mouseClicked(MouseEvent arg0) {
-							String details[] = new String[5];
-							details[0] = getInitDetial.get(index).get("item_name");
-							System.out.println("点击的商品名.." +getInitDetial.get(index).get("item_name")); 
-							details[1] = file_init_path[index];
-							details[2] = getInitDetial.get(index).get("item_price");
-							System.out.println("点击的价格.." +getInitDetial.get(index).get("item_price"));
-							details[3] = getInitDetial.get(index).get("item_purchased_number");
-							details[4] = getInitDetial.get(index).get("item_stock");
-							//商品详情字符串数组，里面的内容参照productDetails()
-//							String details[] = null;
-							//TODO
-							//把详情传到details里，将details作为参数传递到商品详情界面
-							productDetail(details);
-							
-						}
 
-						@Override
-						public void mouseEntered(MouseEvent arg0) {
-							// TODO 自动生成的方法存根
-							
-						}
+		mainPanel.addTab("搜索", searchPanel);
+		mainPanel.setSelectedIndex(1);
 
-						@Override
-						public void mouseExited(MouseEvent arg0) {
-							// TODO 自动生成的方法存根
-							
-						}
-
-						@Override
-						public void mousePressed(MouseEvent arg0) {
-							// TODO 自动生成的方法存根
-							
-						}
-
-						@Override
-						public void mouseReleased(MouseEvent arg0) {
-							// TODO 自动生成的方法存根
-							
-						}
-				
-					});
-			break;
-		}
 		
 	}
 	
 	public void searchResult(String productName[],String productIcon[],int size)
 	{
-		searchResult = new JFrame();
-		searchResult.setBounds(100, 100,900, 600);
-		searchResult.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		searchResult.getContentPane().setLayout(null);
-		
-		JPanel DisplayBarh = new JPanel();
-		DisplayBarh.setBackground(UIManager.getColor("ComboBox.selectionBackground"));
-		DisplayBarh.setBounds(16, 23, 831, 36);
-		searchResult.getContentPane().add(DisplayBarh);
-		DisplayBarh.setLayout(null);
-		
-		JLabel lblWelcome = new JLabel("Search Result");
-		lblWelcome.setForeground(UIManager.getColor("ComboBox.buttonBackground"));
-		lblWelcome.setFont(new Font("Lucida Fax", Font.PLAIN, 18));
-		lblWelcome.setBounds(20, 5, 168, 27);
-		DisplayBarh.add(lblWelcome);
-		
-		JPanel DisplayBar = new JPanel();
-		DisplayBar.setBounds(6, 39, 888, 533);
-		searchResult.getContentPane().add(DisplayBar);
-		DisplayBar.setLayout(null);
 		
 		//加入滚动面板
-		JPanel panel = new JPanel();
+		JPanel searchResultPanel =new JPanel();
+		searchResultPanel.setLayout(new BoxLayout(searchResultPanel,BoxLayout.Y_AXIS));
+		JPanel panel = new JPanel(new SpringLayout());
+		searchResultPanel.add(panel);
 		panel.setBounds(6, 6, 870, 520);
-		JScrollPane scrollPane = new JScrollPane(panel);
-		scrollPane.setBounds(6, 6, 876, 521);
-		DisplayBar.add(scrollPane);
+		JScrollPane scrollPane = new JScrollPane(searchResultPanel);
+		
 		
 		//绘制搜索结果页面
 		if(size == 0)
@@ -203,100 +144,122 @@ public class Store {
 		}
 		else
 		{
+			int insert=0;
+			while(size%4!=0) {
+				size++;
+				insert++;
+			}
 			productResultLabel = new JLabel[size];
-			for(int i = 0;i<size;i++)
+			
+			for(int i = 0;i<size-insert;i++)
 			{
 				productResultLabel[i] = new JLabel(productName[i]);
 				productResultLabel[i].setIcon(new ImageIcon(productIcon[i]));
-				productResultLabel[i].setBounds(90+250*i%4, 110+(i/4)*220, 162, 217);
 				productResultLabel[i].setHorizontalTextPosition(JLabel.CENTER);
 				productResultLabel[i].setVerticalTextPosition(JLabel.BOTTOM);
+				productResultLabel[i].addMouseListener(new searchResultLister(i));
 				panel.add(productResultLabel[i]);
-				
+			}
+			for(int i=0;i<insert;i++) {
+				panel.add(new JLabel());
 			}
 			
-			searchResult.setVisible(true);
+			SpringUtilities.makeCompactGrid(panel, size/4, 4, 0, 0, 50, 30);
+			
+			searchPanel.remove(1);
+			searchPanel.add(scrollPane);
+			searchPanel.repaint();
+			searchPanel.updateUI();
+			searchPanel.revalidate();
 		}
-	
-		//搜索结果中点击某一个商品的响应
-		for(index=0;index<size;index++)
-		{
-			productResultLabel[index].addMouseListener(new searchResultLister(index));
-			break;
-		}
+
 		
 	}
 	
 	//商品详情显示页面
 	public void productDetail(final String details[])
 	{
-		productDetails = new JFrame();
-		productDetails.setBounds(100, 100, 750, 500);
-		productDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		productDetails.getContentPane().setLayout(null);
-		//价格
-		JLabel lblPrice = new JLabel("Price：");
-		lblPrice.setBounds(325, 96, 61, 16);
-		productDetails.getContentPane().add(lblPrice);
-		//销售量
-		JLabel lblSalesVolume = new JLabel("SalesVolume：");
-		lblSalesVolume.setBounds(325, 136, 97, 16);
-		productDetails.getContentPane().add(lblSalesVolume);
-		//库存
-		JLabel lblInventory = new JLabel("Inventory：");
-		lblInventory.setBounds(325, 176, 97, 16);
-		productDetails.getContentPane().add(lblInventory);
-		//数量
-		JLabel lblQuantity = new JLabel("Quantity：");
-		lblQuantity.setBounds(325, 216, 85, 16);
-		productDetails.getContentPane().add(lblQuantity);
+//		productDetails = new JFrame();
+//		productDetails.setBounds(100, 100, 750, 500);
+//		productDetails.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		productDetailPanel.setLayout(null);
+		JPanel productDetailPanel;
+		if(mainPanel.getTabCount()==3) {
+			mainPanel.remove(2);
+		}
+		productDetailPanel=new JPanel(new FlowLayout());
+		mainPanel.addTab("商品详情",productDetailPanel);
 		
-		JButton btnBuyNow = new JButton("Buy Now!");
-		btnBuyNow.setBounds(318, 256, 97, 29);
-		productDetails.getContentPane().add(btnBuyNow);
+		JPanel info =new JPanel(new SpringLayout());
 		
-		JButton btnAddToShoppingCart = new JButton("Add To Shopping Cart");
-		btnAddToShoppingCart.setBounds(415, 256, 172, 29);
-		productDetails.getContentPane().add(btnAddToShoppingCart);
-		
-		quantityText = new JTextField("1",5);
-		quantityText.setBounds(401, 210, 33, 26);
-		productDetails.getContentPane().add(quantityText);
-		
-		JLabel label = new JLabel("件");
-		label.setBounds(441, 216, 61, 16);
-		productDetails.getContentPane().add(label);
 		
 		//商品名
 		JLabel productNameLabel = new JLabel(details[0]);
-		productNameLabel.setFont(new Font("Lucida Console", Font.PLAIN, 20));
-		productNameLabel.setBounds(321, 42, 161, 33);
-		productDetails.getContentPane().add(productNameLabel);
+		productNameLabel.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
+		info.add(productNameLabel);
+		info.add(new JLabel());
+		
+		
+		//销售量
+		JLabel lblSalesVolume = new JLabel("销量");
+		info.add(lblSalesVolume);
+		JLabel salesVolumeLabel = new JLabel(details[3]);
+		lblSalesVolume.setLabelFor(salesVolumeLabel);
+		info.add(salesVolumeLabel);
+		
+				
+		//库存
+		JLabel lblInventory = new JLabel("库存");
+		info.add(lblInventory);
+		JLabel inventoryLabel = new JLabel(details[4]);
+		lblInventory.setLabelFor(inventoryLabel);
+		info.add(inventoryLabel);
+		
+		
+		
+		//价格
+		JLabel lblPrice = new JLabel("单价");
+		info.add(lblPrice);
+		JLabel priceLabel = new JLabel(details[2]);
+		priceLabel.setForeground(Color.RED);
+		priceLabel.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
+		lblPrice.setLabelFor(priceLabel);
+		info.add(priceLabel);
+
+
+		//数量
+		JLabel lblQuantity = new JLabel("购买数量");
+		info.add(lblQuantity);
+		quantityText = new JTextField("1",5);
+		lblQuantity.setLabelFor(quantityText);
+		info.add(quantityText);
+		
+
+		
+		
+		JButton btnBuyNow = new JButton("立即购买");
+		info.add(btnBuyNow);
+		
+		JButton btnAddToShoppingCart = new JButton("加入购物车");
+		info.add(btnAddToShoppingCart);
+		
+		SpringUtilities.makeCompactGrid(info, 6, 2, 0, 0, 20, 50);
+		
+		
 		
 		//商品图片
 		JLabel productImageLabel = new JLabel("");
 		productImageLabel.setIcon(new ImageIcon(details[1]));
 		productImageLabel.setBounds(91, 42, 180, 240);
-		productDetails.getContentPane().add(productImageLabel);
 		
-		//商品单价
-		JLabel priceLabel = new JLabel(details[2]);
-		priceLabel.setForeground(Color.RED);
-		priceLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
-		priceLabel.setBounds(364, 87, 104, 29);
-		productDetails.getContentPane().add(priceLabel);
+		productDetailPanel.add(info);
+		productDetailPanel.add(productImageLabel);
 		
-		//商品已售数量
-		JLabel salesVolumeLabel = new JLabel(details[3]);
-		salesVolumeLabel.setBounds(421, 136, 61, 16);
-		productDetails.getContentPane().add(salesVolumeLabel);
+
 		
-		//商品库存量
-		JLabel inventoryLabel = new JLabel(details[4]);
-		inventoryLabel.setBounds(396, 176, 61, 16);
-		productDetails.getContentPane().add(inventoryLabel);
 		
-		productDetails.setVisible(true);
+		
+//		productDetails.setVisible(true);
 		
 		//立即购买，响应如下
 		btnBuyNow.addActionListener(new ActionListener() {
@@ -318,11 +281,9 @@ public class Store {
 					hm.put("cost", total+"");
 					hm=GUI.getOne(hm);
 					//若银行卡余额充足并且确认购买，则显示购买成功
-					//TODO
 					if(hm.get("result").equals("success"))
 					{
 						//库存量和银行卡余额相应的减少
-						//TODO
 						JOptionPane.showMessageDialog(null, "购买成功！");
 					}
 					else {
@@ -335,7 +296,6 @@ public class Store {
 		});
 		//添加至购物车
 		btnAddToShoppingCart.addActionListener(new ActionListener(){
-			
 			public void actionPerformed(ActionEvent e)
 			{
 				boolean sameflag =false;//判断购物车里是否已经有相同的商品
@@ -364,96 +324,54 @@ public class Store {
 				}
 			
 				//把该类商品信息加入购物车
-				//TODO
 				Object[] options ={ "查看购物车", "返回页面" };
-				 int result= JOptionPane.showOptionDialog(null, "Added to the shopping cart successfully!","Added Successfully",JOptionPane.YES_NO_OPTION,
+				 int result= JOptionPane.showOptionDialog(null, "成功加入购物车","操作结果",JOptionPane.YES_NO_OPTION,
 						  JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 				 if(result == 0)
 				 {
-					 
-					 /*shoppingCartArray的格式如下
-						//shoppingCartArray = {
-						{new Boolean(false),"商品名1","单价1","数量1","总价1"},
-						{new Boolean(false),"商品名2","单价2","数量2","总价2"},
-						{new Boolean(false),"商品名3","单价3","数量3","总价3"},
-						{new Boolean(false),"商品名4","单价4","数量4","总价4"}
-						……
-						};*/
 					 shoppingCart();
-					 
-				 }
-				 
+				 }	 
 			 }			
 		});
+		mainPanel.setSelectedIndex(2);
 	}
 	
 	public void shoppingCart()
 	{
-//		calListener.mouseClicked(null);
-		String [][] shopCart = new String[shoppingCartArray.size()][5];	
+		JPanel shoppingCartPanel=(JPanel)mainPanel.getComponentAt(0);
+
+		
+		String [][] shopCart = new String[shoppingCartArray.size()][4];	
 		for(int i=0;i<shoppingCartArray.size();i++) {
-			for(int j=0;j<5;j++) {
-				if(j==0) {
-					shopCart[i][j] = "false";
-					continue;
-				}
-				shopCart[i][j] = shoppingCartArray.get(i)[j-1];
+			for(int j=0;j<4;j++) {
+				shopCart[i][j] = shoppingCartArray.get(i)[j];
 			}
 		}
-		/*shoppingCartArray的格式如下
-		//shopCartArray = {
-		{new Boolean(false),"商品名1","单价1","数量1","总价1"},
-		{new Boolean(false),"商品名2","单价2","数量2","总价2"},
-		{new Boolean(false),"商品名3","单价3","数量3","总价3"},
-		{new Boolean(false),"商品名4","单价4","数量4","总价4"}
-		……
-		};*/
 		
-		shoppingCart = new JFrame("ShoppingCart");
-		shoppingCart.setBounds(100, 100, 900, 600);
-		shoppingCart.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		shoppingCart.getContentPane().setLayout(null);
 		
-		JPanel DisplayBar = new JPanel();
-		DisplayBar.setBackground(UIManager.getColor("ComboBox.selectionBackground"));
-		DisplayBar.setBounds(34, 23, 831, 36);
-		shoppingCart.getContentPane().add(DisplayBar);
-		DisplayBar.setLayout(null);
+	
 		
 		JLabel lblProductname = new JLabel("ShoppingCart");
 		lblProductname.setForeground(UIManager.getColor("ComboBox.buttonBackground"));
 		lblProductname.setFont(new Font("Lucida Console", Font.PLAIN, 18));
 		lblProductname.setBounds(88, 14, 138, 16);
-		DisplayBar.add(lblProductname);
+		shoppingCartPanel.add(lblProductname);
 		
 		//This panel contains the scrollPane and the TotalBar which is to summit the things you choose to buy.
 		JPanel panel = new JPanel();
 		panel.setBounds(34, 84, 831, 435);
-		shoppingCart.getContentPane().add(panel);
+		shoppingCartPanel.add(panel);
 	
 		//表头
-		String[] headName = {"","Name","Unitprice","Quantity","Amout"};
-		
-		
+		String[] headName = {"商品名称","单价","数量","总价"};
+
 		table = new JTable(shopCart,headName);
 		table.setPreferredScrollableViewportSize(new Dimension(831, 300));
-		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
-       /* table.getColumnModel().getSelectionModel().
-            addListSelectionListener(new ListSelectionListener()
-            {
-            	  public void valueChanged(ListSelectionEvent event)
-            	  {
-            		  if (event.getValueIsAdjusting()) {
-                          return;
-                      }
-            	  }
-            }
-            );*/
-		panel.setLayout(null);
-		
+//		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
+
 		//Scroll implement
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(-2, 5, 835, 304);
+
 		table.setFillsViewportHeight(true);
 		panel.add(scrollPane);
 		
@@ -462,8 +380,8 @@ public class Store {
 		panel.add(TotalBar);
 		TotalBar.setLayout(null);
 		
-		JButton btnSettle = new JButton("Settle");
-		btnSettle.setFont(new Font("Lucida Console", Font.PLAIN, 16));
+		JButton btnSettle = new JButton("结账");
+//		btnSettle.setFont(new Font("Lucida Console", Font.PLAIN, 16));
 		btnSettle.setBounds(676, 29, 117, 37);
 		TotalBar.add(btnSettle);
 		//全选和删除暂时不写哈，只有结算的功能
@@ -475,24 +393,21 @@ public class Store {
 		btnDelete.setBounds(185, 30, 80, 30);
 		TotalBar.add(btnDelete);*/
 		
-		JLabel lblTotal = new JLabel("Total:");
-		lblTotal.setFont(new Font("Lucida Console", Font.PLAIN, 16));
+		JLabel lblTotal = new JLabel("总价：");
 		lblTotal.setBounds(490, 29, 88, 37);
 		TotalBar.add(lblTotal);
 		
 		TotalPriceLabel = new JLabel("¥0.00");
 		TotalPriceLabel.setForeground(Color.RED);
-		TotalPriceLabel.setFont(new Font("Lucida Console", Font.PLAIN, 16));
+		TotalPriceLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
 		TotalPriceLabel.setBounds(561, 30, 88, 37);
 		TotalBar.add(TotalPriceLabel);
-		
-		shoppingCart.setVisible(true);
+
 		
         count = new int[table.getRowCount()];
 		
 		table.addMouseListener(new MouseListener()
 		{
-
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
@@ -501,63 +416,41 @@ public class Store {
 				{
 					for(int j=0;j<2;j++)
 					{
-					for(int i=0;i<t.getRowCount();i++)
-					{
-						if(t.isCellSelected(i, 3))
+						for(int i=0;i<t.getRowCount();i++)
 						{
-							double amountPrice = Double.parseDouble((String)t.getValueAt(i,2))
-									*Double.parseDouble((String)t.getValueAt(i,3));
-							t.setValueAt(""+amountPrice,i,4);
+							if(t.isCellSelected(i, 2))
+							{
+								double amountPrice = Double.parseDouble((String)t.getValueAt(i,1))
+										*Double.parseDouble((String)t.getValueAt(i,2));
+								t.setValueAt(""+amountPrice,i,3);
+							}
 						}
-						
-					}
 					}
 				}
-				for(int i=0;i<t.getRowCount();i++)
-				{
-						double amountPrice = Double.parseDouble((String)t.getValueAt(i,2))
-								*Double.parseDouble((String)t.getValueAt(i,3));
-						t.setValueAt(""+amountPrice,i,4);
-												
-				}
+//				for(int i=0;i<t.getRowCount();i++)
+//				{
+//						double amountPrice = Double.parseDouble((String)t.getValueAt(i,1))
+//								*Double.parseDouble((String)t.getValueAt(i,2));
+//						t.setValueAt(""+amountPrice,i,3);						
+//				}
 				
 			}
-
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO 自动生成的方法存根
-				
-			}
-
+			public void mouseEntered(MouseEvent arg0) {}
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO 自动生成的方法存根
-				
-			}
-
+			public void mouseExited(MouseEvent arg0) {}
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO 自动生成的方法存根
-				
-			}
-
+			public void mousePressed(MouseEvent arg0) {}
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO 自动生成的方法存根
-				
-			}
-	
+			public void mouseReleased(MouseEvent arg0) {}
 		});
+		
 		calListener= new calculatePriceLister();
 		table.addMouseListener(calListener);
-		calListener.mouseClicked(null);
-		
-		
+		calListener.mouseClicked(null);	
 		//购物车一块购买
 		btnSettle.addActionListener(new BuyAllLister());
-		
-		
-		
+		mainPanel.setSelectedIndex(0);
 	}
 	
 	class SearchLister implements ActionListener
@@ -576,7 +469,6 @@ public class Store {
 			try {
 				file_path=GUI.getImage(sendkeyforpicture);
 			} catch (IOException e) {
-				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
 			size = getDetial.size();
@@ -584,12 +476,9 @@ public class Store {
 			String productIcon[] = file_path;
 			for(int i=0;i<size;i++) {
 				productName[i] = getDetial.get(i).get("item_name");
-			}
-			
-			
+			}	
 			//从数据库那里得到商品名字及商品图片的字符串数组及数组们的大小，将其作为参数
 			//传到搜索结果界面的构造函数中
-			//TODO
 			searchResult(productName,productIcon,size);
 			
 		}
@@ -615,81 +504,41 @@ public class Store {
 			System.out.println("点击的销售量.." + getDetial.get(index).get("item_purchased_number"));
 			details[4] = getDetial.get(index).get("item_stock");
 			System.out.println("点击的库存数.." +getDetial.get(index).get("item_stock"));
-			//TODO
 			
 			//把详情传到details里，将details作为参数传递到商品详情界面
 			productDetail(details);
 		}
-
 		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
+		public void mouseEntered(MouseEvent arg0) {}
 		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
+		public void mouseExited(MouseEvent arg0) {}
 		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
+		public void mousePressed(MouseEvent arg0) {}
 		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-		
+		public void mouseReleased(MouseEvent arg0) {}
 	}
 	
 
 	class calculatePriceLister implements MouseListener{
-
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			System.out.println("ok");
-			System.out.println(""+count[0]);
-//			JTable t=(JTable)e.getComponent();
 			Double totalPrice=0.0;
 			for(int i = 0;i<table.getRowCount();i++)
 			{
-				totalPrice += Double.parseDouble((String)table.getValueAt(i,4));
+				totalPrice += Double.parseDouble((String)table.getValueAt(i,3));
 				
 			}
 			TotalPriceLabel.setText("¥"+totalPrice);
 			
 		}
-
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			
-			
-		}
-
+		public void mouseEntered(MouseEvent e) {}
 		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO 自动生成的方法存根
-			
-		}
-
+		public void mouseExited(MouseEvent e) {}
 		@Override
-		public void mousePressed(MouseEvent e) {
-			
-			
-		
-		}
-
+		public void mousePressed(MouseEvent e) {}
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO 自动生成的方法存根
-			
-		}
-
+		public void mouseReleased(MouseEvent e) {}
 	}
 	
 	
@@ -701,23 +550,20 @@ public class Store {
 			boolean flag =true;
 			int result = JOptionPane.showConfirmDialog(null, "总价为"+TotalPriceLabel.getText()+",确认购买？");
 			//若银行卡余额充足并且确认购买，则显示购买成功
-			//TODO
 			int i=0;
 			if(result == 0) {						
 				for(;i<table.getRowCount();i++) {
 					HashMap<String, String> hm=new HashMap<String, String>();
 					hm.put("op", "buy");
 					hm.put("card_id", ClientInfo.getCi());
-					hm.put("cost",(String) table.getValueAt(i, 4));
-					hm.put("item_name", (String) table.getValueAt(i, 1));
-					hm.put("quantity", (String) table.getValueAt(i, 3));
+					hm.put("cost",(String) table.getValueAt(i, 3));
+					hm.put("item_name", (String) table.getValueAt(i, 0));
+					hm.put("quantity", (String) table.getValueAt(i, 2));
 					hm=GUI.getOne(hm);
 					if(hm.get("result").equals("success"))
 					{
 						shoppingCartArray.remove(0);					
-						
 						//库存量和银行卡余额相应的减少
-						//TODO
 					}else {
 						flag =false;
 						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
@@ -730,12 +576,12 @@ public class Store {
 				}
 				if(flag) {
 					JOptionPane.showMessageDialog(null,"购买成功");
-					shoppingCart.setVisible(false);
+					mainPanel.setSelectedIndex(1);
 				}else {
 					String[] headName = {"","Name","Unitprice","Quantity","Amout"};
 					String[][] newTable = new String[table.getRowCount()-i][5];
 					for(int x=i;x<table.getRowCount();x++) {
-						for(int y=0;y<5;y++) {
+						for(int y=0;y<4;y++) {
 							newTable[x][y] = (String) table.getValueAt(x, y);
 						}
 						
@@ -745,6 +591,36 @@ public class Store {
 	
 			}					
 		}
+	}
+	class InitDetailsListener implements MouseListener{
+		int i;
+		public InitDetailsListener(int i) {
+			this.i=i;
+		}
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			String details[] = new String[5];
+			details[0] = getInitDetial.get(i).get("item_name");
+			System.out.println("点击的商品名.." +getInitDetial.get(i).get("item_name")); 
+			details[1] = file_init_path[i];
+			details[2] = getInitDetial.get(i).get("item_price");
+			System.out.println("点击的价格.." +getInitDetial.get(i).get("item_price"));
+			details[3] = getInitDetial.get(i).get("item_purchased_number");
+			details[4] = getInitDetial.get(i).get("item_stock");
+			//商品详情字符串数组，里面的内容参照productDetails()
+			//把详情传到details里，将details作为参数传递到商品详情界面
+			productDetail(details);
+			
+		}
+		@Override
+		public void mouseEntered(MouseEvent arg0) {}
+		@Override
+		public void mouseExited(MouseEvent arg0) {}
+		@Override
+		public void mousePressed(MouseEvent arg0) {}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {}
+
 	}
 	
 	
