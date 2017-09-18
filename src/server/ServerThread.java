@@ -694,7 +694,7 @@ public class ServerThread implements Runnable{
 						int quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_stock")) - Integer.parseInt(getOne.get("quantity"));
 						int buy_quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_purchased_number")) + Integer.parseInt(getOne.get("quantity"));
 						db.setWhere("store_item_info", "item_stock ="+quantity_now, "item_name =\'"+getOne.get("item_name")+"\'");
-						db.setWhere("store_item_info", "item_purchased_number", "item_name =\'"+getOne.get("item_name")+"\'");
+						db.setWhere("store_item_info", "item_purchased_number="+buy_quantity_now, "item_name =\'"+getOne.get("item_name")+"\'");
 						//返回结果
 						send.put("result", "success");
 						send.put("item_name", getOne.get("item_name"));

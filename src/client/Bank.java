@@ -326,6 +326,13 @@ class Bank
 			hm=GUI.getOne(hm);
 			if(hm.get("result").equals("success")){
 				JOptionPane.showMessageDialog(null, "缴费成功");
+				t_password_confirm1.setText("");
+				money_recharge.setText("");
+				HashMap<String,String> hm1=new HashMap<String,String>();
+				hm1.put("op", "QueryBalance");//查询一卡通余额操作
+				hm1.put("card_id", ci);
+				hm1=GUI.getOne(hm1);//GetOne是GUI的static函数，调用时要前缀" GUI. "
+				t_balance.setText(hm1.get("card_balance"));
 			}
 			else {
 				JOptionPane.showMessageDialog(null, hm.get("reason"),"缴费失败", JOptionPane.ERROR_MESSAGE);

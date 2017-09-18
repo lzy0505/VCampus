@@ -39,8 +39,12 @@ public class Store {
 	//搜索结果主界面
 	JPanel searchPanel;
 	JLabel[] productResultLabel;
+	JLabel salesVolumeLabel;
+	JLabel inventoryLabel;
+	String[] details;
 
 	JLabel TotalPriceLabel;
+	
 	//一个索引
 //	static int index = 0;
 	
@@ -182,7 +186,7 @@ public class Store {
 	}
 	
 	//商品详情显示页面
-	public void productDetail(final String details[])
+	public void productDetail()
 	{
 //		productDetails = new JFrame();
 //		productDetails.setBounds(100, 100, 750, 500);
@@ -208,7 +212,7 @@ public class Store {
 		//销售量
 		JLabel lblSalesVolume = new JLabel("销量");
 		info.add(lblSalesVolume);
-		JLabel salesVolumeLabel = new JLabel(details[3]);
+		salesVolumeLabel = new JLabel(details[3]);
 		lblSalesVolume.setLabelFor(salesVolumeLabel);
 		info.add(salesVolumeLabel);
 		
@@ -216,7 +220,7 @@ public class Store {
 		//库存
 		JLabel lblInventory = new JLabel("库存");
 		info.add(lblInventory);
-		JLabel inventoryLabel = new JLabel(details[4]);
+		inventoryLabel = new JLabel(details[4]);
 		lblInventory.setLabelFor(inventoryLabel);
 		info.add(inventoryLabel);
 		
@@ -267,42 +271,7 @@ public class Store {
 //		productDetails.setVisible(true);
 		
 		//立即购买，响应如下
-		btnBuyNow.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				double price = Double.parseDouble(details[2]);
-				int quantity = Integer.parseInt(quantityText.getText());
-				if(quantity > Integer.parseInt(details[4])) {
-					JOptionPane.showMessageDialog(null,"数量超过了！","Warnning",JOptionPane.WARNING_MESSAGE);
-					return;
-				}
-				double total = price*quantity;
-				int result = JOptionPane.showConfirmDialog(null, "总价为"+total+",确认购买？");
-				if (result == 0) {
-					HashMap<String, String> hm= new HashMap<>();
-					hm.put("op", "buy");
-					hm.put("item_name", details[0]);
-					hm.put("card_id", ClientInfo.getCi());
-					hm.put("quantity", quantityText.getText());
-					hm.put("cost", total+"");
-					hm=GUI.getOne(hm);
-					//若银行卡余额充足并且确认购买，则显示购买成功
-					if(hm.get("result").equals("success"))
-					{
-						//库存量和银行卡余额相应的减少
-						int sale_now =Integer.parseInt(salesVolumeLabel.getText())+Integer.parseInt(quantityText.getText());
-						int stock_now = Integer.parseInt(inventoryLabel.getText()) - Integer.parseInt(quantityText.getText());
-						salesVolumeLabel.setText(sale_now+"");
-						inventoryLabel.setText(stock_now+"");
-						JOptionPane.showMessageDialog(null, "购买成功！");
-					}
-					else {
-						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
-					}
-				}
-					
-				
-			}
-		});
+		btnBuyNow.addActionListener(new BuyNowListener());
 		//添加至购物车
 		btnAddToShoppingCart.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
@@ -503,7 +472,7 @@ public class Store {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			//商品详情字符串数组，里面的内容参照productDetails()
-			String details[] = new String[5];
+			details= new String[5];
 			details[0] = getDetial.get(index).get("item_name");
 			System.out.println("点击的商品名.." +getDetial.get(index).get("item_name")); 
 			details[1] = file_path[index];
@@ -515,7 +484,7 @@ public class Store {
 			System.out.println("点击的库存数.." +getDetial.get(index).get("item_stock"));
 			
 			//把详情传到details里，将details作为参数传递到商品详情界面
-			productDetail(details);
+			productDetail();
 		}
 		@Override
 		public void mouseEntered(MouseEvent arg0) {}
@@ -608,7 +577,7 @@ public class Store {
 		}
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			String details[] = new String[5];
+			details= new String[5];
 			details[0] = getInitDetial.get(i).get("item_name");
 			System.out.println("点击的商品名.." +getInitDetial.get(i).get("item_name")); 
 			details[1] = file_init_path[i];
@@ -618,7 +587,7 @@ public class Store {
 			details[4] = getInitDetial.get(i).get("item_stock");
 			//商品详情字符串数组，里面的内容参照productDetails()
 			//把详情传到details里，将details作为参数传递到商品详情界面
-			productDetail(details);
+			productDetail();
 			
 		}
 		@Override
@@ -631,6 +600,39 @@ public class Store {
 		public void mouseReleased(MouseEvent arg0) {}
 
 	}
-	
+	class BuyNowListener implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			double price = Double.parseDouble(details[2]);
+			int quantity = Integer.parseInt(quantityText.getText());
+			if(quantity > Integer.parseInt(details[4])) {
+				JOptionPane.showMessageDialog(null,"数量超过了！","Warnning",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			double total = price*quantity;
+			int result = JOptionPane.showConfirmDialog(null, "总价为"+total+",确认购买？");
+			if (result == 0) {
+				HashMap<String, String> hm= new HashMap<>();
+				hm.put("op", "buy");
+				hm.put("item_name", details[0]);
+				hm.put("card_id", ClientInfo.getCi());
+				hm.put("quantity", quantityText.getText());
+				hm.put("cost", total+"");
+				hm=GUI.getOne(hm);
+				//若银行卡余额充足并且确认购买，则显示购买成功
+				if(hm.get("result").equals("success"))
+				{
+					//库存量和银行卡余额相应的减少
+					int sale_now =Integer.parseInt(salesVolumeLabel.getText())+Integer.parseInt(quantityText.getText());
+					int stock_now = Integer.parseInt(inventoryLabel.getText()) - Integer.parseInt(quantityText.getText());
+					salesVolumeLabel.setText(sale_now+"");
+					inventoryLabel.setText(stock_now+"");
+					JOptionPane.showMessageDialog(null, "购买成功！");
+				}
+				else {
+					JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
+				}
+			}		
+		}
+	}
 	
 }

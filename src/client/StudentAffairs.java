@@ -13,6 +13,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JLabel;
  import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -251,7 +253,7 @@ import java.net.Socket;
 			tabbedPane.setEnabledAt(1, true);
 			tabbedPane.setEnabledAt(2, true);
 		}
- 		
+		tabbedPane.addChangeListener(new changeTabListener());
 
  	}
  	
@@ -537,6 +539,14 @@ import java.net.Socket;
 			textStudentNo.setText(null);
 			textStudentName.setText(null);
 			textEnrollTime.setText(null);
+		}
+		
+	}
+	class changeTabListener implements ChangeListener{
+
+		@Override
+		public void stateChanged(ChangeEvent arg0) {
+			updateStudentCourse();
 		}
 		
 	}
