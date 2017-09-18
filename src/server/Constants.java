@@ -22,9 +22,13 @@ class Constants {
 			put("card_records",new String[] {"card_record_id","card_cost","card_content","card_info_id","card_is_paid","card_time"});
 			put("user_info",new String[] {"user_info_id","nname","gender","grade","major","student_id"});
 			put("store_item_info",new String[] {"item_id","item_stock","item_details","item_picture_url","item_price","item_purchased_number","item_name"});
+<<<<<<< HEAD
 			put("store_purchase_records",new String[] {"purchase_records_id","card_id","purchase_time","purchase_cost","purchase_content"});
 
 		}
+=======
+			put("store_purchase_records",new String[] {"purchase_records_id","card_id","purchase_time","purchase_cost","purchase_content"});}
+>>>>>>> refs/remotes/origin/database
 	};
 	
 }

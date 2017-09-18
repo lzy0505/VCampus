@@ -34,6 +34,7 @@ class HomeScreen
 	    StudentAffairs studentAffairs;
 	    Registration registration;
 	    HSAdmin hsAdmin;
+	    Store store;
 	    String ci;
 	    JFrame G5;
 		JTabbedPane p_HomeScreen; //主面板内容容器

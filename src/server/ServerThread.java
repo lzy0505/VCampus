@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
+
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import com.sun.crypto.provider.HmacMD5;
 
@@ -27,9 +30,12 @@ public class ServerThread implements Runnable{
 	private Socket socket=null;
 	private ObjectInputStream sois = null;//对象输入流
 	private ObjectOutputStream soos = null;
+	private FileInputStream fis;
+    private DataOutputStream dos;
 	private DataBase db=null;
 	private String dir_path = "serverpic/";//指定文件存放处
-	
+    int length = 0;  
+    byte[] sendBytes = null;  
 	HashMap<String,String> send =new HashMap<String,String>();//send is used to send message 
 	ArrayList<HashMap<String,String>> sendList=null;//a HashMap array
 	ArrayList<HashMap<String,String>> getList =new ArrayList<HashMap<String,String>>();
@@ -578,6 +584,93 @@ public class ServerThread implements Runnable{
 				case "GoodsPriceRevise":
 					db.setWhere("store_item_info", "item_price ="+getOne.get("item_price"), "item_name=\'" + getOne.get("item_name")+"\'");
 					break;
+				//初始化商品信息细节
+				case "init_product":
+					sendList = new ArrayList<HashMap<String, String>>();
+					ArrayList<HashMap<String, String>> goood = db.selectWhere("store_item_info", "item_name =\'可乐\'");
+					sendList.add(goood.get(0));
+					ArrayList<HashMap<String, String>> goood1 = db.selectWhere("store_item_info", "item_name =\'牙刷\'");
+					sendList.add(goood1.get(0));
+					ArrayList<HashMap<String, String>> goood2 = db.selectWhere("store_item_info", "item_name =\'抽纸\'");
+					sendList.add(goood2.get(0));
+					ArrayList<HashMap<String, String>> goood3 = db.selectWhere("store_item_info", "item_name =\'薯片\'");
+					sendList.add(goood3.get(0));
+					soos.writeObject(sendList);
+					break;
+				//初始化商品图片
+				case "init_pic":
+					File[] files_init = new File[4];
+					files_init[0] =new File("serverpic/可乐.jpg");
+					files_init[1] =new File("serverpic/牙刷.jpg");
+					files_init[2] =new File("serverpic/抽纸.jpg");
+					files_init[3] =new File("serverpic/薯片.jpg");
+					soos.writeObject(files_init);
+					soos.flush();
+					if(soos!=null)soos.close();
+					System.out.println("传完了.");  
+					if(socket!=null) socket.close();
+					break;
+					
+				//查询商品的细节
+				case "search_product":
+					sendList=db.selectWhere("store_item_info", "item_name LIKE \'%"+getOne.get("key")+"%\'");
+					soos.writeObject(sendList);
+					break;
+				//查询商品的图片
+				case "search_picture":
+					sendList=db.selectWhere("store_item_info", "item_name LIKE \'%"+getOne.get("key")+"%\'");
+					File[] files = new File[sendList.size()];
+					//把搜索到的文件都装到数组里面
+					for(int i=0;i<sendList.size();i++) {
+						files[i] = new File(sendList.get(i).get("item_picture_url"));
+					}
+					System.out.println("开始传..");  
+					soos.writeObject(files);
+					soos.flush();
+					if(soos!=null)soos.close();
+					System.out.println("传完了.");  
+					if(socket!=null) socket.close();
+					break;
+				//购买确认
+				case "buy":
+					//获取当前时间
+					Date date =new Date();
+					SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+					String sdf = df.format(date);
+					//先查完余额再去比较决定是否购买成功
+					sendList = db.selectWhere("card_info", "card_id=\'" + getOne.get("card_id")+"\'");
+					ArrayList<HashMap<String, String>> store_item_info_list = db.selectWhere("store_item_info", "item_name =\'"+getOne.get("item_name")+"\'");     
+					if(Integer.parseInt(store_item_info_list.get(0).get("item_stock"))<Integer.parseInt(getOne.get("quantity"))) {
+						send.put("result", "false");
+						send.put("item_name", getOne.get("item_name"));
+						send.put("reason", "库存不足");
+						soos.writeObject(send);
+						break;
+					}
+					if(Float.parseFloat(sendList.get(0).get("card_balance"))>=Float.parseFloat(getOne.get("cost"))) {
+						float balance_now = Float.parseFloat(sendList.get(0).get("card_balance"))-Float.parseFloat(getOne.get("cost"));
+						db.setWhere("card_info", "card_balance =" + balance_now, "card_id=\'" + getOne.get("card_id")+"\'");
+						HashMap<String, String> record = new HashMap<>();
+						//将购买记录打包查到记录表里
+						record.put("purchase_time","#"+ sdf +"#");
+						record.put("purchase_cost", getOne.get("cost"));
+						record.put("card_id", "\'"+getOne.get("card_id")+"\'");
+						record.put("purchase_content", "\'网络商店购物\'");
+						db.insert("store_purchase_records", record);
+						//将购买的物品相应减少数量
+						int quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_stock")) - Integer.parseInt(getOne.get("quantity"));
+						db.setWhere("store_item_info", "item_stock ="+quantity_now, "item_name =\'"+getOne.get("item_name")+"\'");
+						//返回结果
+						send.put("result", "success");
+						send.put("item_name", getOne.get("item_name"));
+						soos.writeObject(send);
+						break;
+					}else {
+						send.put("result", "false");
+						send.put("reason", "余额不足");
+						soos.writeObject(send);
+					}
+					
 				default:
 					send.put("result","No such operation!");
 					soos.writeObject(send);
