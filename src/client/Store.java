@@ -15,6 +15,7 @@ import com.healthmarketscience.jackcess.Table;
 //import javax.swing.event.ListSelectionListener;
 //import javax.swing.table.TableModel;
 import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
+import com.sun.xml.internal.ws.api.message.saaj.SaajStaxWriter;
 
 import table_component.SpringUtilities;
 
@@ -77,10 +78,11 @@ public class Store {
 		
 		
 		searchPanel.add(searchInput);
+		
 		//Search bar end
 		
 		//为了强行初始化，加了一段，献丑了
-		
+		/*
 		String[] productName = new String[4];
 		String[] productIcon = new String[4];
 
@@ -115,10 +117,11 @@ public class Store {
 		SpringUtilities.makeCompactGrid(productPreviewPanel, 1, 4, 0, 0, 50, 0);
 		searchPanel.add(productPreviewPanel);
 		
-		
+		*/
 		//响应如下
+		
 		search.addActionListener(new SearchLister());
-
+        new SearchLister().actionPerformed(null);
 		mainPanel.addTab("搜索", searchPanel);
 		mainPanel.setSelectedIndex(1);
 
@@ -133,7 +136,7 @@ public class Store {
 		searchResultPanel.setLayout(new BoxLayout(searchResultPanel,BoxLayout.Y_AXIS));
 		JPanel panel = new JPanel(new SpringLayout());
 		searchResultPanel.add(panel);
-		panel.setBounds(6, 6, 870, 520);
+		panel.setPreferredSize(new Dimension(800, 600));
 		JScrollPane scrollPane = new JScrollPane(searchResultPanel);
 		
 		
@@ -165,8 +168,10 @@ public class Store {
 			}
 			
 			SpringUtilities.makeCompactGrid(panel, size/4, 4, 0, 0, 50, 30);
-			
+			if(searchPanel.getComponentCount()>1)
+			{
 			searchPanel.remove(1);
+			}
 			searchPanel.add(scrollPane);
 			searchPanel.repaint();
 			searchPanel.updateUI();
@@ -284,6 +289,10 @@ public class Store {
 					if(hm.get("result").equals("success"))
 					{
 						//库存量和银行卡余额相应的减少
+						int sale_now =Integer.parseInt(salesVolumeLabel.getText())+Integer.parseInt(quantityText.getText());
+						int stock_now = Integer.parseInt(inventoryLabel.getText()) - Integer.parseInt(quantityText.getText());
+						salesVolumeLabel.setText(sale_now+"");
+						inventoryLabel.setText(stock_now+"");
 						JOptionPane.showMessageDialog(null, "购买成功！");
 					}
 					else {

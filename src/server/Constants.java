@@ -19,7 +19,7 @@ class Constants {
 			put("course_info",new String[] {"course_name","course_credits","course_info_id"});
 			put("course_details",new String[] {"course_id","course_max_number","course_selected_number","course_is_full","course_teacher","course_time","course_info_id","course_exam_time","course_exam_place"});
 			put("card_info",new String[]{"card_balance","card_info_id","card_id"} );
-			put("card_records",new String[] {"card_record_id","card_cost","card_content","card_info_id","card_is_paid","card_time"});
+			put("card_records",new String[] {"card_cost","card_content","card_info_id","card_is_paid","card_time","card_record_id"});
 			put("user_info",new String[] {"user_info_id","nname","gender","grade","major","student_id"});
 			put("store_item_info",new String[] {"item_id","item_stock","item_details","item_picture_url","item_price","item_purchased_number","item_name"});
 			put("store_purchase_records",new String[] {"purchase_records_id","card_id","purchase_time","purchase_cost","purchase_content"});

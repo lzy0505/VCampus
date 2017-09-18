@@ -77,13 +77,12 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-					
 				case "sign up":
 					sendList=db.selectWhere("users", "card_id = \'"+getOne.get("card_id")+"\'");
 					// if there's no card_id same as b'card_id,which means sing up is allowable;
 					if(sendList.size()==0) {
 						getOne.remove("op");
-//						getOne.put("user_info_id", "null");
+						getOne.put("user_info_id", "null");
 						getOne.put("card_id", "\'"+getOne.get("card_id")+"\'");
 						getOne.put("identity", "\'"+getOne.get("identity")+"\'");
 						getOne.put("password", "\'"+getOne.get("password")+"\'");
@@ -94,16 +93,33 @@ public class ServerThread implements Runnable{
 						hm.put("card_id", getOne.get("card_id"));
 						hm.put("card_balance", "0");
 						db.insert("card_info",hm);
+						ArrayList<HashMap<String, String>> hmList = db.selectWhere("card_info", "card_id =" + getOne.get("card_id"));
+						//为新用户添加水电费用，暂时先设为0；
+						String[] fee=new String[]{"\'Tuition\'","\'WandE\'","\'Afee\'"};
+						String[] sem=new String[]{"\'第一学年上学期\'","\'第一学年下学期\'","\'第二学年上学期\'","\'第二学年下学期\'","\'第三学年上学期\'","\'第三学年下学期\'","\'第四学年上学期\'","\'第四学年下学期\'"};				
+						for(int j=0;j<3;j++)
+						{               
+							for(int i=0;i<8;i++)
+							{
+				                    HashMap<String, String> cost = new HashMap<>();
+									cost.put("card_info_id", hmList.get(0).get("card_info_id"));
+									cost.put("card_cost", "0");
+									cost.put("card_content", fee[j]);
+									cost.put("card_is_paid", "FALSE");
+									cost.put("card_time", sem[i]);
+									db.insert("card_records", cost);
+									}
+						}
 						send.put("result", "success");
 						soos.writeObject(send);
 						break;
-					}
-					else {
-						send.put("result","fail");
-						send.put("reason","card_id has been used!");
-						soos.writeObject(send);
-						break;
-					}
+						}
+						else {
+							send.put("result","fail");
+							send.put("reason","card_id has been used!");
+							soos.writeObject(send);
+							break;
+						}
 				case "searchbook":
 					if(getOne.get("search_type").equals("author")) 
 					{
@@ -491,6 +507,23 @@ public class ServerThread implements Runnable{
 					}
 					soos.writeObject(sendList);
 					break;
+					//费用修改
+				case "fee_modify":
+					 int count=Integer.parseInt(getOne.get("count"));
+					 //ArrayList<HashMap<String,String>> list_card_info_id = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					 //String card_info_id=list_card_info_id.get(0).get("card_info_id");
+					 String card_record_id;
+					 String modifiedFee;
+					 for(int i=0;i<count;i++)
+					 {
+					 card_record_id=getOne.get("card_record_id"+i);
+					 modifiedFee=getOne.get("fee"+i);
+	                 db.setWhere("card_records","card_cost="+modifiedFee,"card_record_id="+card_record_id);			 
+					 }
+					 send.put("result","success modified");
+				     soos.writeObject(send);
+			         break;
+
 				case "modify_score":
 					getOne.remove("op");
 					db.setWhere("course_records", "course_exam_status=TRUE,course_score="+getOne.get("course_score"), "course_id="+getOne.get("course_id")+" AND course_student=\'"+getOne.get("course_student")+"\'");
@@ -657,9 +690,11 @@ public class ServerThread implements Runnable{
 						record.put("card_id", "\'"+getOne.get("card_id")+"\'");
 						record.put("purchase_content", "\'网络商店购物\'");
 						db.insert("store_purchase_records", record);
-						//将购买的物品相应减少数量
+						//将购买的物品相应减少数量，销量加
 						int quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_stock")) - Integer.parseInt(getOne.get("quantity"));
+						int buy_quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_purchased_number")) + Integer.parseInt(getOne.get("quantity"));
 						db.setWhere("store_item_info", "item_stock ="+quantity_now, "item_name =\'"+getOne.get("item_name")+"\'");
+						db.setWhere("store_item_info", "item_purchased_number", "item_name =\'"+getOne.get("item_name")+"\'");
 						//返回结果
 						send.put("result", "success");
 						send.put("item_name", getOne.get("item_name"));
@@ -675,18 +710,23 @@ public class ServerThread implements Runnable{
 					send.put("result","No such operation!");
 					soos.writeObject(send);
 					break;
-			
 				}		
-				db.finalize();	
 				if(sois!=null)sois.close();
 				if(socket!=null)socket.close();
-			} catch (IOException e) {
+				db.finalize();	
+				
+				}
+				catch (EOFException e) {
+					// TODO: handle exception
+				}
+			catch (IOException e) {
 				// TODO 自动生成的 catch 块
-				e.printStackTrace();
+//				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
+			
 	
 	}
 	public void name() {

@@ -59,7 +59,7 @@ class HomeScreen
 				public void stateChanged(ChangeEvent arg0) {
 					
 					// TODO Auto-generated method stub
-					if(p_HomeScreen.getSelectedIndex()==3) {
+					if(p_HomeScreen.getSelectedIndex()==4) {
 						int r=JOptionPane.showConfirmDialog(G5, "是否确认登出", "操作确认",JOptionPane.WARNING_MESSAGE );
 						if(r==0) {
 							ClientInfo.setCi("");

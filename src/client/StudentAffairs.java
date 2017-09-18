@@ -536,7 +536,6 @@ import java.net.Socket;
 
 			textStudentNo.setText(null);
 			textStudentName.setText(null);
-			textStudentCardID.setText(null);
 			textEnrollTime.setText(null);
 		}
 		

@@ -47,7 +47,7 @@ public class HSAdmin {
          JPanel bg=new JPanel();
          tab=new JTabbedPane();
       
-		 f_admin.setSize(500, 500);
+		 f_admin.setSize(800, 800);
 		 f_admin.setLocation(GUI.getWidth(f_admin.getWidth()),GUI.getHeight(f_admin.getHeight()));
 		 f_admin.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
 		 //费用管理界面
@@ -84,8 +84,10 @@ public class HSAdmin {
 			tab.addTab("费用管理",p_fee);
 			tab.addTab("添加图书",lm.addMain);
 			tab.addTab("删除图书",lm.p_delete);
-			tab.addTab("商店管理", sManage.tab);
-//			tab.setPreferredSize(new Dimension(300,280));
+			tab.addTab("添加新商品",sManage.p_addGoods);
+			tab.addTab("删除商品",sManage.p_delete);
+			tab.addTab("修改库存数量或价格",sManage.p_revise);
+			tab.setPreferredSize(new Dimension(700,700));
 			bg.add(tab);
 			f_admin.add(bg);
          addLis();//增加监听函数
@@ -261,7 +263,7 @@ public class HSAdmin {
 		//bank.t.setPreferredSize(new Dimension(450,300));
 		table_fee.setRowHeight(40);
 		sp1.setViewportView(table_fee);
-		sp1.setPreferredSize(new Dimension(450,300));
+		sp1.setPreferredSize(new Dimension(600,450));
 		fee_p2.removeAll();
 		fee_p2.add(sp1);
 		fee_p2.repaint();

@@ -165,10 +165,10 @@ public class StoreManage {
         
         
 		//顶层JTabbed面板
-		tab=new JTabbedPane();	
-		tab.addTab("添加新商品", p_addGoods);
-		tab.addTab("删除商品",p_delete);
-		tab.addTab("修改库存数量或价格",p_revise);
+//		tab=new JTabbedPane();	
+//		tab.addTab("添加新商品", p_addGoods);
+//		tab.addTab("删除商品",p_delete);
+//		tab.addTab("修改库存数量或价格",p_revise);
 	
 		addLis();//增加消息响应
 			
@@ -264,7 +264,8 @@ public class StoreManage {
     		table_delete.setRowHeight(40);
     		sp_delete=new JScrollPane();
     		sp_delete.setViewportView(table_delete);
-    		sp_delete.setPreferredSize(new Dimension(450,300));
+    		sp_delete.setPreferredSize(new Dimension(600,450));
+    		delete_p2.removeAll();
 			delete_p2.add(sp_delete);
 			delete_p2.repaint();
 			delete_p2.revalidate();
@@ -422,7 +423,8 @@ public class StoreManage {
     		table_revise.setRowHeight(40);
     		sp_revise=new JScrollPane();
     		sp_revise.setViewportView(table_revise);
-    		sp_revise.setPreferredSize(new Dimension(450,300));
+    		sp_revise.setPreferredSize(new Dimension(600,450));
+    		revise_p2.removeAll();
 			revise_p2.add(sp_revise);
 			revise_p2.repaint();
 			revise_p2.revalidate();

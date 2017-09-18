@@ -342,143 +342,182 @@ class Bank
 	  class ActionLis_Paymentquery implements ActionListener
 	  {
 
-		@Override
-		public  void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			HashMap<String,String> hm=new HashMap<String,String>();
-			hm.put("card_id", ci);
-			
-			columnNames=new String[3];
-			//表头
-			columnNames[0]="学期";
-			columnNames[1]="费用";
-			columnNames[2]="支付状态";	
-			//初始化年级和学期方格的内容
-
-			
-		switch(chosePay.getSelectedIndex())
-		{
-			
-		case 0:
-			//查询学费表
-			hm.put("op", "QueryPayment");	
-			hm.put("type", "Tuition");
-			System.out.println("now type:"+ hm.get("type"));
-			sign="Tuition";//表示交学费
-			ArrayList<HashMap<String,String>> TuitionList = GUI.getList(hm);
+			@Override
+			public  void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				HashMap<String,String> hm=new HashMap<String,String>();
+				hm.put("card_id", ci);
+				
+				columnNames=new String[3];
+				//表头
+				columnNames[0]="学年学期";
+				columnNames[1]="缴费金额";
+				
+				columnNames[2]="支付状态";	
+				//初始化年级和学期方格的内容
+				int vaildRowCount=0;//用来计数有效行，若某一学期card_cost为0，则为无效行
+				int startIndex=0;//for循环起始点
+			switch(chosePay.getSelectedIndex())
+			{
+				
+			case 0:
+				//查询学费表
+				hm.put("op", "QueryPayment");	
+				hm.put("type", "Tuition");
+				System.out.println("now type:"+ hm.get("type"));
+				sign="Tuition";//表示交学费
+				columnNames[1]="学费";
+				ArrayList<HashMap<String,String>> TuitionList = GUI.getList(hm);
 				//@反馈部分--------
 				//...返回学费表的费用和是否缴清两列数据，显示
-				rowData=new String[TuitionList.size()][3];
-				
-				if(TuitionList.size()==0)
-					break;
 				for(int i=0;i<TuitionList.size();i++)
 				{
-						rowData[i][0]=TuitionList.get(i).get("card_time");
-						rowData[i][1]=TuitionList.get(i).get("card_cost");			
-						if(TuitionList.get(i).get("card_is_paid").equals("TRUE")) {
+					if(Double.parseDouble(TuitionList.get(i).get("card_cost"))!=0)
+						++vaildRowCount;
+					
+				}
+				
+				rowData=new String[vaildRowCount][3];
+				
+				for(int i=0;i<vaildRowCount;i++)
+				{
+					   for(;startIndex<TuitionList.size();startIndex++)
+					   {
+						   if(Double.parseDouble(TuitionList.get(startIndex).get("card_cost"))!=0)
+						 {
+						rowData[i][0]=TuitionList.get(startIndex).get("card_time");
+						rowData[i][1]=TuitionList.get(startIndex).get("card_cost");	
+						
+						if(TuitionList.get(startIndex).get("card_is_paid").equals("TRUE")) {
 							rowData[i][2]="已支付";
 						}
 						else {
 							rowData[i][2]="未支付";
 						}
-						card_record_id[i] = TuitionList.get(i).get("card_record_id");
-							
+						card_record_id[i] = TuitionList.get(startIndex).get("card_record_id");
+						startIndex++;
+						break;
+						 }
+					   }
 				}
-			//
-			//-----------------
-			
-			break;
-			
-		case 1:
-			//查询水电费
-			hm.put("op", "QueryPayment");
-			hm.put("type", "WandE");
-			System.out.println("now type:"+ hm.get("type"));
-			sign="WandE";//表示交水电费
-			//@反馈部分--------
-			//...返回水电表的费用和是否缴清两列数据，显示
-			//
-			//-----------------
-			ArrayList<HashMap<String,String>> WandEList = GUI.getList(hm);
-			//@反馈部分--------
-			//...返回学费表的费用和是否缴清两列数据，显示
-			rowData=new String[WandEList.size()][3];
-			if(WandEList.size()==0)
-				break;
-			for(int i=0;i<WandEList.size();i++)
-			{
-			
-				rowData[i][0]=WandEList.get(i).get("card_time");
-				rowData[i][1]=WandEList.get(i).get("card_cost");
+				//
+				//-----------------
 				
-				if(WandEList.get(i).get("card_is_paid").equals("TRUE")) {
-					rowData[i][2]="Yes";
-				}
-				else {
-					rowData[i][2]="No";
-				}
-				card_record_id[i] = WandEList.get(i).get("card_record_id");
-			
-			}		
-			break;
-		case 2:
-			hm.put("op", "QueryPayment");
-			hm.put("type", "Afee");
-			System.out.println("now type:"+ hm.get("type"));
-			sign="Afee";//表示交住宿费
-			//@反馈部分--------
-			//...返回住宿表的费用和是否缴清两列数据，显示
-			//
-			//-----------------
-			ArrayList<HashMap<String,String>> AfeeList = GUI.getList(hm);
-			//@反馈部分--------
-			//...返回学费表的费用和是否缴清两列数据，显示
-			rowData=new String[AfeeList.size()][3];
-			if(AfeeList.size()==0)
 				break;
-			for(int i=0;i<AfeeList.size();i++)
-			{
-				rowData[i][0]=AfeeList.get(i).get("card_time");			
-				rowData[i][1]=AfeeList.get(i).get("card_cost");		
-				if(AfeeList.get(i).get("card_is_paid").equals("TRUE")) {
-					rowData[i][2]="Yes";
+				
+			case 1:
+				//查询水电费
+				hm.put("op", "QueryPayment");
+				hm.put("type", "WandE");
+				System.out.println("now type:"+ hm.get("type"));
+				sign="WandE";//表示交水电费
+				columnNames[1]="水电费";
+				//@反馈部分--------
+				//...返回水电表的费用和是否缴清两列数据，显示
+				//
+				//-----------------
+				ArrayList<HashMap<String,String>> WandEList = GUI.getList(hm);
+				//@反馈部分--------
+				//...返回学费表的费用和是否缴清两列数据，显示
+				
+				for(int i=0;i<WandEList.size();i++)
+				{
+					if(Double.parseDouble(WandEList.get(i).get("card_cost"))!=0)
+						++vaildRowCount;
+					
 				}
-				else {
-					rowData[i][2]="No";
-				}
-				card_record_id[i] = AfeeList.get(i).get("card_record_id");
-		
-			}		
-			break;
-			
-		default:
-				break;
+				
+				rowData=new String[vaildRowCount][3];
+				
 
-		}
-		//创建表格
-		sp=new JScrollPane();
-		t=new JTable(rowData,columnNames) {
-			public boolean isCellEditable(int row, int column) {
-				return false;
+				for(int i=0;i<vaildRowCount;i++)
+				{
+				    for(;startIndex<WandEList.size();startIndex++)
+				    {
+					rowData[i][0]=WandEList.get(startIndex).get("card_time");
+					rowData[i][1]=WandEList.get(startIndex).get("card_cost");
+					
+					if(WandEList.get(startIndex).get("card_is_paid").equals("TRUE")) {
+						rowData[i][2]="已支付";
+					}
+					else {
+						rowData[i][2]="未支付";
+					}
+					card_record_id[i] = WandEList.get(startIndex).get("card_record_id");
+					
+					startIndex++;
+					break;
+					
+				    }
+				}		
+				break;
+			case 2:
+				hm.put("op", "QueryPayment");
+				hm.put("type", "Afee");
+				System.out.println("now type:"+ hm.get("type"));
+				sign="Afee";//表示交住宿费
+				columnNames[1]="住宿费";
+				//@反馈部分--------
+				//...返回住宿表的费用和是否缴清两列数据，显示
+				//
+				//-----------------
+				ArrayList<HashMap<String,String>> AfeeList = GUI.getList(hm);
+				for(int i=0;i<AfeeList.size();i++)
+				{
+					if(Double.parseDouble(AfeeList.get(i).get("card_cost"))!=0)
+						++vaildRowCount;
+					
+				}
+				
+				
+				//@反馈部分--------
+				//...返回学费表的费用和是否缴清两列数据，显示
+				rowData=new String[vaildRowCount][3];
+				for(int i=0;i<vaildRowCount;i++)
+				{
+					  for(;startIndex<AfeeList.size();startIndex++)
+					  {
+					rowData[i][0]=AfeeList.get(startIndex).get("card_time");			
+					rowData[i][1]=AfeeList.get(startIndex).get("card_cost");		
+					if(AfeeList.get(startIndex).get("card_is_paid").equals("TRUE")) {
+						rowData[i][2]="已支付";
+					}
+					else {
+						rowData[i][2]="未支付";
+					}
+					card_record_id[i] = AfeeList.get(startIndex).get("card_record_id");
+					  }
+				}	
+					  
+				break;
+				
+			default:
+					break;
+
 			}
-		};
-		t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//bank.t.setPreferredSize(new Dimension(450,300));
-		t.setRowHeight(40);
-		sp.setViewportView(t);
-		sp.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*2/3)));
-		payment_p2.removeAll();
-		payment_p2.add(sp);
-		payment_p2.repaint();
-		payment_p2.revalidate();
-		//至少查询一次后将确认密码部分控件设置为可见
-		l_confirm2.setVisible(true);
-		t_password_confirm2.setVisible(true);
-		ok_pay.setVisible(true);
-		
-		}		   	
-	  }
+			//创建表格
+			sp=new JScrollPane();
+			t=new JTable(rowData,columnNames) {
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
+			t.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			//bank.t.setPreferredSize(new Dimension(450,300));
+			t.setRowHeight(40);
+			sp.setViewportView(t);
+			sp.setPreferredSize(new Dimension(450,300));
+			payment_p2.removeAll();
+			payment_p2.add(sp);
+			payment_p2.repaint();
+			payment_p2.revalidate();
+			//至少查询一次后将确认密码部分控件设置为可见
+			l_confirm2.setVisible(true);
+			t_password_confirm2.setVisible(true);
+			ok_pay.setVisible(true);
+			
+			}		   	
+		  }
 	 
 	 
 }
