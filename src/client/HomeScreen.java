@@ -43,6 +43,7 @@ class HomeScreen
 
 	 	 
 	//传参并且启用监听函数
+
 	 void update(String identity)
 	 {	
 		 	G5 = new  JFrame();
@@ -57,8 +58,6 @@ class HomeScreen
 
 				@Override
 				public void stateChanged(ChangeEvent arg0) {
-					
-					// TODO Auto-generated method stub
 					if(p_HomeScreen.getSelectedIndex()==4) {
 						int r=JOptionPane.showConfirmDialog(G5, "是否确认登出", "操作确认",JOptionPane.WARNING_MESSAGE );
 						if(r==0) {
@@ -81,11 +80,6 @@ class HomeScreen
 			  G5.setLocation(GUI.getWidth(G5.getWidth()),GUI.getHeight(G5.getHeight()));
 			  G5.add(p_HomeScreen);	
 			  ci=ClientInfo.getCi();
-		 if(identity.equals("admin")) {
-			 hsAdmin=new HSAdmin();
-	    	 hsAdmin.init();
-//	    	 p_HomeScreen.addTab("管理员",new ImageIcon("bank.png"),hsAdmin.tab);
-		 }else {
 			 library=new Library(this);
 	    	 library.init();
 	    	 p_HomeScreen.addTab("图书馆",new ImageIcon("library.png"),library.tab_library);
@@ -105,11 +99,7 @@ class HomeScreen
 			 p_HomeScreen.addTab("登    出",null);
 			 backGround.add(p_HomeScreen);
 			 G5.add(backGround);
-			 G5.setVisible(true);
-		 }
-		 
-		
-		 
+			 G5.setVisible(true);	 
 	 }
 	 
 	 

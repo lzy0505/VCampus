@@ -374,7 +374,6 @@ import java.net.Socket;
  		int row;		
 		public SelectCourseButtonEditor(JCheckBox checkBox) {
 			super(checkBox);
-			// TODO Auto-generated constructor stub
 		}
 		
 		@Override public Component getTableCellEditorComponent(JTable table, Object value,
@@ -419,7 +418,7 @@ import java.net.Socket;
 			int row;		
 			public SelectTeacherButtonEditor(JCheckBox checkBox) {
 				super(checkBox);
-				// TODO Auto-generated constructor stub
+	
 			}
 			
 			@Override public Component getTableCellEditorComponent(JTable table, Object value,
@@ -476,7 +475,7 @@ import java.net.Socket;
 		
 	class CourseSelectJTable extends JTable{
 		public CourseSelectJTable(DefaultTableModel tableModel) {
-			// TODO Auto-generated constructor stub
+		
 			super(tableModel);
 		}
 		@Override
@@ -496,7 +495,6 @@ import java.net.Socket;
 		public void actionPerformed(ActionEvent e) {
 			//put textStudentNo.getText(),textStudentName.getText(),sex,textEnrollTime.getText(),
 			//SpecialitySelection.getSelectedItem() into the database
-			//TODO
 			HashMap<String,String> hm = new HashMap<String,String>();
 			hm.put("op","import_student");
 			hm.put("nname", "\'"+textStudentName.getText()+"\'");

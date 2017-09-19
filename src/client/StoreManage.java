@@ -1,6 +1,8 @@
 package client;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -87,11 +89,11 @@ public class StoreManage {
 		l_price=new JLabel("单价:");//商品价格
 		l_addPicture=new JLabel("添加图片:");//增加商品图片
 		t_goodsName=new JTextField();
-		t_goodsName.setPreferredSize(new Dimension(70,30));
+		t_goodsName.setPreferredSize(new Dimension(270,30));
 		t_amount=new JTextField();
-		t_amount.setPreferredSize(new Dimension(70,30));
+		t_amount.setPreferredSize(new Dimension(170,30));
 		t_price=new JTextField();
-		t_price.setPreferredSize(new Dimension(70,30));
+		t_price.setPreferredSize(new Dimension(170,30));
 		b_openFileManagement=new JButton("浏览文件管理器..");//打开文件管理器按钮
 		fileDialog=new FileDialog(f,"添加图片",FileDialog.LOAD);//初始化文件管理器	
 		b_confirmAdd=new JButton("确认添加商品");//确认添加按钮
@@ -101,9 +103,24 @@ public class StoreManage {
 	    addGoods_p1.add(t_amount);
 	    addGoods_p1.add(l_price);
 	    addGoods_p1.add(t_price);
+	    Component[] cArray=addGoods_p1.getComponents();
+		for(int j=0;j<addGoods_p1.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
 	    addGoods_p2.add(l_addPicture);
 	    addGoods_p2.add(b_openFileManagement);
+	    cArray=addGoods_p2.getComponents();
+		for(int j=0;j<addGoods_p2.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
 		addGoods_p4.add(b_confirmAdd);
+		cArray=addGoods_p4.getComponents();
+		for(int j=0;j<addGoods_p4.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
+		p_addGoods.add(new JLabel(" "));
+		p_addGoods.add(new JLabel(" "));
+		p_addGoods.add(new JLabel(" "));
 		p_addGoods.add(addGoods_p1);
 		p_addGoods.add(addGoods_p2);
 		p_addGoods.add(addGoods_p3);
@@ -115,7 +132,7 @@ public class StoreManage {
 		p_revise.setLayout(new BoxLayout(p_revise,BoxLayout.Y_AXIS));
 	    l_amount_GoodsName=new JLabel("商品名称");//商品名标签
 		t_revise_GoodsName=new JTextField();//商品名输入框
-		t_revise_GoodsName.setPreferredSize(new Dimension(70,30));
+		t_revise_GoodsName.setPreferredSize(new Dimension(270,30));
 		cb_chose=new JComboBox<String>();
 		cb_chose.addItem("库存数量");
 		cb_chose.addItem("商品价格");
@@ -129,9 +146,18 @@ public class StoreManage {
 		revise_p1.add(t_revise_GoodsName);
 		revise_p1.add(cb_chose);
 		revise_p1.add(b_query_Revise);
+		cArray=revise_p1.getComponents();
+		for(int j=0;j<revise_p1.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
 		revise_p2=new JPanel();
 		revise_p3=new JPanel();
 		revise_p3.add(b_confirmRevise);
+		cArray=revise_p3.getComponents();
+		for(int j=0;j<revise_p3.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
+		p_revise.add(new JLabel(" "));
 		p_revise.add(revise_p1);
         p_revise.add(revise_p2);
         p_revise.add(revise_p3);
@@ -146,7 +172,7 @@ public class StoreManage {
         delete_p3=new JPanel();
         l_delete_GoodsName=new JLabel("商品名称");
         t_delete_GoodsName=new JTextField();
-        t_delete_GoodsName.setPreferredSize(new Dimension(70,30));
+        t_delete_GoodsName.setPreferredSize(new Dimension(270,30));
         b_query_Delete=new JButton("查询");    
         columnNames_delete=new String[3];
         columnNames_delete[0]="商品名称";
@@ -156,7 +182,16 @@ public class StoreManage {
         delete_p1.add(l_delete_GoodsName);
         delete_p1.add(t_delete_GoodsName);
         delete_p1.add(b_query_Delete);
+        cArray=delete_p1.getComponents();
+		for(int j=0;j<delete_p1.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
         delete_p3.add(b_confirmDelete);
+        cArray=delete_p3.getComponents();
+		for(int j=0;j<delete_p3.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
+		p_delete.add(new JLabel(" "));
         p_delete.add(delete_p1);
         p_delete.add(delete_p2);
         p_delete.add(delete_p3);
@@ -199,12 +234,15 @@ public class StoreManage {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			if(t_delete_GoodsName.getText().equals("")) {
+				JOptionPane.showMessageDialog(null,"未填入商品名称","操作结果",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			int selectedRow=table_delete.getSelectedRow();//得到用户所选的行索引
 			//如果什么都没选
 			if(selectedRow==-1)
 			{			
-				JOptionPane.showMessageDialog(null,"You haven't Selected Any Row !","Warnning",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"未选择商品","操作结果",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			
@@ -234,8 +272,6 @@ public class StoreManage {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
 			HashMap<String,String> hm=new HashMap<String,String>();
 			hm.put("op", "GoodsInfoQuery");
 			hm.put("item_name", t_delete_GoodsName.getText());//传递商品名
@@ -264,7 +300,7 @@ public class StoreManage {
     		table_delete.setRowHeight(40);
     		sp_delete=new JScrollPane();
     		sp_delete.setViewportView(table_delete);
-    		sp_delete.setPreferredSize(new Dimension(600,450));
+    		sp_delete.setPreferredSize(new Dimension(HSAdmin.width*5/6,HSAdmin.height*2/3));
     		delete_p2.removeAll();
 			delete_p2.add(sp_delete);
 			delete_p2.repaint();
@@ -315,7 +351,10 @@ public class StoreManage {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			if(t_revise_GoodsName.getText().equals("")) {
+				JOptionPane.showMessageDialog(null,"未填入商品名称","操作结果",JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			int selectedRow=table_revise.getSelectedRow();
 			//如果啥都没选，报警
 			if(selectedRow==-1)
@@ -364,7 +403,6 @@ public class StoreManage {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			HashMap<String,String> hm=new HashMap<String,String>();
 			//如果查询库存数量
 			if(cb_chose.getSelectedIndex()==0)
@@ -423,7 +461,7 @@ public class StoreManage {
     		table_revise.setRowHeight(40);
     		sp_revise=new JScrollPane();
     		sp_revise.setViewportView(table_revise);
-    		sp_revise.setPreferredSize(new Dimension(600,450));
+    		sp_revise.setPreferredSize(new Dimension(HSAdmin.width*5/6,HSAdmin.height*2/3));
     		revise_p2.removeAll();
 			revise_p2.add(sp_revise);
 			revise_p2.repaint();

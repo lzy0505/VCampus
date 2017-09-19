@@ -216,7 +216,7 @@ class Bank
 
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			// TODO Auto-generated method stub
+		
 			
 //		    JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
 		    int selectedIndex = tab_bank.getSelectedIndex();
@@ -265,7 +265,7 @@ class Bank
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				
 				if(t.getSelectedRow()==-1){
 					JOptionPane.showMessageDialog(null, "尚未选择付款项！","操作错误",JOptionPane.ERROR_MESSAGE);
 					return;
@@ -314,7 +314,7 @@ class Bank
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			
 			//发送包含密码和充值金额的HashMap
 			HashMap<String,String> hm=new HashMap<String,String>();
 			hm.put("op", "recharge");
@@ -351,7 +351,7 @@ class Bank
 
 			@Override
 			public  void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				
 				HashMap<String,String> hm=new HashMap<String,String>();
 				hm.put("card_id", ci);
 				

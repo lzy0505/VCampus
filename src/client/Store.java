@@ -59,7 +59,6 @@ public class Store {
 	public Store()
 	{	
 		mainPanel=new JTabbedPane();
-//TODO
 		JPanel p=new JPanel();
 		p.setName("gouwuche");
 		mainPanel.addTab("购物车",p);
@@ -363,8 +362,6 @@ public class Store {
 //		TotalBar.setLayout(null);
 		
 		JButton btnSettle = new JButton("结账");
-//		btnSettle.setFont(new Font("Lucida Console", Font.PLAIN, 16));
-//		btnSettle.setBounds(676, 29, 117, 37);
 		TotalBar.add(btnSettle);
 		//全选和删除暂时不写哈，只有结算的功能
 		/*JCheckBox chckbxSelectAll = new JCheckBox("Select All");

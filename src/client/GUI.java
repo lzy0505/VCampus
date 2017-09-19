@@ -48,9 +48,6 @@ public class GUI extends JFrame
 	static JButton close3;
 	
 
-	static JFrame G6;
-	JPanel p16,p26,p36;
-	JLabel l16,l26,l36,l46,l56,l66;
 	
 
  	
@@ -67,7 +64,7 @@ public class GUI extends JFrame
 		try {
 			client = new Client();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -78,7 +75,7 @@ public class GUI extends JFrame
 			client.clientSocket = new Socket("localhost",8080);
 			client.sendMessage(sendmes);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			JOptionPane.showMessageDialog(null,"无法连接到服务器",
 					"致命的错误",JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -93,7 +90,7 @@ public class GUI extends JFrame
 			client.sendMessage(sendmes);
 			getmes = client.getMessage();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			JOptionPane.showMessageDialog(null,"无法连接到服务器",
 					"致命的错误",JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -108,7 +105,7 @@ public class GUI extends JFrame
 			getmes = client.getMessages();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		return getmes;
@@ -121,7 +118,7 @@ public class GUI extends JFrame
 			Client client = new Client();
 			getmes = client.upLoad(hm);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+	
 			JOptionPane.showMessageDialog(null,"无法连接到服务器",
 					"致命的错误",JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -291,10 +288,6 @@ public class GUI extends JFrame
 		
 		G3.setLocation(getWidth(G3.getWidth()),getHeight(G3.getHeight()));
 
-
-		
-
-
 		//初始化HomeScreeen类变量
 		homeScreen=new HomeScreen();	
 		
@@ -303,17 +296,6 @@ public class GUI extends JFrame
 		reg2.addActionListener(new MyActLister2());//the GUI of sign up
 		close3.addActionListener(new MyActLister4());//close this GUI's window
 		sign1.addActionListener(new MyActLister5());//if successful,sign in to the correct GUI
-
-		//l35.addMouseListener(new MyMouLister1());//open library(student)
-		//暂且注释l36.addMouseListener(new MyMouLister1());//open library(teacher)
-		//l55.addMouseListener(new MyMouLister2());//open student affairs
-//		b18.addActionListener(new SearchBookFromDB());//search book
-		
-		//TODO
-		//点击商店的出现商店主界面的响应
-		
-		//return10.addActionListener(new MyActLister6());//if return10 is clicked,return to G8
-
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
@@ -333,13 +315,11 @@ public class GUI extends JFrame
             Object key = keys.nextElement(); 
             Object value = UIManager.get(key);  
             if (value instanceof FontUIResource) {
-//            	FontUIResource f=(FontUIResource)value;
-//            	System.out.println(f.getAvailableAttributes().toString());
                 UIManager.put(key, fontRes);  
             }  
         }
   	  }catch (Exception e) {
-		// TODO Auto-generated catch block
+
 		e.printStackTrace();
 	}
 		GUI gui= new GUI("登陆","注册","成功");
@@ -470,21 +450,19 @@ public class GUI extends JFrame
 		    		
 		    }
 		    else if(hm.get("result").equals("success")&&pro1.getSelectedIndex()==2)
+		    	
 		    {
 		    	System.out.println("Adminok");
 		    	ClientInfo.setCi(hm.get("card_id"));
+		    	hsAdmin=new HSAdmin();
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
-		    	homeScreen.update("admin");
+		    	//TODO  管理员分类：hm.get获取从服务器返回的管理员的身份，传入hsAdmin.init("identity")
+		    	//storeadmin
+		    	//libadmin
+		    	//bankadmin
+		    	hsAdmin.init("storeadmin");
 		    	G1.setVisible(false);
-		    	/*框架大概是这样，前端的把这里补全
-		    	 * type = hm.get("type");
-		    	 * switch(type){
-		    	 * 	case "libAdmin":
-		    	 * 	case "storeAdmin":
-		    	 * 	case "bankAdmin":
-		    	 * }
-		    	 * */
-		    	
+
 		    }
 		    		    
 		    else if(hm.get("result").equals("fail"))
