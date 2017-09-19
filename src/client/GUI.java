@@ -456,11 +456,7 @@ public class GUI extends JFrame
 		    	ClientInfo.setCi(hm.get("card_id"));
 		    	hsAdmin=new HSAdmin();
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
-		    	//TODO  管理员分类：hm.get获取从服务器返回的管理员的身份，传入hsAdmin.init("identity")
-		    	//storeadmin
-		    	//libadmin
-		    	//bankadmin
-		    	hsAdmin.init("storeadmin");
+		    	hsAdmin.init(hm.get("type"));
 		    	G1.setVisible(false);
 
 		    }

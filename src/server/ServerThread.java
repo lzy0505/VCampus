@@ -160,7 +160,6 @@ public class ServerThread implements Runnable{
 					soos.writeObject(sendList);				
 					break;
 				case "borrow":
-					//TODO 挂失做了，等一哈取消
 					ArrayList<HashMap<String,String>> lost_borrow = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(lost_borrow.get(0).get("card_is_lost").equals("TRUE")) {
 						send.put("result","失败");
@@ -187,6 +186,7 @@ public class ServerThread implements Runnable{
 							Calendar calendar = Calendar.getInstance();
 							calendar.add(Calendar.DATE,30);
 							String after = df.format(calendar.getTime());
+							System.out.println(after);
 							System.out.println(getOne.get("card_id"));
 							db.setWhere("book", "reader=\'"+ getOne.get("card_id")+"\',"+"borrow_date=#"+ now +"#,"+"return_date=#"+ after +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
 							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
@@ -214,14 +214,13 @@ public class ServerThread implements Runnable{
 						{
 							ArrayList<HashMap<String,String>> idList = db.selectWhere("book_info", "book_info_id ="+sendList.get(i).get("book_info_id"));
 							idList.get(0).put("book_id", sendList.get(i).get("book_id"));
-							idList.get(0).put("borrow_date", sendList.get(i).get("borrow_date"));
+							idList.get(0).put("return_date", sendList.get(i).get("return_date"));
 							cList.add(idList.get(0));						
 						}
 						soos.writeObject(cList);
 						break;
 					}
 				case "return":
-					//TODO 挂失
 					ArrayList<HashMap<String,String>> lost_return = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(lost_return.get(0).get("card_is_lost").equals("TRUE")) {
 						send.put("result","失败");
@@ -245,6 +244,28 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}	
+					//续借书
+				case"+1s":
+					ArrayList<HashMap<String,String>> lost_xu = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_xu.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result","续借失败");
+						send.put("book_name",getOne.get("book_name"));
+						soos.writeObject(send);
+						break;//这里挂失导致还书不成功原因不写
+					}
+					Date date =new Date();
+					SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+					String now = df.format(date);//当前时间
+					//计算30天后的时间
+					Calendar calendar = Calendar.getInstance();
+					calendar.add(Calendar.DATE,30);
+					String after = df.format(calendar.getTime());
+					db.setWhere("book", "return_date=#"+ after +"#","book_id="+getOne.get("book_id"));				
+					send.put("result", "成功续借");
+					send.put("book_name",getOne.get("book_name"));
+					soos.writeObject(send);
+					break;
+					//课程查询
 				case "search_course":
 					//return course_name,credits and course_info_id
 					ArrayList<HashMap<String,String>> scList=db.selectWhere("course_records", "course_student =\'"+getOne.get("card_id")+"\'");
@@ -280,7 +301,6 @@ public class ServerThread implements Runnable{
 					soos.writeObject(sendList);
 					break;
 				case "choose_ok":
-					//TODO 挂失,有待商议
 					//use course_record_id to choose course
 					sendList=db.selectWhere("course_records", "course_record_id="+getOne.get("course_record_id"));
 					if(sendList.get(0).get("select_status").equals("TRUE")) {
@@ -356,7 +376,6 @@ public class ServerThread implements Runnable{
 					break;
 					//支付学杂费
 				case "Payment":			
-					//TODO 挂失
 					ArrayList<HashMap<String,String>> lost_payment = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(lost_payment.get(0).get("card_is_lost").equals("TRUE")) {
 						send.put("result", "false");
@@ -394,7 +413,6 @@ public class ServerThread implements Runnable{
 					}
 					//给一卡通充值
 				case "recharge":
-					//TODO 挂失
 					ArrayList<HashMap<String,String>> lost_recharge = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(lost_recharge.get(0).get("card_is_lost").equals("TRUE")) {
 						send.put("result", "false");
@@ -444,7 +462,6 @@ public class ServerThread implements Runnable{
 					db.setWhere("card_info", "card_is_lost=TRUE", "card_id=\'"+getOne.get("card_id")+"\'");
 					//修改密码
 				case "modify_password":
-					//TODO
 					ArrayList<HashMap<String,String>> lost_modify = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(lost_modify.get(0).get("card_is_lost").equals("TRUE")) {
 						send.put("result", "false");
@@ -488,6 +505,7 @@ public class ServerThread implements Runnable{
 						send.put("book_info_id", book_info_list.get(0).get("book_info_id"));
 						send.put("reader", null);
 						send.put("borrow_date", null);
+						send.put("return_date", null);
 						send.put("is_borrowed", "FALSE");
 						db.insert("book", send);
 					} 
@@ -763,9 +781,9 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-					Date date =new Date();
-					SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-					String sdf = df.format(date);
+					Date date1 =new Date();
+					SimpleDateFormat df1= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+					String sdf1 = df1.format(date1);
 					//先查完余额再去比较决定是否购买成功
 					sendList = db.selectWhere("card_info", "card_id=\'" + getOne.get("card_id")+"\'");
 					ArrayList<HashMap<String, String>> store_item_info_list = db.selectWhere("store_item_info", "item_name =\'"+getOne.get("item_name")+"\'");     
@@ -781,10 +799,10 @@ public class ServerThread implements Runnable{
 						db.setWhere("card_info", "card_balance =" + balance_now, "card_id=\'" + getOne.get("card_id")+"\'");
 						HashMap<String, String> record = new HashMap<>();
 						//将购买记录打包查到记录表里
-						record.put("purchase_time","#"+ sdf +"#");
+						record.put("purchase_time","#"+ sdf1 +"#");
 						record.put("purchase_cost", getOne.get("cost"));
 						record.put("card_id", "\'"+getOne.get("card_id")+"\'");
-						record.put("purchase_content", "\'网络商店购物\'");
+						record.put("purchase_content", "\'"+getOne.get("item_name")+"\'");
 						db.insert("store_purchase_records", record);
 						//将购买的物品相应减少数量，销量加
 						int quantity_now = Integer.parseInt(store_item_info_list.get(0).get("item_stock")) - Integer.parseInt(getOne.get("quantity"));

@@ -96,14 +96,14 @@ public class HSAdmin {
 			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
 		}
 		switch (identity) {
-		case"libadmin" :
+		case"libAdmin" :
 			tab.addTab("添加图书",lm.addMain);
 			tab.addTab("删除图书",lm.p_delete);
 			break;
-		case"bankadmin" :
+		case"bankAdmin" :
 			tab.addTab("费用管理",p_fee);
 			break;
-		case"storeadmin" :
+		case"storeAdmin" :
 			tab.addTab("添加新商品",sManage.p_addGoods);
 			tab.addTab("删除商品",sManage.p_delete);
 			tab.addTab("修改库存数量或价格",sManage.p_revise);

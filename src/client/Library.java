@@ -212,9 +212,9 @@ public class Library {
 				 hmlib=new HashMap<String,String>();
 				 if(has(table_return.getSelectedRows(),table_return.getSelectedRowCount(),i)) {
 					flag=true;
-					// TODO 续借响应函数 这个地方稍微改一哈，和还书代码基本一样撒
+					//续借响应函数 这个地方稍微改一哈，和还书代码基本一样撒
 				 	hmlib.put("book_name", rowData_Return[i][0]);
-				 	hmlib.put("op", "return");
+				 	hmlib.put("op", "+1s");
 				 	hmlib.put("card_id", ci);
 				 	hmlib.put("book_id", book_id[i]);
 				 	hmlib=GUI.getOne(hmlib);
@@ -277,8 +277,8 @@ public class Library {
 				bookNameR[i]=alist.get(i).get("book_name");
 				authorR[i]=alist.get(i).get("author");
 				publisherR[i]=alist.get(i).get("publisher");
-//				TODO 这里改成借阅日期
-				timeR[i]=alist.get(i).get("borrow_date");
+//				这里改成借阅日期
+				timeR[i]=alist.get(i).get("return_date");
 				book_id[i] = alist.get(i).get("book_id");
 			}
 				   int amount=alist.size();
@@ -291,7 +291,7 @@ public class Library {
 						rowData_Return[i][0]=bookNameR[i];
 						rowData_Return[i][1]=authorR[i];
 						rowData_Return[i][2]=publisherR[i];
-						rowData_Return[i][3]=timeR[i].substring(0,timeR[i].length()-7);
+						rowData_Return[i][3]=timeR[i].substring(0,10);
 					}
 					
 					sp_return=new JScrollPane();
