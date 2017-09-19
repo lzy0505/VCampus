@@ -8,7 +8,9 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
@@ -34,6 +36,7 @@ public class ServerThread implements Runnable{
     private DataOutputStream dos;
 	private DataBase db=null;
 	private String dir_path = "serverpic/";//指定文件存放处
+	int number = new Random().nextInt(10) + 1;//生成1-10的随机数
     int length = 0;  
     byte[] sendBytes = null;  
 	HashMap<String,String> send =new HashMap<String,String>();//send is used to send message 
@@ -66,13 +69,37 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-					else if (sendList.get(0).get("password").equals(getOne.get("password"))&&sendList.get(0).get("identity").equals(getOne.get("identity"))) {
-						send.put("card_id",getOne.get("card_id") );
-						send.put("result", "success");
-						soos.writeObject(send);
-						break;
-					}
-					else {
+					if(sendList.get(0).get("password").equals(getOne.get("password"))){
+						//管理员判断
+						if(sendList.get(0).get("identity").equals("libAdmin")){
+							send.put("card_id",getOne.get("card_id") );
+							send.put("type", "libAdmin");
+							send.put("result", "success");
+							soos.writeObject(send);
+							break;
+						}
+						else if(sendList.get(0).get("identity").equals("storeAdmin")) {
+							send.put("card_id",getOne.get("card_id") );
+							send.put("type", "storeAdmin");
+							send.put("result", "success");
+							soos.writeObject(send);
+							break;
+						}
+						else if(sendList.get(0).get("identity").equals("bankAdmin")){
+							send.put("card_id",getOne.get("card_id") );
+							send.put("type", "bankAdmin");
+							send.put("result", "success");
+							soos.writeObject(send);
+							break;
+						}
+						//老师学生判断
+						else {
+							send.put("card_id",getOne.get("card_id") );
+							send.put("result", "success");
+							soos.writeObject(send);
+							break;
+						}
+					}else {
 						send.put("result", "fail");
 						soos.writeObject(send);
 						break;
@@ -92,6 +119,7 @@ public class ServerThread implements Runnable{
 						HashMap hm = new HashMap<String,String>();
 						hm.put("card_id", getOne.get("card_id"));
 						hm.put("card_balance", "0");
+						hm.put("card_is_lost", "FALSE");//未挂失
 						db.insert("card_info",hm);
 						ArrayList<HashMap<String, String>> hmList = db.selectWhere("card_info", "card_id =" + getOne.get("card_id"));
 						//为新用户添加水电费用，暂时先设为0；
@@ -132,6 +160,14 @@ public class ServerThread implements Runnable{
 					soos.writeObject(sendList);				
 					break;
 				case "borrow":
+					//TODO 挂失做了，等一哈取消
+					ArrayList<HashMap<String,String>> lost_borrow = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_borrow.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result","失败");
+						send.put("book_name",getOne.get("book_name"));
+						soos.writeObject(send);
+						break;//这里挂失导致借阅不成功原因不写
+					}
 					String bookname=getOne.get("book_name");
 					bookname=bookname.replaceAll("[']", "\'\'");
 					System.out.println(bookname);
@@ -146,17 +182,21 @@ public class ServerThread implements Runnable{
 						{
 							Date date =new Date();
 							SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-							String sdf = df.format(date);
+							String now = df.format(date);//当前时间
+							//计算30天后的时间
+							Calendar calendar = Calendar.getInstance();
+							calendar.add(Calendar.DATE,30);
+							String after = df.format(calendar.getTime());
 							System.out.println(getOne.get("card_id"));
-							db.setWhere("book", "reader=\'"+ getOne.get("card_id")+"\',"+"borrow_date=#"+ sdf +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
+							db.setWhere("book", "reader=\'"+ getOne.get("card_id")+"\',"+"borrow_date=#"+ now +"#,"+"return_date=#"+ after +"#,"+"is_borrowed="+ "TRUE","book_id="+bList.get(i).get("book_id"));
 							db.setWhere("book_info", "quantity=quantity-1","book_info_id="+bList.get(i).get("book_info_id"));
-							send.put("result", "successfully");
+							send.put("result", "成功");
 							send.put("book_name",getOne.get("book_name"));
 							break;
 						}
 						if(i==(bList.size()-1))
 						{
-							send.put("result","unsuccessfully");
+							send.put("result","失败");
 							send.put("book_name",getOne.get("book_name"));
 						}
 					}
@@ -181,18 +221,26 @@ public class ServerThread implements Runnable{
 						break;
 					}
 				case "return":
+					//TODO 挂失
+					ArrayList<HashMap<String,String>> lost_return = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_return.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result","失败");
+						send.put("book_name",getOne.get("book_name"));
+						soos.writeObject(send);
+						break;//这里挂失导致还书不成功原因不写
+					}
 					sendList=db.selectWhere("book", "book_id = "+getOne.get("book_id"));
 					db.setWhere("book", "reader=null,"+"is_borrowed="+ "FALSE","book_id="+getOne.get("book_id"));
 					db.setWhere("book_info", "quantity=quantity+1","book_info_id="+sendList.get(0).get("book_info_id"));
 					sendList=db.selectWhere("book", "book_id = "+getOne.get("book_id"));
 					if(sendList.get(0).get("is_borrowed").equals("FALSE")) {
-						send.put("result", "successfully");
+						send.put("result", "成功");
 						send.put("book_name", getOne.get("book_name"));
 						soos.writeObject(send);
 						break;
 					}
 					else {
-						send.put("result", "unsuccessfully");
+						send.put("result", "失败");
 						send.put("book_name", getOne.get("book_name"));
 						soos.writeObject(send);
 						break;
@@ -220,6 +268,7 @@ public class ServerThread implements Runnable{
 					soos.writeObject(sendList);
 					break;
 				case "choose_course":
+		
 					//return details to client
 					sendList=db.selectWhere("course_details", "course_info_id= "+getOne.get("course_info_id"));
 					for(int i = 0;i<sendList.size();i++){
@@ -231,6 +280,7 @@ public class ServerThread implements Runnable{
 					soos.writeObject(sendList);
 					break;
 				case "choose_ok":
+					//TODO 挂失,有待商议
 					//use course_record_id to choose course
 					sendList=db.selectWhere("course_records", "course_record_id="+getOne.get("course_record_id"));
 					if(sendList.get(0).get("select_status").equals("TRUE")) {
@@ -304,41 +354,59 @@ public class ServerThread implements Runnable{
 						break;
 					}
 					break;
-				case "Payment":					
-						ArrayList<HashMap<String,String>> cardRecordsListTuition=db.selectWhere("card_records", "card_record_id="+getOne.get("card_record_id"));
-						ArrayList<HashMap<String,String>> cardInfoListTuition=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
-						ArrayList<HashMap<String,String>> users = db.selectWhere("users", "card_id=\'"+getOne.get("card_id")+"\'");
-						System.out.println("balance :" +cardInfoListTuition.get(0).get("card_balance"));
-						System.out.println("cost :" +cardRecordsListTuition.get(0).get("card_cost"));
-						System.out.println("password :" +users.get(0).get("password"));
-						System.out.println("password form client :" +getOne.get("password"));
-						if(Float.parseFloat((cardInfoListTuition.get(0).get("card_balance")))<Float.parseFloat(cardRecordsListTuition.get(0).get("card_cost"))) {
-							send.put("result", "false");
-							send.put("reason", "Balance is unenough!");
-							soos.writeObject(send);
-							break;
-						}
-						else if(!users.get(0).get("password").equals(getOne.get("password"))){
-							send.put("result", "false");
-							send.put("reason", "Password is incorrect!");
-							soos.writeObject(send);
-							break;
-						}
-						else {
-							String balance = (Float.parseFloat((cardInfoListTuition.get(0).get("card_balance")))-Float.parseFloat(cardRecordsListTuition.get(0).get("card_cost")))+"";
-							System.out.println("balance now :" + balance);
-							db.setWhere("card_info", "card_balance ="+balance, "card_id=\'" + getOne.get("card_id")+"\'");
-							db.setWhere("card_records", "card_is_paid ="+ "TRUE", "card_record_id=" + getOne.get("card_record_id"));
-							send.put("result", "success");
-							soos.writeObject(send);
-							break;
-						}
+					//支付学杂费
+				case "Payment":			
+					//TODO 挂失
+					ArrayList<HashMap<String,String>> lost_payment = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_payment.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result", "false");
+						send.put("reason", "此卡已被挂失!");
+						soos.writeObject(send);
+						break;
+					}
+					ArrayList<HashMap<String,String>> cardRecordsListTuition=db.selectWhere("card_records", "card_record_id="+getOne.get("card_record_id"));
+					ArrayList<HashMap<String,String>> cardInfoListTuition=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					ArrayList<HashMap<String,String>> users = db.selectWhere("users", "card_id=\'"+getOne.get("card_id")+"\'");
+					System.out.println("balance :" +cardInfoListTuition.get(0).get("card_balance"));
+					System.out.println("cost :" +cardRecordsListTuition.get(0).get("card_cost"));
+					System.out.println("password :" +users.get(0).get("password"));
+					System.out.println("password form client :" +getOne.get("password"));
+					if(Float.parseFloat((cardInfoListTuition.get(0).get("card_balance")))<Float.parseFloat(cardRecordsListTuition.get(0).get("card_cost"))) {
+						send.put("result", "false");
+						send.put("reason", "余额不足!");
+						soos.writeObject(send);
+						break;
+					}
+					else if(!users.get(0).get("password").equals(getOne.get("password"))){
+						send.put("result", "false");
+						send.put("reason", "密码错误！");
+						soos.writeObject(send);
+						break;
+					}
+					else {
+						String balance = (Float.parseFloat((cardInfoListTuition.get(0).get("card_balance")))-Float.parseFloat(cardRecordsListTuition.get(0).get("card_cost")))+"";
+						System.out.println("balance now :" + balance);
+						db.setWhere("card_info", "card_balance ="+balance, "card_id=\'" + getOne.get("card_id")+"\'");
+						db.setWhere("card_records", "card_is_paid ="+ "TRUE", "card_record_id=" + getOne.get("card_record_id"));
+						send.put("result", "success");
+						soos.writeObject(send);
+						break;
+					}
+					//给一卡通充值
 				case "recharge":
+					//TODO 挂失
+					ArrayList<HashMap<String,String>> lost_recharge = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_recharge.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result", "false");
+						send.put("reason", "此卡已被挂失");
+						soos.writeObject(send);
+						break;
+					}
 					ArrayList<HashMap<String,String>> usersRecharge = db.selectWhere("users", "card_id=\'"+getOne.get("card_id")+"\'");
 					ArrayList<HashMap<String,String>> cardInfoBalance=db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(!usersRecharge.get(0).get("password").equals(getOne.get("password"))) {
 						send.put("result", "false");
-						send.put("reason", "Password is incorrect!");
+						send.put("reason", "密码不正确");
 						soos.writeObject(send);
 						break;
 					}
@@ -366,10 +434,34 @@ public class ServerThread implements Runnable{
 						soos.writeObject(use_name_to_find);
 						break;
 					}
-				case "modify_student":
-					//修改学生信息
+					//修改学生信息TODO 挂失
+				case "modify_student":					
 					int grade = Integer.parseInt(getOne.get("grade"));
 					db.setWhere("user_info", "nname =\'"+getOne.get("nname")+"\'," +"gender =\'"+getOne.get("gender")+"\',"+ "grade ="+grade +","+"major =\'"+ getOne.get("major")+"\',"+ "student_id =\'" + getOne.get("student_id")+"\'" , "user_info_id =" + getOne.get("user_info_id"));
+					break;
+					//一恰通挂失
+				case "card_lost":
+					db.setWhere("card_info", "card_is_lost=TRUE", "card_id=\'"+getOne.get("card_id")+"\'");
+					//修改密码
+				case "modify_password":
+					//TODO
+					ArrayList<HashMap<String,String>> lost_modify = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_modify.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result", "false");
+						send.put("reason", "此卡已被挂失");
+						soos.writeObject(send);
+						break;
+					}
+					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
+					if(sendList.get(0).get("password").equals(getOne.get("password"))){
+						db.setWhere("users", "password =\'" + getOne.get("newPassword"), "card_id= "+"\'"+getOne.get("card_id")+"\'");
+						send.put("result", "success");
+						soos.writeObject(send);
+						break;
+					}
+					send.put("result", "false");
+					send.put("reason", "密码不正确");
+					soos.writeObject(send);
 					break;
 				case "delete_student":
 					db.setWhere("users", "user_info_id =null", "user_info_id ="+ getOne.get("user_info_id"));
@@ -523,7 +615,7 @@ public class ServerThread implements Runnable{
 					 send.put("result","success modified");
 				     soos.writeObject(send);
 			         break;
-
+			         //修改成绩
 				case "modify_score":
 					getOne.remove("op");
 					db.setWhere("course_records", "course_exam_status=TRUE,course_score="+getOne.get("course_score"), "course_id="+getOne.get("course_id")+" AND course_student=\'"+getOne.get("course_student")+"\'");
@@ -559,8 +651,7 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-					//先将一部分信息插入数据库
-					
+					//先将一部分信息插入数据库		
 					getOne.remove("op");
 					getOne.put("item_details", null);
 					getOne.put("item_picture_url", null);
@@ -617,33 +708,30 @@ public class ServerThread implements Runnable{
 				case "GoodsPriceRevise":
 					db.setWhere("store_item_info", "item_price ="+getOne.get("item_price"), "item_name=\'" + getOne.get("item_name")+"\'");
 					break;
-				//初始化商品信息细节
+				//初始化商品信息细节随机
 				case "init_product":
 					sendList = new ArrayList<HashMap<String, String>>();
-					ArrayList<HashMap<String, String>> goood = db.selectWhere("store_item_info", "item_name =\'可乐\'");
-					sendList.add(goood.get(0));
-					ArrayList<HashMap<String, String>> goood1 = db.selectWhere("store_item_info", "item_name =\'牙刷\'");
-					sendList.add(goood1.get(0));
-					ArrayList<HashMap<String, String>> goood2 = db.selectWhere("store_item_info", "item_name =\'抽纸\'");
-					sendList.add(goood2.get(0));
-					ArrayList<HashMap<String, String>> goood3 = db.selectWhere("store_item_info", "item_name =\'薯片\'");
-					sendList.add(goood3.get(0));
+					ArrayList<HashMap<String, String>> goood=db.selectWhere("store_item_info", "item_name LIKE \'%"+""+"%\'");					
+					for(int i=0;i<4;i++) {
+						sendList.add(goood.get(number+i));//number为1-10的随机数
+					}
 					soos.writeObject(sendList);
 					break;
 				//初始化商品图片
 				case "init_pic":
+					sendList = new ArrayList<HashMap<String, String>>();
+					ArrayList<HashMap<String, String>> goodpic=db.selectWhere("store_item_info", "item_name LIKE \'%"+""+"%\'");					
 					File[] files_init = new File[4];
-					files_init[0] =new File("serverpic/可乐.jpg");
-					files_init[1] =new File("serverpic/牙刷.jpg");
-					files_init[2] =new File("serverpic/抽纸.jpg");
-					files_init[3] =new File("serverpic/薯片.jpg");
+					for(int i=0;i<4;i++) {
+						sendList.add(goodpic.get(number+i));//number为1-10的随机数
+						files_init[i] = new File(goodpic.get(number+i).get("item_picture_url"));
+					}
 					soos.writeObject(files_init);
 					soos.flush();
 					if(soos!=null)soos.close();
 					System.out.println("传完了.");  
 					if(socket!=null) socket.close();
 					break;
-					
 				//查询商品的细节
 				case "search_product":
 					sendList=db.selectWhere("store_item_info", "item_name LIKE \'%"+getOne.get("key")+"%\'");
@@ -666,7 +754,15 @@ public class ServerThread implements Runnable{
 					break;
 				//购买确认
 				case "buy":
+					//TODO 挂失确认
 					//获取当前时间
+					ArrayList<HashMap<String,String>> lost_buy = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
+					if(lost_buy.get(0).get("card_is_lost").equals("TRUE")) {
+						send.put("result", "false");
+						send.put("reason", "此卡已被挂失");
+						soos.writeObject(send);
+						break;
+					}
 					Date date =new Date();
 					SimpleDateFormat df= new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 					String sdf = df.format(date);

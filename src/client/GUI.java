@@ -157,7 +157,7 @@ public class GUI extends JFrame
 		G1.setSize((int)(width), (int)(height));
 		G1.setResizable(false);
 		G1.setUndecorated(true);
-		G1.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
+		G1.getLayeredPane().getComponent(1).setFont(new Font("黑体", Font.PLAIN, 15));
 		G1.setIconImage(new ImageIcon("logo.png").getImage());
 		Container c1 = G1.getContentPane();
 		c1.setLayout(new BoxLayout(c1,BoxLayout.Y_AXIS));
@@ -326,7 +326,7 @@ public class GUI extends JFrame
         org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
         UIManager.put("RootPane.setupButtonVisible", false); 
         //更换所有字体
-        FontUIResource fontRes = new FontUIResource(new Font("Microsoft YaHei UI", Font.PLAIN, 17));
+        FontUIResource fontRes = new FontUIResource(new Font("黑体", Font.PLAIN, 17));
         fontRes.canDisplay(ABORT);
         
         for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {  
@@ -476,6 +476,14 @@ public class GUI extends JFrame
 		    	ci =ClientInfo.getCi();//ci is used to identify user,a global variable
 		    	homeScreen.update("admin");
 		    	G1.setVisible(false);
+		    	/*框架大概是这样，前端的把这里补全
+		    	 * type = hm.get("type");
+		    	 * switch(type){
+		    	 * 	case "libAdmin":
+		    	 * 	case "storeAdmin":
+		    	 * 	case "bankAdmin":
+		    	 * }
+		    	 * */
 		    	
 		    }
 		    		    

@@ -478,7 +478,7 @@ class Bank
 				
 				
 				//@反馈部分--------
-				//...返回学费表的费用和是否缴清两列数据，显示
+				//...返回学费表的费用和 是否缴清两列数据，显示
 				rowData=new String[vaildRowCount][3];
 				for(int i=0;i<vaildRowCount;i++)
 				{
@@ -513,7 +513,7 @@ class Bank
 			//bank.t.setPreferredSize(new Dimension(450,300));
 			t.setRowHeight(40);
 			sp.setViewportView(t);
-			sp.setPreferredSize(new Dimension(450,300));
+			sp.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*2/3)));
 			payment_p2.removeAll();
 			payment_p2.add(sp);
 			payment_p2.repaint();

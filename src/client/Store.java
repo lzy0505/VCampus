@@ -140,7 +140,7 @@ public class Store {
 		searchResultPanel.setLayout(new BoxLayout(searchResultPanel,BoxLayout.Y_AXIS));
 		JPanel panel = new JPanel(new SpringLayout());
 		searchResultPanel.add(panel);
-		panel.setPreferredSize(new Dimension(800, 600));
+		panel.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*5/6)));
 		JScrollPane scrollPane = new JScrollPane(searchResultPanel);
 		
 		
@@ -308,7 +308,10 @@ public class Store {
 				 if(result == 0)
 				 {
 					 shoppingCart();
-				 }	 
+				 }else{
+					 shoppingCart();
+					 mainPanel.setSelectedIndex(1);
+				 }
 			 }			
 		});
 		mainPanel.setSelectedIndex(2);
@@ -317,7 +320,7 @@ public class Store {
 	public void shoppingCart()
 	{
 		JPanel shoppingCartPanel=(JPanel)mainPanel.getComponentAt(0);
-
+		shoppingCartPanel.removeAll();
 		
 		String [][] shopCart = new String[shoppingCartArray.size()][4];	
 		for(int i=0;i<shoppingCartArray.size();i++) {
@@ -328,16 +331,17 @@ public class Store {
 		
 		
 	
-		
-		JLabel lblProductname = new JLabel("ShoppingCart");
-		lblProductname.setForeground(UIManager.getColor("ComboBox.buttonBackground"));
-		lblProductname.setFont(new Font("Lucida Console", Font.PLAIN, 18));
-		lblProductname.setBounds(88, 14, 138, 16);
-		shoppingCartPanel.add(lblProductname);
+//		
+//		JLabel lblProductname = new JLabel("ShoppingCart");
+//		lblProductname.setForeground(UIManager.getColor("ComboBox.buttonBackground"));
+//		lblProductname.setFont(new Font("Lucida Console", Font.PLAIN, 18));
+//		lblProductname.setBounds(88, 14, 138, 16);
+//		shoppingCartPanel.add(lblProductname);
 		
 		//This panel contains the scrollPane and the TotalBar which is to summit the things you choose to buy.
 		JPanel panel = new JPanel();
-		panel.setBounds(34, 84, 831, 435);
+		panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+//		panel.setBounds(34, 84, 831, 435);
 		shoppingCartPanel.add(panel);
 	
 		//表头
@@ -353,14 +357,14 @@ public class Store {
 		table.setFillsViewportHeight(true);
 		panel.add(scrollPane);
 		
-		JPanel TotalBar = new JPanel();
-		TotalBar.setBounds(8, 321, 817, 95);
-		panel.add(TotalBar);
-		TotalBar.setLayout(null);
+		JPanel TotalBar = new JPanel(new FlowLayout());
+//		TotalBar.setBounds(8, 321, 817, 95);
+		
+//		TotalBar.setLayout(null);
 		
 		JButton btnSettle = new JButton("结账");
 //		btnSettle.setFont(new Font("Lucida Console", Font.PLAIN, 16));
-		btnSettle.setBounds(676, 29, 117, 37);
+//		btnSettle.setBounds(676, 29, 117, 37);
 		TotalBar.add(btnSettle);
 		//全选和删除暂时不写哈，只有结算的功能
 		/*JCheckBox chckbxSelectAll = new JCheckBox("Select All");
@@ -372,13 +376,13 @@ public class Store {
 		TotalBar.add(btnDelete);*/
 		
 		JLabel lblTotal = new JLabel("总价：");
-		lblTotal.setBounds(490, 29, 88, 37);
+//		lblTotal.setBounds(490, 29, 88, 37);
 		TotalBar.add(lblTotal);
 		
 		TotalPriceLabel = new JLabel("¥0.00");
 		TotalPriceLabel.setForeground(Color.RED);
 		TotalPriceLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
-		TotalPriceLabel.setBounds(561, 30, 88, 37);
+//		TotalPriceLabel.setBounds(561, 30, 88, 37);
 		TotalBar.add(TotalPriceLabel);
 
 		
@@ -405,12 +409,12 @@ public class Store {
 						}
 					}
 				}
-//				for(int i=0;i<t.getRowCount();i++)
-//				{
-//						double amountPrice = Double.parseDouble((String)t.getValueAt(i,1))
-//								*Double.parseDouble((String)t.getValueAt(i,2));
-//						t.setValueAt(""+amountPrice,i,3);						
-//				}
+				for(int i=0;i<t.getRowCount();i++)
+				{
+						double amountPrice = Double.parseDouble((String)t.getValueAt(i,1))
+								*Double.parseDouble((String)t.getValueAt(i,2));
+						t.setValueAt(""+amountPrice,i,3);						
+				}
 				
 			}
 			@Override
@@ -422,7 +426,7 @@ public class Store {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {}
 		});
-		
+		panel.add(TotalBar);
 		calListener= new calculatePriceLister();
 		table.addMouseListener(calListener);
 		calListener.mouseClicked(null);	
