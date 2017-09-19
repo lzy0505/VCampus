@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
@@ -74,37 +75,46 @@ public class UserManage {
 		informationImportLeftContentPanel.add(textStudentCardID);
 		
 		//TODO 这里写一个获取该学生信息的操作，用ClientInfo.getCi()查找
-	
-		
+		HashMap card_for_search = new HashMap<String,String>();
+		card_for_search.put("card_id", ClientInfo.getCi());
+		card_for_search.put("op", "card_search_student");
+		ArrayList<HashMap<String,String>> studentInfo =GUI.getList(card_for_search);
+		if(studentInfo.size() !=0) {		
+			textStudentNo = new JTextField(studentInfo.get(0).get("student_id"));		
+			textStudentName = new JTextField(studentInfo.get(0).get("nname"));		
+			textEnrollTime = new JTextField(studentInfo.get(0).get("grade"));
+		}else {
+			textStudentNo = new JTextField();			
+			textStudentName = new JTextField();			
+			textEnrollTime = new JTextField();
+		}
 		JLabel lblStudentNumber = new JLabel("学号",JLabel.TRAILING);
 		informationImportLeftContentPanel.add(lblStudentNumber);
-		//TODO 这里是写学号 写成JTextField("xxxxxx")  没有填空 
-		textStudentNo = new JTextField();
+		
 		lblStudentNumber.setLabelFor(textStudentNo);
 		informationImportLeftContentPanel.add(textStudentNo);
 		JLabel lblStudentname = new JLabel("姓名",JLabel.TRAILING);
 		informationImportLeftContentPanel.add(lblStudentname);
-		//TODO 这里是写姓名 写成JTextField("xxxxxx")  没有填空 
-		textStudentName = new JTextField();
+		
 		textStudentName.setColumns((int)(HomeScreen.width/100));
 		lblStudentname.setLabelFor(textStudentName);
 		informationImportLeftContentPanel.add(textStudentName);
 		JLabel lblEnrollmenttime = new JLabel("入学年份",JLabel.TRAILING);
 		informationImportRightContentPanel.add(lblEnrollmenttime);
-		//TODO 这里是写入学时间 写成JTextField("xxxxxx")  没有填空 
-		textEnrollTime = new JTextField();
-		textEnrollTime.setText("2010");
+		
+		
 		lblEnrollmenttime.setLabelFor(textEnrollTime);
 		informationImportRightContentPanel.add(textEnrollTime);
 		JLabel lblSpecialty = new JLabel("专业",JLabel.TRAILING);
 		informationImportRightContentPanel.add(lblSpecialty);
 		SpecialitySelection = new JComboBox();
 		SpecialitySelection.setModel(new DefaultComboBoxModel(majors));
-		//TODO 这里是专业   
+	
+		  
 		int index=0;
-		if(true) {//有信息
+		if(studentInfo.size() !=0) {//有信息
 			for(int i=0;i<majors.length;i++) {
-				if(true) {//专业名称=majors[i]
+				if(studentInfo.get(0).get("major").equals(majors[i])) {					
 					index=i;
 				}
 			}
@@ -121,11 +131,10 @@ public class UserManage {
 		ButtonGroup bg=new ButtonGroup();
 		bg.add(rdbtnFemale);
 		bg.add(rdbtnMale);
-		//TODO 这里是性别，没有不操作
-		if(true) {//男
+		if(studentInfo.size() !=0&&studentInfo.get(0).get("gender").equals("male")) {//男
 			rdbtnMale.setSelected(true);
 		}
-		else if(true) {//女
+		else if(studentInfo.size() !=0&&studentInfo.get(0).get("gender").equals("female")) {//女
 			rdbtnFemale.setSelected(true);
 		}
 		JPanel genderPanel=new JPanel(new FlowLayout());
@@ -198,8 +207,16 @@ public class UserManage {
 				JOptionPane.showMessageDialog(null, "新密码不一致","操作错误",JOptionPane.ERROR_MESSAGE);
 				return;
 			}else {
-				// TODO 先检查一哈旧密码是不是对的
-				//再把newPwdText.getText()改成新密码
+				HashMap<String, String> changePassword = new HashMap<>();
+				changePassword.put("op", "modify_password");
+				changePassword.put("card_id", ClientInfo.getCi());
+				changePassword.put("newPassword", newPwdText.getText());
+				changePassword = GUI.getOne(changePassword);
+				if(changePassword.get("result").equals("success")) {
+					JOptionPane.showMessageDialog(null,"修改成功！");
+				}else {
+					JOptionPane.showMessageDialog(null,changePassword.get("reason"),"修改失败！",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			
 		}

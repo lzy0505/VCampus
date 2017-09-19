@@ -227,7 +227,6 @@ public class Registration {
 			//find whether there is a person searched in the database,if yes,
 			//give value to the array information[][]
 			////if search successfully,show the searchFrame
-			//TODO
 			HashMap<String,String> hm= new HashMap<>();
 			ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
 			hm.put("student_id", studentnumber.getText());
@@ -279,7 +278,6 @@ public class Registration {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 //			System.out.println("mouseClicked");
-			// TODO 自动生成的方法存根
 			for(int row=0,colModify=5,colDelete=6;row<informationQueryTable.getRowCount();row++)
 			{	
 				if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colModify)
@@ -304,7 +302,6 @@ public class Registration {
 						hm.put("user_info_id", user_info_id[row]);
 						GUI.send(hm);
 					    //Modify the information of student[row] in the database
-						//TODO
 						JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
 					}
 				}

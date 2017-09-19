@@ -324,7 +324,6 @@ public class StoreManage {
 	{
      	@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			//这一块真的不会弄
 			//传递商品名 t_goodsName.getText()，数量t_amount.getText()，单价t_price.getText()
      		//和图片,图片就是ImageIcon型变量imageIcon_pass，大小96*96
@@ -483,7 +482,6 @@ public class StoreManage {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
 			System.out.println("okFile");
 			fileDialog.setVisible(true);
 			path=fileDialog.getDirectory()+fileDialog.getFile();//获得路径

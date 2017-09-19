@@ -452,6 +452,12 @@ public class ServerThread implements Runnable{
 						soos.writeObject(use_name_to_find);
 						break;
 					}
+					//通过一卡通号寻找学生
+				case "card_search_student":
+					ArrayList<HashMap<String,String>> use_card_id_to_find = db.selectWhere("users", "card_id =\'" + getOne.get("card_id")+"\'");
+					sendList=db.selectWhere("user_info", "user_info_id ="+use_card_id_to_find.get(0).get("user_info_id"));
+					soos.writeObject(sendList);
+					break;
 					//修改学生信息TODO 挂失
 				case "modify_student":					
 					int grade = Integer.parseInt(getOne.get("grade"));
@@ -469,17 +475,13 @@ public class ServerThread implements Runnable{
 						soos.writeObject(send);
 						break;
 					}
-					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");
-					if(sendList.get(0).get("password").equals(getOne.get("password"))){
-						db.setWhere("users", "password =\'" + getOne.get("newPassword"), "card_id= "+"\'"+getOne.get("card_id")+"\'");
-						send.put("result", "success");
-						soos.writeObject(send);
-						break;
-					}
-					send.put("result", "false");
-					send.put("reason", "密码不正确");
+					sendList=db.selectWhere("users", "card_id = "+"\'"+getOne.get("card_id")+"\'");				
+					db.setWhere("users", "password =\'" + getOne.get("newPassword")+"\'", "card_id= "+"\'"+getOne.get("card_id")+"\'");
+					send.put("result", "success");
 					soos.writeObject(send);
 					break;
+					
+					
 				case "delete_student":
 					db.setWhere("users", "user_info_id =null", "user_info_id ="+ getOne.get("user_info_id"));
 					db.deleteWhere("user_info", "student_id =\'"+ getOne.get("student_id")+"\'");				
@@ -487,6 +489,12 @@ public class ServerThread implements Runnable{
 				case "import_student":
 					String card_id= getOne.get("card_id");
 					String student_id = getOne.get("student_id");
+					ArrayList<HashMap<String,String>> check_has = db.selectWhere("user_info", "student_id ="+ getOne.get("student_id"));
+					if(check_has.size()!=0) {
+						int grade1 = Integer.parseInt(getOne.get("grade"));
+						db.setWhere("user_info", "nname ="+getOne.get("nname")+"," +"gender ="+getOne.get("gender")+","+ "grade ="+grade1 +","+"major ="+ getOne.get("major")+","+ "student_id =" + getOne.get("student_id"),  "student_id =" + getOne.get("student_id"));
+						break;
+					}
 					System.out.println("card_id :"+getOne.get("card_id"));
 					getOne.remove("op");
 					getOne.remove("card_id");
@@ -772,7 +780,6 @@ public class ServerThread implements Runnable{
 					break;
 				//购买确认
 				case "buy":
-					//TODO 挂失确认
 					//获取当前时间
 					ArrayList<HashMap<String,String>> lost_buy = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
 					if(lost_buy.get(0).get("card_is_lost").equals("TRUE")) {
@@ -831,13 +838,13 @@ public class ServerThread implements Runnable{
 				
 				}
 				catch (EOFException e) {
-					// TODO: handle exception
+			
 				}
 			catch (IOException e) {
-				// TODO 自动生成的 catch 块
+		
 //				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO 自动生成的 catch 块
+			
 				e.printStackTrace();
 			}
 			
