@@ -60,6 +60,7 @@ public class Library {
 	    JTable table_return;//显示需要归还的书的表格
 	    JScrollPane sp_return;
 	    JButton b_return;//还书按钮
+	    JButton b_reborrow;
 	    
 	public Library(HomeScreen hs)
 	{
@@ -117,7 +118,9 @@ public class Library {
 //	    l_return.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
 //	    l_return.setFont(new Font);//“你已借图书有”的按钮	   
 	    b_return=new JButton("还书");//还书按钮
+	    b_reborrow=new JButton("续借");
 	    return_p1.add(b_return);
+	    return_p1.add(b_reborrow);
 //	    p_return.add(l_return);
 	    p_return.add(return_p2);
 	    p_return.add(return_p1);
@@ -125,13 +128,13 @@ public class Library {
 	    columnNames_Return[0]="书名";
 	    columnNames_Return[1]="作者";
 	    columnNames_Return[2]="出版社";
-	    columnNames_Return[3]="借阅时间";
+	    columnNames_Return[3]="还书日期";
 	    
 	    
 	    //将借书和还书面板加入tabbed中
 	    tab_library=new JTabbedPane();
 	    tab_library.addTab("查询与借阅",p_borrow);
-	    tab_library.addTab("还书",p_return);
+	    tab_library.addTab("还书与续借",p_return);
 //	    tab_library.setPreferredSize(new Dimension(600,500));
 	    p_library=new JPanel(); //顶层面板
 //	    p_library.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*4/5)));
@@ -148,17 +151,10 @@ public class Library {
 		b_borrow.addActionListener(new ActionLis_Borrow());
 		tab_library.addChangeListener(new ChangeLis_Tab());
 		b_return.addActionListener(new ActionLis_Return());//还书按钮
+		b_reborrow.addActionListener(new ActionLis_ReBorrow());
 	}	
 	
-	//重绘函数
 
-	
-//	void update(String card_id)
-//	{
-//		ci=card_id;
-//	
-//	}
-//	
 	
 
 	//各种消息响应函数及中间函数
@@ -167,7 +163,7 @@ public class Library {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			
 			
 			HashMap<String,String> hmlib=null;
 			boolean flag=false;
@@ -204,13 +200,51 @@ public class Library {
 
 	}
 	
-	
+	class ActionLis_ReBorrow implements ActionListener
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			HashMap<String,String> hmlib=null;
+			boolean flag=false;
+			HashMap<String,String> hmbook=new HashMap<String,String>();
+			for (int i = 0;i < table_return.getRowCount();i++) {
+				 hmlib=new HashMap<String,String>();
+				 if(has(table_return.getSelectedRows(),table_return.getSelectedRowCount(),i)) {
+					flag=true;
+					// TODO 续借响应函数 这个地方稍微改一哈，和还书代码基本一样撒
+				 	hmlib.put("book_name", rowData_Return[i][0]);
+				 	hmlib.put("op", "return");
+				 	hmlib.put("card_id", ci);
+				 	hmlib.put("book_id", book_id[i]);
+				 	hmlib=GUI.getOne(hmlib);
+				 	hmbook.put(hmlib.get("book_name"),hmlib.get("result"));
+				 }
+			}
+			String[] booknames=new String[hmbook.size()];
+			booknames= hmbook.keySet().toArray(booknames);
+			String result="";
+			for(int i=0;i<hmbook.size();i++){
+				result+=(booknames[i]+ "续借"+hmbook.get(booknames[i])+"！\n");
+			}
+			if(flag)JOptionPane.showMessageDialog(null,result,"操作结果",JOptionPane.INFORMATION_MESSAGE);
+			
+			//刷新操作,刷新两个表格。
+			flushFlag=true;
+			new ChangeLis_Tab().stateChanged(null);
+			new ActionLis_Query().actionPerformed(null);
+			flushFlag=false;
+			
+		}
+		
+
+	}
 	
 	class ChangeLis_Tab implements ChangeListener
 	{
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			// TODO Auto-generated method stub
+			
 			if(flushFlag==true)
 				operation();
 			else if(flushFlag==false){
@@ -243,15 +277,12 @@ public class Library {
 				bookNameR[i]=alist.get(i).get("book_name");
 				authorR[i]=alist.get(i).get("author");
 				publisherR[i]=alist.get(i).get("publisher");
+//				TODO 这里改成借阅日期
 				timeR[i]=alist.get(i).get("borrow_date");
 				book_id[i] = alist.get(i).get("book_id");
 			}
-		 	
-		
-			   int amount=alist.size();
-			  
-			   
-				if(alist.size()>=1)
+				   int amount=alist.size();
+			 if(alist.size()>=1)
 				{   return_p2.setVisible(true);
 				    b_return.setEnabled(true);
 				   rowData_Return=new String[amount][4];
@@ -375,9 +406,7 @@ public class Library {
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
-				//SearchUnSuccessful.setVisible(true);
-				//show the GUI of searching unsuccessfully
-				//TODO
+
 				JOptionPane.showMessageDialog(null,"未搜索到图书",
 						"操作结果",JOptionPane.WARNING_MESSAGE);							  
 			}
