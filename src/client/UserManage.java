@@ -39,6 +39,11 @@ public class UserManage {
 	private JTextField textStudentNo;
 	private JTextField textStudentName;
 	private JTextField textStudentCardID;
+	JTextField confirmOldPwdText;
+	JTextField newPwdText ;
+	JTextField confirmNewPwdText;
+	
+	
 	JRadioButton rdbtnFemale;
 	JRadioButton rdbtnMale;
 	JTextField textEnrollTime;
@@ -149,12 +154,58 @@ public class UserManage {
 		btnButton.addActionListener(new SubmitLister());
 		btnCancel.addActionListener(new CancelLister());
  		
-		tabPanel.addTab("修改密码", null, pwdChangePanel, null);
+		pwdChangePanel.setLayout(new SpringLayout());
+		
+		JLabel confirmOldPwdLabel = new JLabel("确认当前密码",JLabel.RIGHT);
+		pwdChangePanel.add(confirmOldPwdLabel);
 
+		confirmOldPwdText = new JTextField();
+		confirmOldPwdText.setColumns(20);
+		confirmOldPwdLabel.setLabelFor(confirmOldPwdText);
+		pwdChangePanel.add(confirmOldPwdText);
+		JLabel newPwdLabel = new JLabel("新密码",JLabel.RIGHT);
+		pwdChangePanel.add(newPwdLabel);
+		newPwdText = new JTextField();
+		newPwdLabel.setLabelFor(newPwdText);
+		pwdChangePanel.add(newPwdText);
+		confirmNewPwdText = new JTextField();
+		JLabel confirmNewPwdLabel = new JLabel("确认新密码",JLabel.RIGHT);
+		pwdChangePanel.add(confirmNewPwdLabel);
+		confirmNewPwdLabel.setLabelFor(confirmNewPwdText);
+		pwdChangePanel.add(confirmNewPwdText);
+		JButton changePwdButton=new JButton("修改密码");
+		
+		
+		pwdChangePanel.add(new JLabel());
+		pwdChangePanel.add(changePwdButton);
+		changePwdButton.addActionListener(new ChangeListener());
+		
+		SpringUtilities.makeCompactGrid(pwdChangePanel, 4, 2, 0, 50, 10, 50);
+		JPanel middle = new JPanel();
+		middle.setMinimumSize(new Dimension((int)HomeScreen.width*2/3,(int)HomeScreen.height*2/3));
+		middle.add(pwdChangePanel);
+		tabPanel.addTab("修改密码", null, middle, null);
+		
 		
 	}
 	
 	
+	class ChangeListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(!newPwdText.getText().equals(confirmNewPwdText.getText())) {
+				JOptionPane.showMessageDialog(null, "新密码不一致","操作错误",JOptionPane.ERROR_MESSAGE);
+				return;
+			}else {
+				// TODO 先检查一哈旧密码是不是对的
+				//再把newPwdText.getText()改成新密码
+			}
+			
+		}
+		
+	}
+
 	
 	class SubmitLister implements ActionListener
 	{
@@ -183,7 +234,6 @@ public class UserManage {
 	class CancelLister implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
-			
 			textStudentNo.setText(null);
 			textStudentName.setText(null);
 			textEnrollTime.setText(null);
