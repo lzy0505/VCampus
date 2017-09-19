@@ -31,7 +31,7 @@ class HomeScreen
 	//需要传参的变量
 	    Bank bank;
 	    Library library;//图书馆
-	    StudentAffairs studentAffairs;
+
 	    Registration registration;
 	    HSAdmin hsAdmin;
 	    Store store;
@@ -40,6 +40,8 @@ class HomeScreen
 		JTabbedPane p_HomeScreen; //主面板内容容器
 
 		int preSecTab=0;
+		
+		HashMap<String,String> isCompleted=null;
 
 	 	 
 	//传参并且启用监听函数
@@ -58,7 +60,7 @@ class HomeScreen
 
 				@Override
 				public void stateChanged(ChangeEvent arg0) {
-					if(p_HomeScreen.getSelectedIndex()==4) {
+					if(p_HomeScreen.getSelectedIndex()==5) {
 						int r=JOptionPane.showConfirmDialog(G5, "是否确认登出", "操作确认",JOptionPane.WARNING_MESSAGE );
 						if(r==0) {
 							ClientInfo.setCi("");
@@ -77,6 +79,7 @@ class HomeScreen
 		 	p_HomeScreen.setPreferredSize(new Dimension((int) (width*0.97),  (int) (height)-50));
 		 	JPanel backGround=new JPanel();
 		 	
+		 	
 			  G5.setLocation(GUI.getWidth(G5.getWidth()),GUI.getHeight(G5.getHeight()));
 			  G5.add(p_HomeScreen);	
 			  ci=ClientInfo.getCi();
@@ -90,12 +93,40 @@ class HomeScreen
 			 store=new Store();
 			 p_HomeScreen.addTab("商   店",new ImageIcon("store.png"),store.mainPanel);
 			 if(identity.equals("student")) {
-				 studentAffairs=new StudentAffairs(this);
-				 p_HomeScreen.addTab("教   务",new ImageIcon("courses.png"),studentAffairs.tabbedPane);
+				StudentAffairs studentAffairs=new StudentAffairs(this);
+				UserManage userManage=new UserManage(this);
+				p_HomeScreen.addTab("教   务",new ImageIcon("courses.png"),studentAffairs.tabbedPane);
+				p_HomeScreen.addTab("信息管理",userManage.tabPanel);
+				isCompleted=new HashMap<String,String>();
+				isCompleted.put("op", "isCompleted");
+				isCompleted.put("card_id",ClientInfo.getCi());
+				isCompleted=GUI.getOne(isCompleted);
+				p_HomeScreen.addChangeListener(new ChangeListener() {
+
+					@Override
+					public void stateChanged(ChangeEvent arg0) {
+						isCompleted=new HashMap<String,String>();
+						isCompleted.put("op", "isCompleted");
+						isCompleted.put("card_id",ClientInfo.getCi());
+						isCompleted=GUI.getOne(isCompleted);
+						if(isCompleted.get("result").equals("false")) {
+							p_HomeScreen.setEnabledAt(3, false);
+						}else {
+							p_HomeScreen.setEnabledAt(3, true);
+						}
+					}
+				});
+				if(isCompleted.get("result").equals("false")) {
+					p_HomeScreen.setEnabledAt(3, false);
+					JOptionPane.showMessageDialog(null, "请先录入个人信息","操作提示",JOptionPane.ERROR_MESSAGE);
+				}else {
+					p_HomeScreen.setEnabledAt(3, true);
+				}
 			 }else {
 				 registration=new Registration(new String[][] {},this);
 				 p_HomeScreen.addTab("教   务",new ImageIcon("studentMessage.png"),registration.tabbedPane);
 			 }
+			 
 			 p_HomeScreen.addTab("登    出",null);
 			 backGround.add(p_HomeScreen);
 			 G5.add(backGround);

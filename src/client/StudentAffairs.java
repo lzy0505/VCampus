@@ -61,18 +61,6 @@ import java.net.Socket;
  	private ArrayList<HashMap<String,String>> csList =null;
  	private ArrayList<HashMap<String,String>> coList =new ArrayList<HashMap<String,String>>();
  	
- 	
-	private JTextField textStudentNo;
-	private JTextField textStudentName;
-	private JTextField textStudentCardID;
-	JRadioButton rdbtnFemale;
-	JRadioButton rdbtnMale;
-	JTextField textEnrollTime;
-	JComboBox SpecialitySelection;
-	private String[] majors = {"建筑学院", "机械工程学院", "能源与环境学院", "信息科学与工程学院", 
-				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
-			"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
-			"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
  	JFrame courseDetails=null;
  	//tab表中的内容
  	Object[][] selectCourseTableContent=null;
@@ -90,7 +78,7 @@ import java.net.Socket;
 	public JTabbedPane tabbedPane=null;
 	//已选课的信息（用于disable button）
 	HashMap<String,String> selectedCourse=null;
-	HashMap<String,String>isCompleted=null;
+
 	
 
  	
@@ -114,90 +102,7 @@ import java.net.Socket;
 
  		
  		
-    	//The following code is about the "Information Import" bar.
-		JPanel informationImportPanel = new JPanel();
-		informationImportPanel.setLayout(new BoxLayout(informationImportPanel,BoxLayout.Y_AXIS));
-		tabbedPane.addTab("信息录入", null, informationImportPanel, null);
-		
-
-		JPanel informationImportContentPanel =new JPanel();
-		informationImportContentPanel.setLayout(new FlowLayout(50));
-		
-		JPanel informationImportLeftContentPanel =new JPanel(new SpringLayout());
-		JPanel informationImportRightContentPanel =new JPanel(new SpringLayout());
-		
-		JLabel lblStudentCardID = new JLabel("一卡通号",JLabel.TRAILING);
-		informationImportLeftContentPanel.add(lblStudentCardID);
-		textStudentCardID = new JTextField(ClientInfo.getCi());
-		textStudentCardID.setEnabled(false);
-		lblStudentCardID.setLabelFor(textStudentCardID);
-		informationImportLeftContentPanel.add(textStudentCardID);
-		
-		JLabel lblStudentNumber = new JLabel("学号",JLabel.TRAILING);
-		informationImportLeftContentPanel.add(lblStudentNumber);
-		textStudentNo = new JTextField();
-
-		lblStudentNumber.setLabelFor(textStudentNo);
-		informationImportLeftContentPanel.add(textStudentNo);
-		
-		JLabel lblStudentname = new JLabel("姓名",JLabel.TRAILING);
-		informationImportLeftContentPanel.add(lblStudentname);
-		textStudentName = new JTextField();
-		textStudentName.setColumns((int)(HomeScreen.width/100));
-		lblStudentname.setLabelFor(textStudentName);
-		informationImportLeftContentPanel.add(textStudentName);
-		
-		JLabel lblEnrollmenttime = new JLabel("入学年份",JLabel.TRAILING);
-		informationImportRightContentPanel.add(lblEnrollmenttime);
-		textEnrollTime = new JTextField();
-		textEnrollTime.setText("2010");
-		lblEnrollmenttime.setLabelFor(textEnrollTime);
-		informationImportRightContentPanel.add(textEnrollTime);
-		
-		JLabel lblSpecialty = new JLabel("专业",JLabel.TRAILING);
-		informationImportRightContentPanel.add(lblSpecialty);
-		SpecialitySelection = new JComboBox();
-		SpecialitySelection.setModel(new DefaultComboBoxModel(majors));
-		SpecialitySelection.setMaximumRowCount(10);
-		lblSpecialty.setLabelFor(SpecialitySelection);
-		informationImportRightContentPanel.add(SpecialitySelection);
-		
-		JLabel lblSex = new JLabel("性别",JLabel.TRAILING);
-		informationImportRightContentPanel.add(lblSex);
-		rdbtnFemale = new JRadioButton("女");
-		rdbtnMale = new JRadioButton("男");
-		ButtonGroup bg=new ButtonGroup();
-		bg.add(rdbtnFemale);
-		bg.add(rdbtnMale);
-		JPanel genderPanel=new JPanel(new FlowLayout());
-		genderPanel.add(rdbtnFemale);
-		genderPanel.add(rdbtnMale);
-		lblSex.setLabelFor(genderPanel);
-		informationImportRightContentPanel.add(genderPanel);
-
-		SpringUtilities.makeCompactGrid(informationImportLeftContentPanel, 3, 2, (int)(HomeScreen.width/8), (int)(HomeScreen.height/8),  (int)(HomeScreen.width/80), (int)(HomeScreen.height/10));
-		SpringUtilities.makeCompactGrid(informationImportRightContentPanel, 3, 2, (int)(HomeScreen.width/8), (int)(HomeScreen.height/8),  (int)(HomeScreen.width/80), (int)(HomeScreen.height/10));
-		informationImportContentPanel.add(informationImportLeftContentPanel);
-		informationImportContentPanel.add(informationImportRightContentPanel);
-
-		
-		
-		
-		JPanel informationImportActionBar = new JPanel();
-		informationImportActionBar.setLayout(new FlowLayout());
-		
-		JButton btnButton = new JButton("提交");
-		informationImportActionBar.add(btnButton);
-		JButton btnCancel = new JButton("清空");
-		informationImportActionBar.add(btnCancel);
-		informationImportActionBar.setPreferredSize(new Dimension(200,100));
-		
-		
-		informationImportPanel.add(informationImportContentPanel);
-		informationImportPanel.add(informationImportActionBar);
-		btnButton.addActionListener(new SubmitLister());
-		btnCancel.addActionListener(new CancelLister());
- 		
+    	
  		updateTableContent();
  		
  		DefaultTableModel selectCourseTableModel= new DefaultTableModel();
@@ -241,18 +146,7 @@ import java.net.Socket;
  		scoreQueryPane.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*5/6)));
  		test3.add(scoreQueryPane);
  		tabbedPane.addTab("成绩查询", null, test3, null); 		
-  		
-
-		if(isCompleted.get("result").equals("false")) {
-			tabbedPane.setEnabledAt(1, false);
-			tabbedPane.setEnabledAt(2, false);
-			tabbedPane.setEnabledAt(3, false);
-		}else {
-			tabbedPane.remove(0);
-			tabbedPane.setEnabledAt(0, true);
-			tabbedPane.setEnabledAt(1, true);
-			tabbedPane.setEnabledAt(2, true);
-		}
+  				
 		tabbedPane.addChangeListener(new changeTabListener());
 
  	}
@@ -285,10 +179,6 @@ import java.net.Socket;
  	}
 	
 	public void updateTableContent() {
-		isCompleted=new HashMap<String,String>();
-		isCompleted.put("op", "isCompleted");
-		isCompleted.put("card_id",ClientInfo.getCi());
-		isCompleted=GUI.getOne(isCompleted);
  		HashMap<String,String> hm = new HashMap<String,String>();
 	 	hm.put("card_id", ClientInfo.getCi());
 	 	hm.put("op", "search_course");
@@ -489,57 +379,7 @@ import java.net.Socket;
 		}
 	}
 	
-	class SubmitLister implements ActionListener
-	{
-
-		public void actionPerformed(ActionEvent e) {
-			//put textStudentNo.getText(),textStudentName.getText(),sex,textEnrollTime.getText(),
-			//SpecialitySelection.getSelectedItem() into the database
-			HashMap<String,String> hm = new HashMap<String,String>();
-			hm.put("op","import_student");
-			hm.put("nname", "\'"+textStudentName.getText()+"\'");
-			hm.put("student_id","\'"+ textStudentNo.getText()+"\'");
-			if(rdbtnMale.isSelected())hm.put("gender", "\'male\'");
-			else if(rdbtnFemale.isSelected()) hm.put("gender", "\'female\'");
-			else {
-				JOptionPane.showMessageDialog(null, "ERROR!","Choose the gender",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			hm.put("grade", textEnrollTime.getText());
-			hm.put("card_id", textStudentCardID.getText());
-			hm.put("major", "\'"+majors[SpecialitySelection.getSelectedIndex()]+"\'");
-			GUI.send(hm);
-			JOptionPane.showMessageDialog(null, "Submit successfully!","Submit Successfully",JOptionPane.PLAIN_MESSAGE);
-			
-			isCompleted=new HashMap<String,String>();
-			isCompleted.put("op", "isCompleted");
-			isCompleted.put("card_id",ClientInfo.getCi());
-			isCompleted=GUI.getOne(isCompleted);
-	 		if(isCompleted.get("result").equals("false")) {
-				tabbedPane.setEnabledAt(1, false);
-				tabbedPane.setEnabledAt(2, false);
-				tabbedPane.setEnabledAt(3, false);
-			}else {
-				tabbedPane.remove(0);
-				tabbedPane.setEnabledAt(1, true);
-				tabbedPane.setEnabledAt(2, true);
-				tabbedPane.setEnabledAt(0, true);
-			}
-	 		
-			
-		}	
-	}
 	
-	class CancelLister implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e) {
-
-			textStudentNo.setText(null);
-			textStudentName.setText(null);
-			textEnrollTime.setText(null);
-		}
-		
-	}
 	class changeTabListener implements ChangeListener{
 
 		@Override
