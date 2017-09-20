@@ -38,6 +38,7 @@ public class StoreManage {
 	JLabel l_showImage;//用来显示图片的Label
 	String path;//保存文件地址
 	JButton b_confirmAdd;//确认添加按钮
+	JComboBox<String> cata; 
 	
 
 	
@@ -84,10 +85,10 @@ public class StoreManage {
 		addGoods_p2=new JPanel();
 		addGoods_p3=new JPanel();
 		addGoods_p4=new JPanel();
-		l_add_goodsName=new JLabel("商品名称:");//商品名标签
-		l_amount=new JLabel("数量:");//商品数量
-		l_price=new JLabel("单价:");//商品价格
-		l_addPicture=new JLabel("添加图片:");//增加商品图片
+		l_add_goodsName=new JLabel("商品名称");//商品名标签
+		l_amount=new JLabel("数量");//商品数量
+		l_price=new JLabel("单价");//商品价格
+		l_addPicture=new JLabel("添加图片");//增加商品图片
 		t_goodsName=new JTextField();
 		t_goodsName.setPreferredSize(new Dimension(270,30));
 		t_amount=new JTextField();
@@ -101,8 +102,19 @@ public class StoreManage {
 	    addGoods_p1.add(t_goodsName);
 	    addGoods_p1.add(l_amount);
 	    addGoods_p1.add(t_amount);
-	    addGoods_p1.add(l_price);
-	    addGoods_p1.add(t_price);
+	    
+	    
+	    
+	    JPanel addGoods_p5=new JPanel();
+	    addGoods_p5.add(new JLabel("商品类别"));
+	    cata=new JComboBox<String>(new String[] {"食品","电子产品","日用品","饮料"});
+	    cata.setPreferredSize(new Dimension(270,30));
+	    addGoods_p5.add(cata);
+	    
+	    addGoods_p5.add(l_price);
+	    addGoods_p5.add(t_price);
+	    
+
 	    Component[] cArray=addGoods_p1.getComponents();
 		for(int j=0;j<addGoods_p1.getComponentCount();j++){
 			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
@@ -111,6 +123,10 @@ public class StoreManage {
 	    addGoods_p2.add(b_openFileManagement);
 	    cArray=addGoods_p2.getComponents();
 		for(int j=0;j<addGoods_p2.getComponentCount();j++){
+			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
+		}
+		cArray=addGoods_p5.getComponents();
+		for(int j=0;j<addGoods_p5.getComponentCount();j++){
 			cArray[j].setFont(new Font("黑体", Font.PLAIN, HSAdmin.fontsize));
 		}
 		addGoods_p4.add(b_confirmAdd);
@@ -122,6 +138,7 @@ public class StoreManage {
 		p_addGoods.add(new JLabel(" "));
 		p_addGoods.add(new JLabel(" "));
 		p_addGoods.add(addGoods_p1);
+		p_addGoods.add(addGoods_p5);
 		p_addGoods.add(addGoods_p2);
 		p_addGoods.add(addGoods_p3);
 		p_addGoods.add(addGoods_p4);
@@ -196,15 +213,7 @@ public class StoreManage {
         p_delete.add(delete_p2);
         p_delete.add(delete_p3);
         
-        
-        
-        
-		//顶层JTabbed面板
-//		tab=new JTabbedPane();	
-//		tab.addTab("添加新商品", p_addGoods);
-//		tab.addTab("删除商品",p_delete);
-//		tab.addTab("修改库存数量或价格",p_revise);
-	
+
 		addLis();//增加消息响应
 			
 	}
@@ -306,14 +315,7 @@ public class StoreManage {
 			delete_p2.repaint();
 			delete_p2.revalidate();
 	
-			
 		}
-		
-		
-		
-		
-		
-		
 	}
 	
 	
@@ -324,13 +326,14 @@ public class StoreManage {
 	{
      	@Override
 		public void actionPerformed(ActionEvent e) {
-			//这一块真的不会弄
 			//传递商品名 t_goodsName.getText()，数量t_amount.getText()，单价t_price.getText()
      		//和图片,图片就是ImageIcon型变量imageIcon_pass，大小96*96
      		HashMap<String, String> up_load = new HashMap<>();
      		up_load.put("item_name",t_goodsName.getText());
      		up_load.put("item_stock", t_amount.getText());
      		up_load.put("item_price", t_price.getText());
+     		//TODO 这里加一个商品类别  cata.getItemAt(cata.getSelectedIndex());
+     		 
      		up_load.put("item_picture_url", path);
      		up_load = GUI.upLoad(up_load);
 			if(up_load.get("result").equals("success")) {
@@ -358,7 +361,7 @@ public class StoreManage {
 			//如果啥都没选，报警
 			if(selectedRow==-1)
 			{
-				JOptionPane.showMessageDialog(null,"You haven't Selected Any Row !","Warnning",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null,"请选择需要修改的商品","操作提示",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 			

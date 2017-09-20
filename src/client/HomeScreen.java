@@ -56,25 +56,6 @@ class HomeScreen
 			G5.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.BOLD, 15));
 		 	G5.setResizable(false);
 		 	p_HomeScreen=new JTabbedPane();
-		 	p_HomeScreen.addChangeListener(new ChangeListener(){
-
-				@Override
-				public void stateChanged(ChangeEvent arg0) {
-					if(p_HomeScreen.getSelectedIndex()==5) {
-						int r=JOptionPane.showConfirmDialog(G5, "是否确认登出", "操作确认",JOptionPane.WARNING_MESSAGE );
-						if(r==0) {
-							ClientInfo.setCi("");
-							G5.setVisible(false);
-							GUI.G1.setVisible(true);
-						}else {
-							p_HomeScreen.setSelectedIndex(preSecTab);
-						}
-					}else {
-						preSecTab=p_HomeScreen.getSelectedIndex();
-					}
-				}
-		 		
-		 	});
 		 	p_HomeScreen.setTabPlacement(JTabbedPane.LEFT);
 		 	p_HomeScreen.setPreferredSize(new Dimension((int) (width*0.97),  (int) (height)-50));
 		 	JPanel backGround=new JPanel();
@@ -85,7 +66,7 @@ class HomeScreen
 			  ci=ClientInfo.getCi();
 			 library=new Library(this);
 	    	 library.init();
-	    	 p_HomeScreen.addTab("图书馆",new ImageIcon("library.png"),library.tab_library);
+	    	 p_HomeScreen.addTab("图 书 馆",new ImageIcon("library.png"),library.tab_library);
 	    	 
 	    	 bank=new Bank(this);
 			 bank.init();
@@ -96,7 +77,7 @@ class HomeScreen
 				StudentAffairs studentAffairs=new StudentAffairs(this);
 				UserManage userManage=new UserManage(this);
 				p_HomeScreen.addTab("教   务",new ImageIcon("courses.png"),studentAffairs.tabbedPane);
-				p_HomeScreen.addTab("信息管理",userManage.tabPanel);
+				p_HomeScreen.addTab("信息管理",new ImageIcon("manage.png"),userManage.tabPanel);
 				isCompleted=new HashMap<String,String>();
 				isCompleted.put("op", "isCompleted");
 				isCompleted.put("card_id",ClientInfo.getCi());
@@ -122,9 +103,49 @@ class HomeScreen
 				}else {
 					p_HomeScreen.setEnabledAt(3, true);
 				}
+				p_HomeScreen.addChangeListener(new ChangeListener(){
+
+					@Override
+					public void stateChanged(ChangeEvent arg0) {
+						if(p_HomeScreen.getSelectedIndex()==5) {
+							int r=JOptionPane.showConfirmDialog(G5, "是否确认登出", "操作确认",JOptionPane.WARNING_MESSAGE );
+							if(r==0) {
+								ClientInfo.setCi("");
+								G5.setVisible(false);
+								GUI.G1.setVisible(true);
+							}else {
+								p_HomeScreen.setSelectedIndex(preSecTab);
+							}
+						}else {
+							preSecTab=p_HomeScreen.getSelectedIndex();
+						}
+					}
+			 		
+			 	});
+				
+				
 			 }else {
 				 registration=new Registration(new String[][] {},this);
 				 p_HomeScreen.addTab("教   务",new ImageIcon("studentMessage.png"),registration.tabbedPane);
+				 p_HomeScreen.addChangeListener(new ChangeListener(){
+
+						@Override
+						public void stateChanged(ChangeEvent arg0) {
+							if(p_HomeScreen.getSelectedIndex()==4) {
+								int r=JOptionPane.showConfirmDialog(G5, "是否确认登出", "操作确认",JOptionPane.WARNING_MESSAGE );
+								if(r==0) {
+									ClientInfo.setCi("");
+									G5.setVisible(false);
+									GUI.G1.setVisible(true);
+								}else {
+									p_HomeScreen.setSelectedIndex(preSecTab);
+								}
+							}else {
+								preSecTab=p_HomeScreen.getSelectedIndex();
+							}
+						}
+				 		
+				 	});
 			 }
 			 
 			 p_HomeScreen.addTab("登    出",null);

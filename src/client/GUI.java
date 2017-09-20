@@ -19,7 +19,7 @@ import java.util.HashMap;
 //implements ActionListener
 public class GUI extends JFrame 
 {
-	final static private double RATIO=0.33;
+//	final static private double RATIO=0.33;
 	
 	private Client client;
 	private String ci; //card_id
@@ -148,20 +148,38 @@ public class GUI extends JFrame
 	public GUI(String title1,String title2,String title3)
 	{
 		//the part of G1
-		double width=Toolkit.getDefaultToolkit().getScreenSize().getWidth()*RATIO;
-		double height=Toolkit.getDefaultToolkit().getScreenSize().getHeight()*RATIO;
+		double width=Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.25;
+		double height=Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.40;
 		G1 = new JFrame(title1);
 		G1.setSize((int)(width), (int)(height));
 		G1.setResizable(false);
 		G1.setUndecorated(true);
 		G1.getLayeredPane().getComponent(1).setFont(new Font("黑体", Font.PLAIN, 15));
 		G1.setIconImage(new ImageIcon("logo.png").getImage());
-		Container c1 = G1.getContentPane();
+		
+		JPanel c1 =(JPanel) G1.getContentPane();
 		c1.setLayout(new BoxLayout(c1,BoxLayout.Y_AXIS));
 		
 		
+//		c1.setOpaque(false);
+//
+//        JLabel label = new JLabel();
+//        ImageIcon icon = new ImageIcon("bg.jpg");
+//                
+//        label.setIcon(icon);
+//        label.setBounds(0, 0, icon.getIconWidth(),icon.getIconHeight());
+//                
+//        int w = G1.getLayeredPane().getWidth();
+//        int h =G1.getLayeredPane().getHeight();
+//        Image img = icon.getImage().getScaledInstance(w, h, Image.SCALE_FAST);
+//        label.setIcon(new ImageIcon(img));
+//        label.setBounds(0, 0, w,h);
+//        G1.getLayeredPane().add(label,new Integer(Integer.MIN_VALUE));
+
 		p1 = new JPanel();
+		p1.setOpaque(false);
 		JPanel bg=new JPanel();
+//		bg.setOpaque(false);
 		p1.setLayout(new SpringLayout());
 		
 		profession1 = new JLabel("用户身份",JLabel.RIGHT);
@@ -189,7 +207,7 @@ public class GUI extends JFrame
 		pass1 = new JPasswordField("");
 		password1.setLabelFor(pass1);
 		p1.add(pass1);
-		SpringUtilities.makeCompactGrid(p1, 3, 2, 0, (int)(height/11), 10, (int)(height/11));
+		SpringUtilities.makeCompactGrid(p1, 3, 2, 0, (int)(height*2/11), 10, (int)(height/11));
 		
 		p1.setPreferredSize(new Dimension((int)(width*3/5),(int)(height*7/11)));
 		
@@ -203,6 +221,7 @@ public class GUI extends JFrame
 		sign1 = new JButton("登陆");
 		p41.add(reg1);
 		p41.add(sign1);	
+//		p41.setOpaque(false);
 		G1.add(p41);
 		
 		G1.setLocation(getWidth(G1.getWidth()),getHeight(G1.getHeight()));
@@ -214,7 +233,7 @@ public class GUI extends JFrame
 		//the part of G2
 		G2 = new JFrame(title2);
 		G2.setIconImage(new ImageIcon("logo.png").getImage());
-		G2.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()*RATIO), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*RATIO));
+		G2.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.25), (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.40));
 		G2.getLayeredPane().getComponent(1).setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 15));
 		Container c2 = G2.getContentPane();
 		c2.setLayout(new BoxLayout(c2,BoxLayout.Y_AXIS));
@@ -259,7 +278,7 @@ public class GUI extends JFrame
 		p42.setLayout(new FlowLayout(FlowLayout.CENTER));
 		reg2 = new JButton("注册");
 		p42.add(reg2);
-		SpringUtilities.makeCompactGrid(p2, 3, 3, 0,(int)(height/13), 5, (int)(height/12));
+		SpringUtilities.makeCompactGrid(p2, 3, 3, 0,(int)(height*3/13), 5, (int)(height/12));
 		bg2.add(p2);
 		G2.add(bg2);
 		G2.add(p42);
@@ -308,6 +327,7 @@ public class GUI extends JFrame
         org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();  
         UIManager.put("RootPane.setupButtonVisible", false); 
         //更换所有字体
+        UIManager.put("TabbedPane.contentOpaque", false);
         FontUIResource fontRes = new FontUIResource(new Font("黑体", Font.PLAIN, 17));
         fontRes.canDisplay(ABORT);
         

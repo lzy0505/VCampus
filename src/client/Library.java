@@ -285,6 +285,7 @@ public class Library {
 			 if(alist.size()>=1)
 				{   return_p2.setVisible(true);
 				    b_return.setEnabled(true);
+				    b_reborrow.setEnabled(true);
 				   rowData_Return=new String[amount][4];
 					for(int i=0;i<amount;i++)
 					{
@@ -327,12 +328,9 @@ public class Library {
 			return_p2.add(sp_return);
 			return_p2.repaint();
 			return_p2.revalidate();	
-				
-				
-				
-				      
+						      
 			 b_return.setEnabled(false);
-				 						  
+			 b_reborrow.setEnabled(false);						  
 			}
 		}
 

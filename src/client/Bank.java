@@ -11,10 +11,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -100,7 +102,8 @@ class Bank
 	 {		
 		
 		 	//充值界面	
-		    p_recharge = new JPanel(new SpringLayout());			    
+		    p_recharge = new JPanel(new SpringLayout());	
+//		    p_recharge.setOpaque(false);
 
 		 	JLabel l_ecard=new JLabel("一卡通余额",JLabel.RIGHT);
 		 	p_recharge.add(l_ecard);
@@ -127,12 +130,31 @@ class Bank
 		 	
 			ok_re=new JButton("确定");
 		 	ok_re.setPreferredSize(new Dimension(70,30));
-		 	p_recharge.add(new JLabel());
+		 	JButton lostCard=new JButton("一卡通挂失");
+		 	lostCard.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO 这里写挂失撒
+					
+					if(true) {//成功
+						JOptionPane.showMessageDialog(null,"挂失成功","操作结果", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(null,"挂失失败","操作结果", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+		 		
+		 	});
+		 	p_recharge.add(lostCard);
 		 	p_recharge.add(ok_re);
 		 	
 		 	
 		 	SpringUtilities.makeCompactGrid(p_recharge, 4, 2, 0, 70, 10, 70);
 		 	JPanel test2=new JPanel();
+//		 	ImageIcon i=new ImageIcon("qwe.png");
+//		 	JLabel bg=new JLabel(i);
+//		 	bg.setBounds((int)HomeScreen.width-i.getIconWidth()-50, (int)HomeScreen.height-i.getIconHeight()-50, i.getIconWidth(), i.getIconHeight());
+//		 	test2.add(bg);
 		 	test2.add(p_recharge);
 		 	test2.setPreferredSize(new Dimension((int)(HomeScreen.width/3),(int)(HomeScreen.height/2)));
 		 	
@@ -185,14 +207,26 @@ class Bank
 		 	test.add(p_records);
 		 	//银行tab
 		 	//return_upbank.setPreferredSize(new Dimension(300,80));
-		 	tab_bank=new JTabbedPane();			 	
-		 	tab_bank.addTab("查询与充值",test2);
+		 	tab_bank=new JTabbedPane();
+//		 	tab_bank.setOpaque(false);
+		 	tab_bank.addTab("充值与挂失",test2);
 		 	tab_bank.addTab("支付",p_payment);
 		 	tab_bank.addTab("消费流水",test);
-	        p_bank=new JPanel();
-	        p_bank.setLayout(new BoxLayout(p_bank,BoxLayout.Y_AXIS));
-	        p_bank.add(tab_bank);
-	        
+		 	
+//		 	tab_bank.setComponentZOrder(bg, new Integer(Integer.MIN_VALUE));
+//		 	tab_bank.setBackground(bg);
+//		 	tab_bank.setComponentZOrder(bg, 0);
+		 	
+//	        p_bank.setComponentZOrder(bg, 1);
+		 	
+//		 	
+//	        p_bank=new JPanel();
+//	        p_bank.setLayout(new BoxLayout(p_bank,BoxLayout.Y_AXIS));
+//	        p_bank.add(bg);
+//	        p_bank.add(tab_bank);
+//
+//	        p_bank.setOpaque(false);
+//	        
 		 	//启用监听函数
 		 	addLis();
 		 			 
@@ -229,8 +263,7 @@ class Bank
 				hm.put("card_id", ci);
 				hm=GUI.getOne(hm);//GetOne是GUI的static函数，调用时要前缀" GUI. "
 				t_balance.setText(hm.get("card_balance"));
-//				System.out.println("card_balance :" + hm.get("card_balance"));
-				
+	
 				//---反馈部分交给李某
 				//...返回用户的一卡通余额，写进t_balance控件显示
 				//--------------

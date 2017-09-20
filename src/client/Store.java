@@ -52,7 +52,6 @@ public class Store {
 	JTextField quantityText;//用于计算选中某种商品的数量
 	
 	//购物车
-	static int count[];
 	JTable table=null;
 	
 	
@@ -62,7 +61,6 @@ public class Store {
 		JPanel p=new JPanel();
 		p.setName("gouwuche");
 		mainPanel.addTab("购物车",p);
-		
 		
 		searchPanel=new JPanel();
 		searchPanel.setLayout(new BoxLayout(searchPanel,BoxLayout.Y_AXIS));
@@ -121,6 +119,7 @@ public class Store {
 		searchPanel.add(productPreviewPanel);
 		
 		*/
+		
 		//响应如下
 		
 		search.addActionListener(new SearchLister());
@@ -379,11 +378,8 @@ public class Store {
 		TotalPriceLabel = new JLabel("¥0.00");
 		TotalPriceLabel.setForeground(Color.RED);
 		TotalPriceLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
-//		TotalPriceLabel.setBounds(561, 30, 88, 37);
 		TotalBar.add(TotalPriceLabel);
 
-		
-        count = new int[table.getRowCount()];
 		
 		table.addMouseListener(new MouseListener()
 		{
@@ -557,8 +553,8 @@ public class Store {
 					JOptionPane.showMessageDialog(null,"购买成功");
 					mainPanel.setSelectedIndex(1);
 				}else {
-					String[] headName = {"","Name","Unitprice","Quantity","Amout"};
-					String[][] newTable = new String[table.getRowCount()-i][5];
+					String[] headName = {"商品名","单价","数量","总价"};
+					String[][] newTable = new String[table.getRowCount()-i][4];
 					for(int x=i;x<table.getRowCount();x++) {
 						for(int y=0;y<4;y++) {
 							newTable[x][y] = (String) table.getValueAt(x, y);
