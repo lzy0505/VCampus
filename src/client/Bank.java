@@ -472,6 +472,7 @@ class Bank
 				
 			case 0:
 				//查询学费表
+				startIndex=0;
 				hm.put("op", "QueryPayment");	
 				hm.put("type", "Tuition");
 				System.out.println("now type:"+ hm.get("type"));
@@ -491,24 +492,25 @@ class Bank
 				
 				for(int i=0;i<vaildRowCount;i++)
 				{
-					   for(;startIndex<TuitionList.size();startIndex++)
-					   {
-						   if(Double.parseDouble(TuitionList.get(startIndex).get("card_cost"))!=0)
-						 {
-						rowData[i][0]=TuitionList.get(startIndex).get("card_time");
-						rowData[i][1]=TuitionList.get(startIndex).get("card_cost");	
-						
-						if(TuitionList.get(startIndex).get("card_is_paid").equals("TRUE")) {
-							rowData[i][2]="已支付";
-						}
-						else {
-							rowData[i][2]="未支付";
-						}
-						card_record_id[i] = TuitionList.get(startIndex).get("card_record_id");
-						startIndex++;
-						break;
-						 }
-					   }
+					while(startIndex<TuitionList.size())
+					  {
+						  if(Double.parseDouble(TuitionList.get(startIndex).get("card_cost"))!=0) {
+								rowData[i][0]=TuitionList.get(startIndex).get("card_time");			
+								rowData[i][1]=TuitionList.get(startIndex).get("card_cost");		
+								if(TuitionList.get(startIndex).get("card_is_paid").equals("TRUE")) {
+									rowData[i][2]="已支付";
+								}
+								else {
+									rowData[i][2]="未支付";
+								}
+								card_record_id[i] = TuitionList.get(startIndex).get("card_record_id");
+								startIndex++;
+								break;
+						}else {
+								startIndex++;
+							  continue;
+						  }
+					  }
 				}
 				//
 				//-----------------
@@ -517,6 +519,7 @@ class Bank
 				
 			case 1:
 				//查询水电费
+				startIndex=0;
 				hm.put("op", "QueryPayment");
 				hm.put("type", "WandE");
 				System.out.println("now type:"+ hm.get("type"));
@@ -542,26 +545,29 @@ class Bank
 
 				for(int i=0;i<vaildRowCount;i++)
 				{
-				    for(;startIndex<WandEList.size();startIndex++)
-				    {
-					rowData[i][0]=WandEList.get(startIndex).get("card_time");
-					rowData[i][1]=WandEList.get(startIndex).get("card_cost");
-					
-					if(WandEList.get(startIndex).get("card_is_paid").equals("TRUE")) {
-						rowData[i][2]="已支付";
-					}
-					else {
-						rowData[i][2]="未支付";
-					}
-					card_record_id[i] = WandEList.get(startIndex).get("card_record_id");
-					
-					startIndex++;
-					break;
-					
-				    }
+					while(startIndex<WandEList.size())
+					  {
+						  if(Double.parseDouble(WandEList.get(startIndex).get("card_cost"))!=0) {
+								rowData[i][0]=WandEList.get(startIndex).get("card_time");			
+								rowData[i][1]=WandEList.get(startIndex).get("card_cost");		
+								if(WandEList.get(startIndex).get("card_is_paid").equals("TRUE")) {
+									rowData[i][2]="已支付";
+								}
+								else {
+									rowData[i][2]="未支付";
+								}
+								card_record_id[i] = WandEList.get(startIndex).get("card_record_id");
+								startIndex++;
+								break;
+						}else {
+								startIndex++;
+							  continue;
+						  }
+					  }
 				}		
 				break;
 			case 2:
+				startIndex=0;
 				hm.put("op", "QueryPayment");
 				hm.put("type", "Afee");
 				System.out.println("now type:"+ hm.get("type"));
@@ -585,17 +591,24 @@ class Bank
 				rowData=new String[vaildRowCount][3];
 				for(int i=0;i<vaildRowCount;i++)
 				{
-					  for(;startIndex<AfeeList.size();startIndex++)
+					while(startIndex<AfeeList.size())
 					  {
-					rowData[i][0]=AfeeList.get(startIndex).get("card_time");			
-					rowData[i][1]=AfeeList.get(startIndex).get("card_cost");		
-					if(AfeeList.get(startIndex).get("card_is_paid").equals("TRUE")) {
-						rowData[i][2]="已支付";
-					}
-					else {
-						rowData[i][2]="未支付";
-					}
-					card_record_id[i] = AfeeList.get(startIndex).get("card_record_id");
+						  if(Double.parseDouble(AfeeList.get(startIndex).get("card_cost"))!=0) {
+								rowData[i][0]=AfeeList.get(startIndex).get("card_time");			
+								rowData[i][1]=AfeeList.get(startIndex).get("card_cost");		
+								if(AfeeList.get(startIndex).get("card_is_paid").equals("TRUE")) {
+									rowData[i][2]="已支付";
+								}
+								else {
+									rowData[i][2]="未支付";
+								}
+								card_record_id[i] = AfeeList.get(startIndex).get("card_record_id");
+								startIndex++;
+								break;
+						}else {
+								startIndex++;
+							  continue;
+						  }
 					  }
 				}	
 					  
