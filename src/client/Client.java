@@ -69,7 +69,7 @@ public class Client{
 		}
 		return getmes;
 	}
-	//给一个HashMap装商品的路径、名字、数量、单价。
+	//给一个HashMap装商品的路径、名字、数量、单价、类型
 	public HashMap<String, String> upLoad(HashMap<String, String> hm)throws IOException {
 		/*分三步，第一步：传给服务器要传的新商品的名字，如果已经有了该商品就返回失败。否则先录入信息，
 		 * 注：先将路径设为空；hm里面的路径是客户端处的

@@ -259,11 +259,12 @@ public class StoreManage {
 			hm.put("op", "DeleteGoods");
 			hm.put("item_picture_url",url_delete[selectedRow]);	//传递商品的图片路径
 			hm.put("item_name", rowData_delete[selectedRow][0]);
-			GUI.send(hm);
+			hm=GUI.getOne(hm);
 			//刷新表格
-			if(hm.get("result")=="success")
+			if(hm.get("result").equals("success"))
 			{
 				//如果成功修改，刷新表格
+				JOptionPane.showMessageDialog(null,"删除成功");
 				new ActionLis_queryDelete().actionPerformed(null);
 			}
 			
@@ -332,7 +333,8 @@ public class StoreManage {
      		up_load.put("item_name",t_goodsName.getText());
      		up_load.put("item_stock", t_amount.getText());
      		up_load.put("item_price", t_price.getText());
-     		//TODO 这里加一个商品类别  cata.getItemAt(cata.getSelectedIndex());
+     		up_load.put("item_type",  "\'"+cata.getItemAt(cata.getSelectedIndex())+"\'");
+ 
      		 
      		up_load.put("item_picture_url", path);
      		up_load = GUI.upLoad(up_load);

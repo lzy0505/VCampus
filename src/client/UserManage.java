@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -40,9 +41,9 @@ public class UserManage {
 	private JTextField textStudentNo;
 	private JTextField textStudentName;
 	private JTextField textStudentCardID;
-	JTextField confirmOldPwdText;
-	JTextField newPwdText ;
-	JTextField confirmNewPwdText;
+	JPasswordField confirmOldPwdText;
+	JPasswordField newPwdText ;
+	JPasswordField confirmNewPwdText;
 	
 	
 	JRadioButton rdbtnFemale;
@@ -168,16 +169,16 @@ public class UserManage {
 		JLabel confirmOldPwdLabel = new JLabel("确认当前密码",JLabel.RIGHT);
 		pwdChangePanel.add(confirmOldPwdLabel);
 
-		confirmOldPwdText = new JTextField();
+		confirmOldPwdText = new JPasswordField();
 		confirmOldPwdText.setColumns(20);
 		confirmOldPwdLabel.setLabelFor(confirmOldPwdText);
 		pwdChangePanel.add(confirmOldPwdText);
 		JLabel newPwdLabel = new JLabel("新密码",JLabel.RIGHT);
 		pwdChangePanel.add(newPwdLabel);
-		newPwdText = new JTextField();
+		newPwdText = new JPasswordField();
 		newPwdLabel.setLabelFor(newPwdText);
 		pwdChangePanel.add(newPwdText);
-		confirmNewPwdText = new JTextField();
+		confirmNewPwdText = new JPasswordField();
 		JLabel confirmNewPwdLabel = new JLabel("确认新密码",JLabel.RIGHT);
 		pwdChangePanel.add(confirmNewPwdLabel);
 		confirmNewPwdLabel.setLabelFor(confirmNewPwdText);

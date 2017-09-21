@@ -375,6 +375,22 @@ public class GUI extends JFrame
 	class MyActLister2 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
+			String str = i2.getText();
+			for(int i =str.length();--i>=0;){
+				if(!Character.isDigit(str.charAt(i))){
+					JOptionPane.showMessageDialog(G1,"一卡通号应为数字！",
+							"注册失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+			String passstr =pass2.getText();
+			for(int i =passstr.length();--i>=0;){
+				if(!(Character.isDigit(passstr.charAt(i))||Character.isAlphabetic(passstr.charAt(i)))){
+					JOptionPane.showMessageDialog(G1,"密码只能为数字和字母！",
+							"注册失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
 			
 			if(i2.getText().length()<11 & (pass2.getText().length()>5) & (pass2.getText().length()<17)& (pass2.getText().equals(ipass2.getText())))
 			{

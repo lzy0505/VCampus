@@ -24,7 +24,7 @@ import javax.swing.plaf.RootPaneUI;
 //@主界面类--------------------------------
 class HomeScreen
 {
-	final static private double RATIO=0.66;
+	final static private double RATIO=0.75;
 	public static double width=Toolkit.getDefaultToolkit().getScreenSize().getWidth()*RATIO;
 	public static double height=Toolkit.getDefaultToolkit().getScreenSize().getHeight()*RATIO;
 	//the elements of G5
@@ -86,6 +86,8 @@ class HomeScreen
 
 					@Override
 					public void stateChanged(ChangeEvent arg0) {
+						if(p_HomeScreen.getSelectedIndex()==5)
+							return;
 						isCompleted=new HashMap<String,String>();
 						isCompleted.put("op", "isCompleted");
 						isCompleted.put("card_id",ClientInfo.getCi());

@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.*;
@@ -17,7 +18,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
-import client.Registration.DoubleClickModifyDelete;
 import client.StudentAffairs.SelectCourseButtonEditor;
 import table_component.ButtonEditor;
 import table_component.ButtonRenderer;
@@ -53,7 +53,7 @@ public class Registration {
 	ArrayList<HashMap<String,String>> courseList=null;
 	ArrayList<HashMap<String,String>> studentList=null;
 	//Information table construction
-	final String[] informationQueryTableHead= {"学号","姓名","性别","入学年份","专业","编辑","删除"};
+	final String[] informationQueryTableHead= {"学号","姓名","性别","入学年份","专业","编辑"};
 
 	
 
@@ -107,11 +107,11 @@ public class Registration {
         informationQueryTable.getColumn("编辑").setCellRenderer(new ButtonRenderer());
         informationQueryTable.getColumn("编辑").setCellEditor(
          new InformationQueryButtonEditor(new JCheckBox()));
-        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
-        informationQueryTable.getColumn("删除").setCellEditor(
-         new InformationQueryButtonEditor(new JCheckBox()));
+//        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
+//        informationQueryTable.getColumn("删除").setCellEditor(
+//         new InformationQueryButtonEditor(new JCheckBox()));
         
-		informationQueryTable.addMouseListener(new DoubleClickModifyDelete());
+//		informationQueryTable.addMouseListener(new DoubleClickModifyDelete());
 		informationQueryTable.setColumnSelectionAllowed(false);
 
 		
@@ -235,7 +235,7 @@ public class Registration {
 			hmList = GUI.getList(hm);
 			if(hmList!=null)
 			{
-				String information[][]=new String[hmList.size()][7];
+				String information[][]=new String[hmList.size()][6];
 				user_info_id=new String[hmList.size()];
 				for(int i = 0;i<hmList.size();i++) {	
 					information[i][0] = hmList.get(i).get("student_id");
@@ -248,8 +248,8 @@ public class Registration {
 					System.out.println("grade :" + hmList.get(i).get("grade"));
 					information[i][4] = hmList.get(i).get("major");
 					System.out.println("major:" + hmList.get(i).get("major"));
-					information[i][5] = "Modify";
-					information[i][6]= "Delete";
+					information[i][5] = "编辑";
+//					information[i][6]= "Delete";
 					user_info_id[i] = hmList.get(i).get("user_info_id");
 			}
 
@@ -257,9 +257,9 @@ public class Registration {
 		        informationQueryTable.getColumn("编辑").setCellRenderer(new ButtonRenderer());
 		        informationQueryTable.getColumn("编辑").setCellEditor(
 		         new InformationQueryButtonEditor(new JCheckBox()));
-		        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
-		        informationQueryTable.getColumn("删除").setCellEditor(
-		         new InformationQueryButtonEditor(new JCheckBox()));
+//		        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
+//		        informationQueryTable.getColumn("删除").setCellEditor(
+//		         new InformationQueryButtonEditor(new JCheckBox()));
 			
 			}
 			else
@@ -271,97 +271,125 @@ public class Registration {
 		
 	}
 	
-	//Modify and delete function
-	class DoubleClickModifyDelete implements MouseListener
-	{
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-//			System.out.println("mouseClicked");
-			for(int row=0,colModify=5,colDelete=6;row<informationQueryTable.getRowCount();row++)
-			{	
-				if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colModify)
-				{
-					//修改学生信息
-					int result=JOptionPane.showConfirmDialog(null, "Modify confirmed?");
-					if(result == 0)
-					{
-						HashMap<String,String> hm= new HashMap<>();
-						ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
-						hm.put("op", "modify_student");
-						System.out.println((String)informationQueryTable.getValueAt(row, 0));
-						hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
-						System.out.println((String)informationQueryTable.getValueAt(row, 1));
-						hm.put("nname", (String)informationQueryTable.getValueAt(row, 1));
-						System.out.println((String)informationQueryTable.getValueAt(row, 2));
-						hm.put("gender",(String)informationQueryTable.getValueAt(row, 2));
-						System.out.println((String)informationQueryTable.getValueAt(row, 3));
-						hm.put("grade", (String)informationQueryTable.getValueAt(row, 3));
-						System.out.println((String)informationQueryTable.getValueAt(row, 4));
-						hm.put("major", (String)informationQueryTable.getValueAt(row, 4));
-						hm.put("user_info_id", user_info_id[row]);
-						GUI.send(hm);
-					    //Modify the information of student[row] in the database
-						JOptionPane.showMessageDialog(null, "Modify successfully!","Modify Successfully",JOptionPane.PLAIN_MESSAGE);
-					}
-				}
-				//删除学生信息
-				else if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colDelete)
-				{
-					int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
-					if(result == 0)
-					{					
-						//delete the information of student[row] from database
-						//TODO
-						HashMap<String,String> hm= new HashMap<>();
-						hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
-						hm.put("user_info_id", user_info_id[row]);
-						hm.put("op", "delete_student");
-						GUI.send(hm);
-						JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
-						DefaultTableModel dtm=(DefaultTableModel)informationQueryTable.getModel();
-						dtm.removeRow(row);	
-						dtm.fireTableDataChanged();
-					}
-				}
-//				}	
-			}
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO 自动生成的方法存根
-			
-		}
-		
-	}
+//	//Modify and delete function
+//	class DoubleClickModifyDelete implements MouseListener
+//	{
+//
+//		@Override
+//		public void mouseClicked(MouseEvent e) {
+////			System.out.println("mouseClicked");
+//			for(int row=0,colModify=5;row<informationQueryTable.getRowCount();row++)
+//			{	
+//				if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colModify)
+//				{
+//					//修改学生信息
+//					int result=JOptionPane.showConfirmDialog(null, "确认编辑？");
+//					if(result == 0)
+//					{
+//						HashMap<String,String> hm= new HashMap<>();
+//						ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+//						hm.put("op", "modify_student");
+//						System.out.println((String)informationQueryTable.getValueAt(row, 0));
+//						hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
+//						System.out.println((String)informationQueryTable.getValueAt(row, 1));
+//						hm.put("nname", (String)informationQueryTable.getValueAt(row, 1));
+//						System.out.println((String)informationQueryTable.getValueAt(row, 2));
+//						hm.put("gender",(String)informationQueryTable.getValueAt(row, 2));
+//						System.out.println((String)informationQueryTable.getValueAt(row, 3));
+//						hm.put("grade", (String)informationQueryTable.getValueAt(row, 3));
+//						System.out.println((String)informationQueryTable.getValueAt(row, 4));
+//						hm.put("major", (String)informationQueryTable.getValueAt(row, 4));
+//						hm.put("user_info_id", user_info_id[row]);
+//						GUI.send(hm);
+//					    //Modify the information of student[row] in the database
+//						JOptionPane.showMessageDialog(null, "编辑成功!","操作结果",JOptionPane.PLAIN_MESSAGE);
+//					}
+//				}
+//				//删除学生信息
+////				else if(informationQueryTable.getSelectedRow() == row&&informationQueryTable.getSelectedColumn()==colDelete)
+////				{
+////					int result = JOptionPane.showConfirmDialog(null, "Delete confirmed?");
+////					if(result == 0)
+////					{					
+////						//delete the information of student[row] from database
+////						//TODO
+////						HashMap<String,String> hm= new HashMap<>();
+////						hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
+////						hm.put("user_info_id", user_info_id[row]);
+////						hm.put("op", "delete_student");
+////						GUI.send(hm);
+////						JOptionPane.showMessageDialog(null, "Delete successfully!","Delete Successfully",JOptionPane.PLAIN_MESSAGE);
+////						DefaultTableModel dtm=(DefaultTableModel)informationQueryTable.getModel();
+////						dtm.removeRow(row);	
+////						dtm.fireTableDataChanged();
+////					}
+////				}
+////				}	
+//			}
+//		}
+//
+//		@Override
+//		public void mouseEntered(MouseEvent arg0) {
+//			// TODO 自动生成的方法存根
+//			
+//		}
+//
+//		@Override
+//		public void mouseExited(MouseEvent arg0) {
+//			// TODO 自动生成的方法存根
+//			
+//		}
+//
+//		@Override
+//		public void mousePressed(MouseEvent e) {
+//			
+//		}
+//
+//		@Override
+//		public void mouseReleased(MouseEvent arg0) {
+//			// TODO 自动生成的方法存根
+//			
+//		}
+//		
+//	}
 	//导入学生信息
 	//submit function in "information import"
 	
 	class InformationQueryButtonEditor extends ButtonEditor{
-
+		int row;
 		public InformationQueryButtonEditor(JCheckBox checkBox) {
 			super(checkBox);
 			// TODO Auto-generated constructor stub
 		}
+		@Override public Component getTableCellEditorComponent(JTable table, Object value,
+			      boolean isSelected, int row, int column) {
+			this.row=row;
+			Component button=super.getTableCellEditorComponent(table, value, isSelected, row, column);
+			return button;
+		}
 		
+		@Override public Object getCellEditorValue(){
+			if (super.getIsPushed()) {
+				HashMap<String,String> hm= new HashMap<>();
+				ArrayList<HashMap<String, String>> hmList = new ArrayList<HashMap<String, String>>();
+				hm.put("op", "modify_student");
+//				System.out.println((String)informationQueryTable.getValueAt(row, 0));
+				hm.put("student_id",(String)informationQueryTable.getValueAt(row, 0));
+//				System.out.println((String)informationQueryTable.getValueAt(row, 1));
+				hm.put("nname", (String)informationQueryTable.getValueAt(row, 1));
+//				System.out.println((String)informationQueryTable.getValueAt(row, 2));
+				hm.put("gender",(String)informationQueryTable.getValueAt(row, 2));
+//				System.out.println((String)informationQueryTable.getValueAt(row, 3));
+				hm.put("grade", (String)informationQueryTable.getValueAt(row, 3));
+//				System.out.println((String)informationQueryTable.getValueAt(row, 4));
+				hm.put("major", (String)informationQueryTable.getValueAt(row, 4));
+				hm.put("user_info_id", user_info_id[row]);
+				GUI.send(hm);
+			    //Modify the information of student[row] in the database
+				JOptionPane.showMessageDialog(null, "编辑成功!","操作结果",JOptionPane.PLAIN_MESSAGE);			
+		    }
+			return super.getCellEditorValue();
+		  }
 	}
 	
 

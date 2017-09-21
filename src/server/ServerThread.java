@@ -71,21 +71,21 @@ public class ServerThread implements Runnable{
 					}
 					if(sendList.get(0).get("password").equals(getOne.get("password"))){
 						//管理员判断
-						if(sendList.get(0).get("identity").equals("libAdmin")){
+						if(sendList.get(0).get("identity").equals("libAdmin")&&getOne.get("identity").equals("admin")){
 							send.put("card_id",getOne.get("card_id") );
 							send.put("type", "libAdmin");
 							send.put("result", "success");
 							soos.writeObject(send);
 							break;
 						}
-						else if(sendList.get(0).get("identity").equals("storeAdmin")) {
+						else if(sendList.get(0).get("identity").equals("storeAdmin")&&getOne.get("identity").equals("admin")) {
 							send.put("card_id",getOne.get("card_id") );
 							send.put("type", "storeAdmin");
 							send.put("result", "success");
 							soos.writeObject(send);
 							break;
 						}
-						else if(sendList.get(0).get("identity").equals("bankAdmin")){
+						else if(sendList.get(0).get("identity").equals("bankAdmin")&&getOne.get("identity").equals("admin")){
 							send.put("card_id",getOne.get("card_id") );
 							send.put("type", "bankAdmin");
 							send.put("result", "success");
@@ -93,7 +93,13 @@ public class ServerThread implements Runnable{
 							break;
 						}
 						//老师学生判断
-						else {
+						else if(sendList.get(0).get("identity").equals("student")&&getOne.get("identity").equals("student")){
+							send.put("card_id",getOne.get("card_id") );
+							send.put("result", "success");
+							soos.writeObject(send);
+							break;
+						}
+						else if(sendList.get(0).get("identity").equals("teacher")&&getOne.get("identity").equals("teacher")){
 							send.put("card_id",getOne.get("card_id") );
 							send.put("result", "success");
 							soos.writeObject(send);
@@ -458,14 +464,23 @@ public class ServerThread implements Runnable{
 					sendList=db.selectWhere("user_info", "user_info_id ="+use_card_id_to_find.get(0).get("user_info_id"));
 					soos.writeObject(sendList);
 					break;
-					//修改学生信息TODO 挂失
+					//修改学生信息
 				case "modify_student":					
 					int grade = Integer.parseInt(getOne.get("grade"));
 					db.setWhere("user_info", "nname =\'"+getOne.get("nname")+"\'," +"gender =\'"+getOne.get("gender")+"\',"+ "grade ="+grade +","+"major =\'"+ getOne.get("major")+"\',"+ "student_id =\'" + getOne.get("student_id")+"\'" , "user_info_id =" + getOne.get("user_info_id"));
 					break;
 					//一恰通挂失
 				case "card_lost":
-					db.setWhere("card_info", "card_is_lost=TRUE", "card_id=\'"+getOne.get("card_id")+"\'");
+					ArrayList<HashMap<String,String>> check_lost =db.selectWhere("card_info",  "card_id=\'"+getOne.get("card_id")+"\'");
+					if(check_lost.get(0).get("card_is_lost").equals("TRUE")){
+						send.put("result", "false");
+						send.put("reason", "此卡已经被挂失");
+					}else{
+						db.setWhere("card_info", "card_is_lost=TRUE", "card_id=\'"+getOne.get("card_id")+"\'");
+						send.put("result", "success");
+					}
+					soos.writeObject(send);
+					break;
 					//修改密码
 				case "modify_password":
 					ArrayList<HashMap<String,String>> lost_modify = db.selectWhere("card_info", "card_id=\'"+getOne.get("card_id")+"\'");
@@ -652,11 +667,18 @@ public class ServerThread implements Runnable{
 					break;
 				case "isCompleted":
 					getOne.remove("op");
-					String infoId=db.selectWhere("users","card_id=\'"+getOne.get("card_id")+"\'").get(0).get("user_info_id");
-					if(infoId.equals("")||infoId.equals("0")) {
-						getOne.put("result", "false");
-					}else {
+					HashMap<String,String> infoId=db.selectWhere("users","card_id=\'"+getOne.get("card_id")+"\'").get(0);
+					if(!infoId.get("identity").equals("student")){
 						getOne.put("result", "true");
+					}else{
+						if(infoId.get("user_info_id")==null){
+							getOne.put("result", "false");
+						}
+						else if(infoId.get("user_info_id").equals("")||infoId.get("user_info_id").equals("0")) {
+							getOne.put("result", "false");
+						}else {
+							getOne.put("result", "true");
+						}
 					}
 					soos.writeObject(getOne);
 					break;
@@ -716,6 +738,8 @@ public class ServerThread implements Runnable{
 					File delete_file = new File(getOne.get("item_picture_url"));
 					if(delete_file.exists())delete_file.delete();			
 					db.deleteWhere("store_item_info", "item_name=\'" + getOne.get("item_name")+"\'");
+					send.put("result", "success");
+					soos.writeObject(send);
 					break;
 				//修改货物查询数量
 				case "QueryGoodsAmount":				
@@ -823,6 +847,7 @@ public class ServerThread implements Runnable{
 						break;
 					}else {
 						send.put("result", "false");
+						send.put("item_name", getOne.get("item_name"));
 						send.put("reason", "余额不足");
 						soos.writeObject(send);
 					}

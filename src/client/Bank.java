@@ -136,11 +136,16 @@ class Bank
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					// TODO 这里写挂失撒
-					
-					if(true) {//成功
+					HashMap<String,String> card_lost = new HashMap<String,String>();
+					card_lost.put("op", "card_lost");
+					card_lost.put("card_id", ci);
+					card_lost = GUI.getOne(card_lost);
+					if(card_lost.get("result").equals("success")) {//成功
 						JOptionPane.showMessageDialog(null,"挂失成功","操作结果", JOptionPane.INFORMATION_MESSAGE);
+						lostCard.setEnabled(false);
 					}else {
-						JOptionPane.showMessageDialog(null,"挂失失败","操作结果", JOptionPane.ERROR_MESSAGE);
+						
+						JOptionPane.showMessageDialog(null,"挂失失败,"+card_lost.get("reason"),"操作结果", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 		 		
