@@ -78,7 +78,7 @@ public class Registration {
 
 		
 		tabbedPane = new JTabbedPane();
-		tabbedPane.setPreferredSize(new Dimension(500,360));
+//		tabbedPane.setPreferredSize(new Dimension(500,360));
 		mainPanel=new JPanel();
 		mainPanel.add(tabbedPane);
 		
@@ -118,17 +118,12 @@ public class Registration {
         informationQueryTable.getColumn("编辑").setCellRenderer(new ButtonRenderer());
         informationQueryTable.getColumn("编辑").setCellEditor(
          new InformationQueryButtonEditor(new JCheckBox()));
-//        informationQueryTable.getColumn("删除").setCellRenderer(new ButtonRenderer());
-//        informationQueryTable.getColumn("删除").setCellEditor(
-//         new InformationQueryButtonEditor(new JCheckBox()));
-        
-//		informationQueryTable.addMouseListener(new DoubleClickModifyDelete());
 		informationQueryTable.setColumnSelectionAllowed(false);
 
 		
 		//Scroll implement
 		JScrollPane scrollPane = new JScrollPane(informationQueryTable);
-		scrollPane.setBounds(0, 0, 600, 350);
+		scrollPane.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*4/5)));
 
 		informationService.add(scrollPane);
 		
@@ -139,7 +134,7 @@ public class Registration {
 		//成绩录入
 		
 		JPanel ModifyBar = new JPanel();
-		ModifyBar.setBounds(6, 32, 438, 440);
+//		ModifyBar.setBounds(6, 32, 438, 440);
 		tabbedPane.addTab("成绩录入", null, ModifyBar, null);
 		ModifyBar.setLayout(new BoxLayout(ModifyBar,BoxLayout.Y_AXIS));
 		
@@ -169,17 +164,19 @@ public class Registration {
 		JButton submitScore=new JButton("上传分数");
 		submitScore.addActionListener(new ScoreSubmitActionListener());
 		coursePanel.add(submitScore);
-				
+		ModifyBar.add(coursePanel);		
 		DefaultTableModel emptyTableModel=new DefaultTableModel();
 		emptyTableModel.setDataVector(new Object[][] {}, new String[] {"学号","姓名","分数"});
 		
 		importScoreTable=new ScoreSubmitJTable(emptyTableModel);
 		importScoreTable.setColumnSelectionAllowed(false);
 		importScoreTable.setFillsViewportHeight(true);
+		importScoreTable.setRowHeight(35);
+		
 		
 		JScrollPane scrollPanel = new JScrollPane(importScoreTable);
-		scrollPane.setBounds(0, 30, 600, 320);
-		ModifyBar.add(coursePanel);
+		scrollPane.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*4/5)));
+		
 		ModifyBar.add(scrollPanel);
 		cbalistener.actionPerformed(null);
 		
@@ -207,16 +204,17 @@ public class Registration {
 		textExamPlace = new JTextField();
 		lblExamTime.setLabelFor(textExamPlace);
 		arrangeExam.add(textExamPlace);	
-		
-		SpringUtilities.makeCompactGrid(arrangeExam, 3, 2, 40, 50, 5, 16);
-		arrangeExam.setPreferredSize(new Dimension(250,100));
+		JPanel middle=new JPanel(new FlowLayout());
+		SpringUtilities.makeCompactGrid(arrangeExam, 3, 2, 50,150, 5, 70);
+//		arrangeExam.setPreferredSize(new Dimension(250,100));
 		cbalistener2.actionPerformed(null);
-		
+		middle.setPreferredSize(new Dimension((int)(HomeScreen.width*2/3),(int)(HomeScreen.height*2/3)));
+		middle.add(arrangeExam);
 		JButton submitArrangement=new JButton("提交");
 		submitArrangement.addActionListener(new ExamSubmitActionListener());
 		JPanel examArrangePanel = new JPanel();
 		examArrangePanel.setLayout(new BoxLayout(examArrangePanel,BoxLayout.Y_AXIS));
-		examArrangePanel.add(arrangeExam);
+		examArrangePanel.add(middle);
 		examArrangePanel.add(submitArrangement);
 		tabbedPane.addTab("考试安排", null, examArrangePanel, null);
 		

@@ -101,7 +101,7 @@ public class Store {
 		//JPanel flashPanel
 		welcomePicture=new JLabel();
 		//图片缩放
-		ImageIcon imageIcon_display=new ImageIcon("clientpic/广告2.jpeg");
+		ImageIcon imageIcon_display=new ImageIcon("clientpic/广告2.png");
 		Image image=imageIcon_display.getImage();
 		image=image.getScaledInstance((int)(HomeScreen.width*6/8), (int)(HomeScreen.height*5/6), Image.SCALE_DEFAULT);
 		imageIcon_display=new ImageIcon(image);
@@ -120,8 +120,6 @@ public class Store {
 		searchPanel.add(searchInput);
 		searchPanel.add(welcomePicture);
 		//设置定时器关闭广告
-		
-		
 		
 		
 		//分类"饮料","日用品","电子产品","食品"
@@ -577,7 +575,7 @@ public class Store {
 		
 
 		table = new JTable(shopCart,headName);
-		table.setPreferredScrollableViewportSize(new Dimension(831, 300));
+		table.setPreferredScrollableViewportSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*3/4)));
 //		table.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 
 		//Scroll implement

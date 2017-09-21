@@ -165,6 +165,7 @@ public class ServerThread implements Runnable{
 							break;
 						}
 				case "searchbook":
+					//TODO
 					if(getOne.get("search_type").equals("author")) 
 					{
 						sendList=db.selectWhere("book_info", "author LIKE \'%"+getOne.get("keyword")+"%\'");	
@@ -454,9 +455,10 @@ public class ServerThread implements Runnable{
 				case "search_student":
 					//通过学号或者姓名查找学生，找不到就给个空数组
 					System.out.println("name :" +getOne.get("nname")+ "student_id :"+getOne.get("student_id"));
+					//TODO
 					ArrayList<HashMap<String,String>> use_name_to_find = db.selectWhere("user_info", "nname =\'" + getOne.get("nname")+"\'");
 					if(use_name_to_find.size()==0) {
-						ArrayList<HashMap<String,String>> use_student_id_to_find = db.selectWhere("user_info", "student_id =\'" + getOne.get("student_id")+"\'");
+						ArrayList<HashMap<String,String>> use_student_id_to_find = db.selectWhere("user_info", "student_id LIKE \'%" + getOne.get("student_id")+"%\'");
 						if(use_student_id_to_find.size()==0){
 							soos.writeObject(sendList);
 							break;
