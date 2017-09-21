@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 import com.sun.corba.se.impl.orbutil.closure.Constant;
@@ -720,24 +722,24 @@ public class ServerThread implements Runnable{
 					soos.writeObject(send);
 					//接收图片,从这里开始就接受不到杂流（HashMap）,所以在此处重新建立链接
 				//	file_sois =new ObjectInputStream(socket.getInputStream());
-					File getFile = (File)sois.readObject();
-					File file = new File(dir_path+getFile.getName());
+			
+					
+					HashMap<String,byte[]> getFile = (HashMap<String,byte[]>)sois.readObject();
+					
+					String path=getFile.keySet().iterator().next();
+					File file = new File(dir_path+path);
 					if(!file.exists()) {
 						System.out.println("开始接收图片了");
-						FileInputStream fis = new FileInputStream(getFile);//文件输入流
-						FileOutputStream fos = new FileOutputStream(new File(dir_path+getFile.getName()));//文件输出流
-						byte[] buffer =new byte[1];
-						while(fis.read(buffer)!=-1){
-							fos.write(buffer);
-						}
-						fos.flush();
-						if(fis!=null)fis.close();
-						if(fos!=null)fos.close();
+						byte[] data=getFile.get(path);
+						FileImageOutputStream imageOutput = new FileImageOutputStream(file);
+	            	    imageOutput.write(data, 0, data.length);
+	            	    imageOutput.close();
 					}
 					System.out.println("如果没看到开始就GG，如果有就完事儿了！");
 					//最后一步，更新表中的url数据
-					db.setWhere("store_item_info", "item_picture_url =\'"+dir_path+getFile.getName()+"\'", "item_name="+name);
+					db.setWhere("store_item_info", "item_picture_url =\'"+dir_path+path+"\'", "item_name="+name);
 					break;
+
 				
 				//商品删除确认
 				case "DeleteGoods":
@@ -798,18 +800,37 @@ public class ServerThread implements Runnable{
 				//查询商品的图片
 				case "search_picture":
 					sendList=db.selectWhere("store_item_info", "item_name LIKE \'%"+getOne.get("key")+"%\'");
-					File[] files = new File[sendList.size()];
+//					File[] files = new File[sendList.size()];
 					//把搜索到的文件都装到数组里面
+					
+					ArrayList<HashMap<String,byte[]>> dataList=new ArrayList<HashMap<String,byte[]>>();
+					
+					HashMap<String,byte[]> hmd;
 					for(int i=0;i<sendList.size();i++) {
-						files[i] = new File(sendList.get(i).get("item_picture_url"));
+						hmd=new HashMap<String,byte[]>();
+
+						System.out.println(sendList.get(i).get("item_picture_url").substring(10));
+						FileImageInputStream input = new FileImageInputStream(new File(sendList.get(i).get("item_picture_url")));
+					      ByteArrayOutputStream output = new ByteArrayOutputStream();
+					      byte[] buf = new byte[1024];
+					      int numBytesRead = 0;
+					      while ((numBytesRead = input.read(buf)) != -1) {
+					      output.write(buf, 0, numBytesRead);
+					      }
+					      byte[] data = output.toByteArray();
+					      hmd.put(sendList.get(i).get("item_picture_url").substring(10), data);
+					      dataList.add(hmd);
+					      output.close();
+					      input.close();		
 					}
 					System.out.println("开始传..");  
-					soos.writeObject(files);
+					soos.writeObject(dataList);
 					soos.flush();
 					if(soos!=null)soos.close();
 					System.out.println("传完了.");  
 					if(socket!=null) socket.close();
 					break;
+
 				//购买确认
 				case "buy":
 					//获取当前时间
