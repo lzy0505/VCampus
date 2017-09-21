@@ -243,7 +243,6 @@ public class StoreManage {
     * <p>消息映射函数 <br>
     * 
     * </p>
-    * @author 赵千锋、李子厚
     */
 	void addLis()
 	{
@@ -264,7 +263,6 @@ public class StoreManage {
     * <p>删除确认响应函数 <br>
     * 删除，与数据库交流数据
     * </p>
-    * @author 赵千锋、李子厚
     */
 	class ActionLis_confirmDelete implements ActionListener
 	{
@@ -306,10 +304,9 @@ public class StoreManage {
 	
 	//删除商品界面的查询按钮
 	/**
-	    * <p>删除商品需要的查询按钮 <br>
-	    * 
+	    * <p>删除商品需要的查询按钮响应 <br>
+	    * 返回查询的商品的数量、单价等
 	    * </p>
-	    * @author 赵千锋、李子厚
 	    */
 	class ActionLis_queryDelete implements ActionListener
 	{
@@ -355,7 +352,11 @@ public class StoreManage {
 	
 	
 	
-	
+	/**
+	    * <p>添加商品确认响应 <br>
+	    * 上传商品至服务器
+	    * </p>
+	    */
 	class ActionLis_confirmAdd implements ActionListener
 	
 	{
@@ -401,6 +402,12 @@ public class StoreManage {
 	
 	
       //修改界面的确认修改按钮
+	
+	/**
+    * <p>修改确认响应 <br>
+    * 修改信息，修改数据库
+    * </p>
+    */
 	class ActionLis_confirmRevise implements ActionListener
 	{
 
@@ -469,6 +476,11 @@ public class StoreManage {
 	
 
 	//修改界面的查询按钮
+	/**
+    * <p>修改查询响应 <br>
+    * 根据商品名查找需要修改的商品
+    * </p>
+    */
 	class ActionLis_queryRevise implements ActionListener
 	{
 
@@ -547,7 +559,11 @@ public class StoreManage {
 	
 	
 	
-	
+	/**
+	    * <p>打开文件资源管理器 <br>
+	    * 规格化图片路径
+	    * </p>
+	    */
 	class ActionLis_openFileManagement implements ActionListener
 	
 	{

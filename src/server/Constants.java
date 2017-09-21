@@ -6,8 +6,11 @@ package server;
 import java.util.HashMap;
 
 /**
- * @author lzy05
- *
+ *<p>Constants</p>
+ * <p>数据库连接类<br>
+ * 
+ * </p>
+ * @author 刘宗源
  */
 class Constants {
 	public final static HashMap<String,String[]> constructionOfTables=new HashMap<String,String[]>() {

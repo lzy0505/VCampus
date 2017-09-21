@@ -164,9 +164,9 @@ public class HSAdmin {
 					JOptionPane.showMessageDialog(null,"请输入大于零的数！",
 							"修改失败",JOptionPane.ERROR_MESSAGE);
 					return;
-				}			
+				}
 				//判断是否大于零
-				if(Double.parseDouble(str)<=0){
+				if(Double.parseDouble(str)<0){
 					JOptionPane.showMessageDialog(null,"请输入大于零的数！",
 							"修改失败",JOptionPane.ERROR_MESSAGE);
 					return;
@@ -186,7 +186,10 @@ public class HSAdmin {
 			
 		 		String result=hm.get("result"); 
 		 		System.out.println(result);
-		    	JOptionPane.showMessageDialog(null,result,"操作结果",JOptionPane.INFORMATION_MESSAGE);
+		 		if(result.equals("success")) {
+		 			JOptionPane.showMessageDialog(null,"修改成功","操作结果",JOptionPane.INFORMATION_MESSAGE);
+		 		}
+		 		else{JOptionPane.showMessageDialog(null,"修改失败","操作结果",JOptionPane.INFORMATION_MESSAGE);}
 
 			
 		}

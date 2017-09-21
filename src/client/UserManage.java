@@ -27,8 +27,11 @@ import javax.swing.SpringLayout;
 import table_component.SpringUtilities;
 
 /**
- * @author lzy05
- *
+ *<p>UserManage</p>
+ * <p>学生自我管理信息类<br>
+ * 学生导入、修改自己的信息（学号、入学时间等）
+ * </p>
+ * @author 刘宗源、李子厚
  */
 public class UserManage {
 
@@ -54,7 +57,12 @@ public class UserManage {
 				"土木工程学院", "电子科学与工程学院", "数学学院", "自动化学院", "计算机科学与工程学院", "物理系", "生物科学与医学工程学院", 
 			"材料科学与工程学院", "人文学院", "经济管理学院", "电气工程学院", "外国语学院", "体育系", "化学化工学院", "交通学院", 
 			"仪器科学与工程学院", "艺术学院", "法学院", "基础医学院", "公共卫生学院", "临床医学院", "吴健雄学院", "软件学院"};
-	
+	/**
+	 *<p>UserManage</p>
+	 * <p>构造函数<br>
+	 * 绘制界面
+	 * </p>
+	 */
 	
 	public UserManage(HomeScreen hs) {
 		this.hs=hs;
@@ -199,7 +207,12 @@ public class UserManage {
 		
 	}
 	
-	
+	/**
+	 *<p>修改学密码响应函数</p>
+	 * <p>修改数据库信息<br>
+	 * 
+	 * </p>
+	 */
 	class ChangeListener implements ActionListener{
 
 		@Override
@@ -235,7 +248,12 @@ public class UserManage {
 		
 	}
 
-	
+	/**
+	 *<p>录入信息响应函数</p>
+	 * <p>修改数据库信息<br>
+	 * 
+	 * </p>
+	 */
 	class SubmitLister implements ActionListener
 	{
 

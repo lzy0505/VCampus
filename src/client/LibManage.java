@@ -80,45 +80,57 @@ public class LibManage {
     */
 	 void init() {
 		
-			
-		 
 		 
 			//加书标签界面
 		 	JPanel p_add = new JPanel();
-			p_add.setLayout(new SpringLayout());
+			p_add.setLayout(new BoxLayout(p_add,BoxLayout.Y_AXIS));
 			ok_add = new JButton("确认");
+			//ok_add.setPreferredSize(new Dimension(100,30));
 //			ok_add.setMinimumSize(new Dimension((int)HomeScreen.width/6, (int)HomeScreen.height*1/19));
-//			ok_add.setPreferredSize(new Dimension((int)HomeScreen.width/6, (int)HomeScreen.height*1/19));
-			
+			ok_add.setPreferredSize(new Dimension((int)HomeScreen.width/5, (int)HomeScreen.height*1/16));
 			l_book_name =new JLabel("书名",JLabel.RIGHT);
-			p_add.add(l_book_name);
+			JPanel p1=new JPanel();
+			//p_add.add(l_book_name);
 			book_name = new JTextField();
+			
 //			book_name.setFont(new Font("黑体", Font.PLAIN, (int)HomeScreen.height*1/19));
-//			book_name.setPreferredSize(new Dimension((int)HomeScreen.width/3, (int)HomeScreen.height*1/19));
-			l_book_name.setLabelFor(book_name);
-			p_add.add(book_name);
+			book_name.setPreferredSize(new Dimension((int)HomeScreen.width/3, (int)HomeScreen.height*1/19));
+			//l_book_name.setLabelFor(book_name);
+			p1.add(l_book_name);
+			p1.add(book_name);
+			p_add.add(p1);
 			
 			l_author_name =new JLabel("作者",JLabel.RIGHT);
-			p_add.add(l_author_name);
+			JPanel p2=new JPanel();
+			p2.add(l_author_name);
 			author_name = new JTextField();
 //			author_name.setPreferredSize(new Dimension(250,40));
-			l_author_name.setLabelFor(author_name);
-			p_add.add(author_name);
+			//l_author_name.setLabelFor(author_name);
+			author_name.setPreferredSize(new Dimension((int)HomeScreen.width/3, (int)HomeScreen.height*1/19));
+			p2.add(author_name);
+			p_add.add(p2);
 			
-			
+			JPanel p3=new JPanel();
 			l_publish_name = new JLabel("出版社",JLabel.RIGHT);
-			p_add.add(l_publish_name);
+			p3.add(l_publish_name);
 			publish_name = new JTextField();
+			publish_name.setPreferredSize(new Dimension((int)HomeScreen.width/3, (int)HomeScreen.height*1/19));
 //			publish_name.setPreferredSize(new Dimension(250,40));
-			l_publish_name.setLabelFor(publish_name);
-			p_add.add(publish_name);
+			//l_publish_name.setLabelFor(publish_name);
+			//publish_name.setPreferredSize(new Dimension(70,20));
+			p3.add(publish_name);		
+			p_add.add(p3);
 			
+			
+			JPanel p4=new JPanel();
 			l_add_quantity = new JLabel("数量",JLabel.RIGHT);
-			p_add.add(l_add_quantity);
+			p4.add(l_add_quantity);
 			add_quantity = new JTextField();
+			add_quantity.setPreferredSize(new Dimension((int)HomeScreen.width/3, (int)HomeScreen.height*1/19));
 //			add_quantity.setPreferredSize(new Dimension(250,40));
-			l_add_quantity.setLabelFor(add_quantity);
-			p_add.add(add_quantity);
+			//l_add_quantity.setLabelFor(add_quantity);
+			p4.add(add_quantity);
+			p_add.add(p4);
 			
 			
 			Component[] cArray=p_add.getComponents();
@@ -127,12 +139,13 @@ public class LibManage {
 			}
 			
 			
-			SpringUtilities.makeCompactGrid(p_add, 4, 2, 30,(int)HomeScreen.height*1/19, 10, (int)((HomeScreen.height*2.5)/19));
+			//SpringUtilities.makeCompactGrid(p_add, 4, 2, 30,(int)HomeScreen.height*1/19, 10, (int)((HomeScreen.height*1.55)/19));
 			p_add.setPreferredSize(new Dimension((int)HomeScreen.width/2, (int)HomeScreen.height*16/19));
 					
 			addMain=new JPanel();
 			addMain.setLayout(new BoxLayout(addMain,BoxLayout.Y_AXIS));
 			JPanel middleP1=new JPanel();
+			//middleP1.setPreferredSize(new Dimension((int)HomeScreen.height*5/6,(int)HomeScreen.height*4/6));
 			middleP1.add(p_add);
 			addMain.add(middleP1);
 			addMain.add(ok_add);
@@ -182,7 +195,7 @@ public class LibManage {
 				p_delete.add(delete_p[i]);
 			}
 			addLis();
-			
+
 	 }
 	 
 	 

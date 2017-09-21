@@ -53,7 +53,13 @@ import javax.swing.JTable;
 import java.net.Socket;
  import java.util.ArrayList;
  import java.util.HashMap;
- 
+ /**
+  *<p>StudentAffairs</p>
+  * <p>学生课程管理类<br>
+  * 学生查询成绩、选课
+  * </p>
+  * @author 叶鑫、刘宗源、李子厚
+  */
  public class StudentAffairs {
  
  	private HomeScreen homeScreen=null;
@@ -152,10 +158,10 @@ import java.net.Socket;
  	}
  	
 
- 	 	
- 	/**
- 	 * Update the contents of the frame.
- 	 */
+ 	 /**
+ 	  * <p>更新学生课程，绘制界面<br>
+ 	  * </p>
+ 	  */
  	private void updateStudentCourse() {
  		updateTableContent();
  		DefaultTableModel selectCourseTableModel= new DefaultTableModel();
@@ -177,7 +183,11 @@ import java.net.Socket;
  		scoreQueryTableModel.setDataVector(scoreQueryTableContent, scoreQueryTableHead);
  		scoreQueryTable.setModel(scoreQueryTableModel);
  	}
-	
+ 	 /**
+	  * <p>界面切换方法<br>
+	  *	切换到学生的课程情况界面，从数据库获取信息
+	  * </p>
+	  */
 	public void updateTableContent() {
  		HashMap<String,String> hm = new HashMap<String,String>();
 	 	hm.put("card_id", ClientInfo.getCi());
@@ -233,7 +243,11 @@ import java.net.Socket;
 		 	examArrangementTableContent[j][2] = csList.get(examArrangemetIndex[j]).get("course_exam_time");
 		}
 	}
-
+	 /**
+	  * <p>课程选择界面<br>
+	  *	界面绘制
+	  * </p>
+	  */
  	public void courseSelect(Object[][] selectTeacherTableContent)
  	{
  		courseDetails = new JFrame();
@@ -259,7 +273,11 @@ import java.net.Socket;
  		courseDetails.setVisible(true);
  	
  	}
-
+	 /**
+	  * <p>选择课程响应函数<br>
+	  *	学生选课，修改数据库信息
+	  * </p>
+	  */
  	class SelectCourseButtonEditor extends ButtonEditor{
  		int row;		
 		public SelectCourseButtonEditor(JCheckBox checkBox) {
@@ -303,7 +321,11 @@ import java.net.Socket;
 		 
  		
  	}
-  
+ 	 /**
+	  * <p>选择老师响应函数<br>
+	  *	学生选具体老师的课，修改数据库信息
+	  * </p>
+	  */
 	class SelectTeacherButtonEditor extends ButtonEditor{
 			int row;		
 			public SelectTeacherButtonEditor(JCheckBox checkBox) {
@@ -343,7 +365,11 @@ import java.net.Socket;
 				return super.getCellEditorValue();
 			  }
 	}
-	
+	 /**
+	  * <p>选择老师响应函数<br>
+	  *	学生选具体老师的课，修改数据库信息
+	  * </p>
+	  */
 	class SelectTeacherButtonRenderer extends ButtonRenderer{
 		public SelectTeacherButtonRenderer() {
 			super();

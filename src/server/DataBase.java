@@ -3,13 +3,23 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-  
+/**
+ *<p>DataBase</p>
+ * <p>数据库类<br>
+ * 该类提供了管理数据库的方法，查找、修改、删除、插入功能
+ * </p>
+ * @author 刘宗源
+ */
 
 public class DataBase {
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rs;
-	
+	/**
+	 * <p>构造函数<br>
+	 * 加载数据库驱动
+	 * </p>
+	 */
 	public DataBase() {
 		System.out.println("DataBase -Load DBDriver- "+"Loading...");
 		try {
@@ -20,7 +30,10 @@ public class DataBase {
 	        e.printStackTrace();
 	    }
 	}
-	
+	/**
+	 * <p>与数据库连接<br>
+	 * </p>
+	 */
 	public void connectToDB() {
 		String filePath=System.getProperty("user.dir");
 		System.out.println("DataBase -Connect to DB- "+"File Path:"+filePath);
@@ -53,7 +66,12 @@ public class DataBase {
 //			e.printStackTrace();
 //		}
 //	}
-
+	/**
+	 * <p>查找数据库方法<br>
+	 * </p>
+	 * @param tableName 表名
+	 * @param condition 情况
+	 */
 	public ArrayList<HashMap<String,String>> selectWhere(String tableName,String condition){
 		try {
 			System.out.println("DataBase -Excute select- "+"Excuting:"+"SELECT * FROM "+ tableName+" WHERE "+condition+";" );
@@ -78,7 +96,12 @@ public class DataBase {
 			return null;
 		}
 	}
-	
+	/**
+	 * <p>插入<br>
+	 * </p>
+	 * @param tableName 表名
+	 * @param condition 条件
+	 */
 	public void insert(String tableName,HashMap<String,String> content) {
 		try {
 			Iterator<String> it =content.keySet().iterator();
@@ -104,7 +127,14 @@ public class DataBase {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * <p>选取<br>
+	 * </p>
+	 * @param tableName 表名
+	 * @param setValue 设定值
+	 * @param condition 条件
+	 * @return 返回一个HashMap的ArrayList
+	 */
 	public void setWhere(String tableName,String setValue,String condition) {
 		try {
 			String command="UPDATE " + tableName +" SET "+setValue+" WHERE "+condition+";";
@@ -117,7 +147,13 @@ public class DataBase {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * <p>删除<br>
+	 * </p>
+	 * @param tableName 表名
+	 * @param condition 条件
+	 * @return 无返回值
+	 */
 	public void deleteWhere(String tableName, String condition) {
 		try {
 			String command="DELETE FROM "+tableName+" WHERE "+condition+";";
@@ -132,7 +168,10 @@ public class DataBase {
 		
 	}
 	
-	
+	/**
+	 * <p>解构函数<br>
+	 * </p>
+	 */
 	protected void finalize(){
 		System.out.println("DataBase -Disconnect to DB- "+"Disconnecting...");
 		try {

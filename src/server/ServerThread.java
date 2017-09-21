@@ -22,8 +22,11 @@ import java.util.Date;
 
 
 /**
- * @author storm
- *
+ *<p>ServerThread</p>
+ * <p>服务器线程类<br>
+ * 该类提供了与客户端以及数据库交互的方法
+ * </p>
+ * @author 李子厚
  */
 public class ServerThread implements Runnable{
 	private boolean flag;
@@ -47,6 +50,13 @@ public class ServerThread implements Runnable{
 	}
 	
 	//run函数
+	/**
+	 *<p>run方法</p>
+	 * <p>该方法涵盖了所有与客户端及数据库连接的业务逻辑<br>
+	 * 传入需要的操作，返回响应的结果或者修改数据库
+	 * </p>
+	 * @author 李子厚
+	 */
 	public void run() {
 			try {
 				db=new DataBase();
@@ -651,7 +661,7 @@ public class ServerThread implements Runnable{
 					 modifiedFee=getOne.get("fee"+i);
 	                 db.setWhere("card_records","card_cost="+modifiedFee,"card_record_id="+card_record_id);			 
 					 }
-					 send.put("result","success modified");
+					 send.put("result","success");
 				     soos.writeObject(send);
 			         break;
 			         //修改成绩
