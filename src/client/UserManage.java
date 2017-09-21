@@ -263,7 +263,7 @@ public class UserManage {
 				}
 			}
 			
-			if(str.length()!=4) {
+			if(gradestr.length()!=4) {
 				JOptionPane.showMessageDialog(null,"请输入4位入学日期！",
 						"信息录入失败",JOptionPane.ERROR_MESSAGE);
 				return;

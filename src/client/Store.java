@@ -23,7 +23,13 @@ import table_component.SpringUtilities;
 
 //import ShoppingCart.ColumnListener;
 //import ShoppingCart.MyTableModel;
-
+/**
+ *<p>Store</p>
+ * <p>商店类<br>
+ * 绘制商店界面，有购买、购物车、商品分类功能
+ * </p>
+ * @author 叶鑫、赵千锋、李子厚、刘宗源
+ */
 public class Store {
 
 	//主界面的组件
@@ -72,6 +78,12 @@ public class Store {
 	JLabel welcomePicture;
 	boolean hasdeleteAdd;//判断广告标签是否删除
 	public Store()
+	/**
+	 *<p>Store</p>
+	 * <p>初始化<br>
+	 * 绘制商店界面
+	 * </p>
+	 */
 	{	b_filiterMode=false;
 		flagAll=false;
 		mainPanel=new JTabbedPane();
@@ -207,7 +219,12 @@ public class Store {
 		
 
 	}
-	
+	/**
+	 *<p>Store</p>
+	 * <p>点击商店响应<br>
+	 * 绘制商店界面
+	 * </p>
+	 */
 	
 	class ListListener implements ListSelectionListener
 	{
@@ -286,8 +303,12 @@ public class Store {
 	}
 	
 	
-
-	//绘制搜索结果的函数
+	/**
+	 *<p>Store</p>
+	 * <p>搜索响应<br>
+	 * 绘制搜索结果的函数
+	 * </p>
+	 */
 	public void searchResult(String productName[],String productIcon[],String productPrice[],int size)
 	{
 		JPanel p_buf=new JPanel();
