@@ -36,12 +36,16 @@ import sun.security.util.Password;
 import table_component.SpringUtilities;
 
 /**
- * @author Mcdull
- *
+ *<p>Bank</p >
+ *  <p>银行类，该类生成银行界面，与服务器通信获取相关数据并显示。 <br>
+ * 功能：缴费、充值、一卡通挂失
+ * </p>
+ * @author 赵千锋、李子厚
+ * @see java.awt.Dimension;
+ * @since 1.8
  */
 
-//----------------------------------------
-//@银行类----------------------------------
+
 class Bank
 {
 	HomeScreen homeScreen=null;
@@ -97,7 +101,12 @@ class Bank
 //		 ci=card_id;
 //	 }
 	
-	//绘制银行的函数 
+	/**
+	 * 
+	 * <p>
+	 * 绘制银行的函数
+	 * </p>
+	 */
 	 void init()
 	 {		
 		
@@ -131,6 +140,16 @@ class Bank
 			ok_re=new JButton("确定");
 		 	ok_re.setPreferredSize(new Dimension(70,30));
 		 	JButton lostCard=new JButton("一卡通挂失");
+
+			/**
+			 * 
+			 * <p>
+			 * 挂失功能函数
+			 * </p>
+			 * 
+			 * @return 没有返回值
+			 */
+		 	
 		 	lostCard.addActionListener(new ActionListener() {
 
 				@Override
@@ -237,7 +256,14 @@ class Bank
 		 			 
 	 }
 
-	 //为银行类的相关控件增加监听函数
+		/**
+		 * 
+		 * <p>
+		 * 为银行类的相关控件增加监听函数
+		 * </p>
+		 * 
+		 * @return 没有返回值
+		 */
 	 void addLis()
 	 {   
 		 ok_re.addActionListener(new ActionLis_recharge());	//确认充值按钮	
@@ -250,6 +276,14 @@ class Bank
 	 }
 		//-----------------------------------------------
 		//@@各种消息映射类的实现
+		/**
+		 * 
+		 * <p>
+		 * 切换标签类，在切换时刷新界面
+		 * </p>
+		 * 
+		 * 
+		 */
 	 class ChangeLis_tab implements ChangeListener
 	 {
 
@@ -297,7 +331,14 @@ class Bank
 		 
 	 }
 
-	 
+		/**
+		 * 
+		 * <p>
+		 * 支付功能类，支付学杂费
+		 * </p>
+		 * 
+		 * 
+		 */
     class ActionLis_Pay implements ActionListener
     {
 
@@ -345,7 +386,12 @@ class Bank
 
     }
 	 
-
+	/**
+	 * <p>
+	 *向一卡通充值类
+	 * </p>
+	 * 
+	 */
 	 
 	class ActionLis_recharge implements ActionListener
 	{
@@ -395,7 +441,13 @@ class Bank
 		 
 	 
 	}
-	
+	/**
+	 * 
+	 * <p>
+	 * 查询学费、住宿费等费用的类
+	 * </p>
+	 * 
+	 */
 
 	  class ActionLis_Paymentquery implements ActionListener
 	  {

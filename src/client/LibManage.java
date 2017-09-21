@@ -29,7 +29,13 @@ import javax.swing.text.Highlighter;
 import client.Library.ActionLis_Query;
 import client.Library.ChangeLis_Tab;
 import table_component.SpringUtilities;
-
+/**
+*<p>LibManage</p>
+* <p>图书馆管理类<br>
+* 提供添加图书和删除图书的功能
+* </p>
+* @author 李子厚、赵千锋、刘宗源
+*/
 public class LibManage {
 
 
@@ -65,7 +71,13 @@ public class LibManage {
 		homeScreen=hs;
 	}
 	*/
-	//绘制管理图书馆的函数 
+	//
+    /**
+     * 绘制管理图书馆的函数 
+    * <p>绘制图书馆管理界面<br>
+    * 
+    * </p>
+    */
 	 void init() {
 		
 			
@@ -185,6 +197,11 @@ public class LibManage {
 
 	 
 	//各种消息响应函数及中间函数
+	   /** 
+	    * <p>查询响应 <br>
+	    * 通过书名或者作者查询书籍，从服务器获取数据
+	    * </p>
+	    */
 	 class ActionLis_Query implements ActionListener
 	 {
 		 public void actionPerformed(ActionEvent e) {
@@ -253,7 +270,11 @@ public class LibManage {
 				
 		 }
 	 }
-	 
+	   /** 
+	    * <p>添加书确认响应 <br>
+	    * 添加图书并上传到服务器
+	    * </p>
+	    */
 	 class ActionLis_Add_Ok implements ActionListener
 	 {
 		 public void actionPerformed(ActionEvent e) {
@@ -286,7 +307,12 @@ public class LibManage {
 			 }
 		 }
 	 }
-	 
+	   /** 
+	    * <p>删除响应 <br>
+	    * 单本删除
+	    * 删除书籍响应，删除数据库内容
+	    * </p>
+	    */
 	 class ActionLis_delete_single implements ActionListener
 	 {
 		 public void actionPerformed(ActionEvent e) {
@@ -326,7 +352,12 @@ public class LibManage {
 					
 				}
 		 }
-	
+	   /** 
+	    * <p>删除响应 <br>
+	    * 同类型书籍全部删除
+	    * 删除书籍响应，删除数据库内容
+	    * </p>
+	    */
 	 
 	 class ActionLis_delete_all implements ActionListener
 	 {

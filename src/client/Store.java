@@ -5,7 +5,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.TimerTask;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableModel;
@@ -52,21 +54,47 @@ public class Store {
 	JTextField quantityText;//用于计算选中某种商品的数量
 	
 	//购物车
+	static int count[];
 	JTable table=null;
-	
-	
+	//分类
+	JList typelist;
+	String type[];
+	//储存搜索结果
+	String productName[];
+	String productIcon[];
+	String productPrice[];
+	String[] headName; 
+	JCheckBox checkAll;
+	boolean flagAll;
+	//存储搜索结果筛选前在product[]里面的位置
+	int[] product_index;
+	boolean b_filiterMode;//标记是否为筛选模式
+	JLabel welcomePicture;
+	boolean hasdeleteAdd;//判断广告标签是否删除
 	public Store()
-	{	
+	{	b_filiterMode=false;
+		flagAll=false;
 		mainPanel=new JTabbedPane();
 		JPanel p=new JPanel();
 		p.setName("gouwuche");
 		mainPanel.addTab("购物车",p);
+		hasdeleteAdd=false;
 		
 		searchPanel=new JPanel();
 		searchPanel.setLayout(new BoxLayout(searchPanel,BoxLayout.Y_AXIS));
 		
 		
 		JPanel searchInput=new JPanel(new FlowLayout(FlowLayout.CENTER));
+		//添加入场广告
+		//JPanel flashPanel
+		welcomePicture=new JLabel();
+		//图片缩放
+		ImageIcon imageIcon_display=new ImageIcon("clientpic/广告2.jpeg");
+		Image image=imageIcon_display.getImage();
+		image=image.getScaledInstance((int)(HomeScreen.width*6/8), (int)(HomeScreen.height*5/6), Image.SCALE_DEFAULT);
+		imageIcon_display=new ImageIcon(image);
+		welcomePicture.setIcon(imageIcon_display);
+		welcomePicture.setPreferredSize(new Dimension((int)(HomeScreen.width*5/6),(int)(HomeScreen.height*5/6)));
 		
 		//Search bar start
 		searchText = new JTextField();
@@ -75,11 +103,30 @@ public class Store {
 		search = new JButton("搜索");
 		
 		searchInput.add(searchText);
-		searchInput.add(search);
-		
-		
+		searchInput.add(search);	
+		//searchPanel.add(p_classfiy);
 		searchPanel.add(searchInput);
+		searchPanel.add(welcomePicture);
+		//设置定时器关闭广告
 		
+		
+		
+		
+		//分类"饮料","日用品","电子产品","食品"
+		type=new String[5];
+		type[0]="全部";
+		type[1]="饮料";
+		type[2]="日用品";
+		type[3]="电子产品";
+		type[4]="食品";
+		typelist=new JList(type);
+		typelist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);//规定List列表只能单选
+		headName=new String[4];
+	    headName[0]="商品名称";
+	    headName[1]="单价";
+	    headName[2]="数量";
+	    headName[3]="总价";
+	    
 		//Search bar end
 		
 		//为了强行初始化，加了一段，献丑了
@@ -119,19 +166,132 @@ public class Store {
 		searchPanel.add(productPreviewPanel);
 		
 		*/
-		
 		//响应如下
-		
+	   
 		search.addActionListener(new SearchLister());
-        new SearchLister().actionPerformed(null);
+        //new SearchLister().actionPerformed(null);//手动调用搜索
 		mainPanel.addTab("搜索", searchPanel);
 		mainPanel.setSelectedIndex(1);
-
+		typelist.addListSelectionListener(new ListListener());
 		
 	}
 	
-	public void searchResult(String productName[],String productIcon[],int size)
+	
+	
+	void setTimer()
 	{
+		System.out.println("ok1");
+		Timer t=new Timer();
+		t.schedule(new MyTask(), 3000);
+		
+	}
+	class MyTask extends TimerTask
+	{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			System.out.println("ok2");
+			if(hasdeleteAdd==false)
+			{
+				searchPanel.remove(welcomePicture);
+				new SearchLister().actionPerformed(null);//手动调用搜索
+				searchPanel.repaint();
+				searchPanel.revalidate();
+				hasdeleteAdd=true;
+			}
+			
+		}
+		
+		
+		
+
+	}
+	
+	
+	class ListListener implements ListSelectionListener
+	{
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			// TODO Auto-generated method stub
+			int size=getDetial.size();
+			int vaildSize=0;
+			int index=0;
+			int count=0;
+			String theItemName[];
+			String theItemPicture[];
+			String theItemPrice[];
+			if(size==0)
+			{
+				return;
+			}
+			String itemType[]={"饮料","日用品","电子产品","食品"};
+			
+			for(int k=0;k<5;k++)
+			{
+			//如果选择的是..的话
+			if(typelist.getSelectedIndex()==k&&k==0)
+			{
+				b_filiterMode=false;
+				flagAll=true;
+				new SearchLister().actionPerformed(null);
+				//显示全部
+				
+			}
+		
+			else if(typelist.getSelectedIndex()==k&&k!=0)
+			{
+				b_filiterMode=true;
+				flagAll=false;
+				for(int i=0;i<size;i++)
+				{
+					
+					if(getDetial.get(i).get("item_type").equals(itemType[k-1]))
+					{
+					  
+                       ++vaildSize;
+					}				
+				}
+				product_index=new int[vaildSize];
+				theItemName=new String[vaildSize];
+				theItemPicture=new String[vaildSize];
+				theItemPrice=new String[vaildSize];
+				
+				for(int i=0;i<size;i++)
+				{
+					if(getDetial.get(i).get("item_type").equals(itemType[k-1]))
+					{
+					  
+					   product_index[count]=i;					   
+                       theItemName[index]=productName[i];
+                       theItemPicture[index]=productIcon[i];
+                       theItemPrice[index]=productPrice[i];
+                       ++index;
+                       ++count;
+					}				
+				}
+	
+				searchResult(theItemName,theItemPicture,theItemPrice,vaildSize);
+				return;
+			}
+			
+			
+			}
+	
+			
+		}
+			
+		
+	}
+	
+	
+
+	//绘制搜索结果的函数
+	public void searchResult(String productName[],String productIcon[],String productPrice[],int size)
+	{
+		JPanel p_buf=new JPanel();
+		p_buf.setLayout(new BoxLayout(p_buf,BoxLayout.X_AXIS));
 		
 		//加入滚动面板
 		JPanel searchResultPanel =new JPanel();
@@ -141,6 +301,16 @@ public class Store {
 		panel.setPreferredSize(new Dimension((int)(HomeScreen.width*5/7),(int)(HomeScreen.height*5/6)));
 		JScrollPane scrollPane = new JScrollPane(searchResultPanel);
 		
+		JPanel p_classfiy=new JPanel();
+		typelist.setBackground(new Color(240,240,240));
+		typelist.setFixedCellHeight((int)HomeScreen.width*1/22);
+		typelist.setPreferredSize(new Dimension((int)(HomeScreen.width*1/8),(int)(HomeScreen.height*4/5)));
+		p_classfiy.add(typelist);
+		p_classfiy.setPreferredSize(new Dimension((int)(HomeScreen.width*1/7),(int)(HomeScreen.height*4/5)));
+		
+		
+		p_buf.add(p_classfiy);
+		p_buf.add(scrollPane);
 		
 		//绘制搜索结果页面
 		if(size == 0)
@@ -151,35 +321,57 @@ public class Store {
 		{
 			int insert=0;
 			while(size%4!=0) {
-				size++;
-				insert++;
+				size++;//填满最后一行
+				insert++;//空Label
 			}
 			productResultLabel = new JLabel[size];
+			JPanel[] panelSet=new JPanel[size];
+			JLabel[] productPriceLabel=new JLabel[size];
 			
 			for(int i = 0;i<size-insert;i++)
-			{
+			{   panelSet[i]=new JPanel();
+			    panelSet[i].setLayout(new BoxLayout(panelSet[i],BoxLayout.Y_AXIS));
+				productPriceLabel[i]=new JLabel("          "+"¥ "+productPrice[i]);
+				productPriceLabel[i].setForeground(Color.RED);
+				productPriceLabel[i].setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+				
 				productResultLabel[i] = new JLabel(productName[i]);
 				productResultLabel[i].setIcon(new ImageIcon(productIcon[i]));
+				System.out.println(productIcon[i]);
 				productResultLabel[i].setHorizontalTextPosition(JLabel.CENTER);
 				productResultLabel[i].setVerticalTextPosition(JLabel.BOTTOM);
+				if(b_filiterMode==false)
+				{
 				productResultLabel[i].addMouseListener(new searchResultLister(i));
-				panel.add(productResultLabel[i]);
+				}
+				else if(b_filiterMode==true)
+				{
+					System.out.println(product_index[i]);
+					productResultLabel[i].addMouseListener(new searchResultLister(product_index[i]));
+					
+				}
+				panelSet[i].add(productResultLabel[i]);
+				panelSet[i].add(productPriceLabel[i]);
+				panel.add(panelSet[i]);
+				
 			}
 			for(int i=0;i<insert;i++) {
-				panel.add(new JLabel());
+				productResultLabel[size-insert+i]=new JLabel();
+				panel.add(productResultLabel[size-insert+i]);
+				
 			}
 			
-			SpringUtilities.makeCompactGrid(panel, size/4, 4, 0, 0, 50, 30);
-			if(searchPanel.getComponentCount()>1)
-			{
-			searchPanel.remove(1);
-			}
-			searchPanel.add(scrollPane);
-			searchPanel.repaint();
-			searchPanel.updateUI();
-			searchPanel.revalidate();
+			
 		}
-
+		SpringUtilities.makeCompactGrid(panel, size/4, 4, 0, 0, 50, 30);
+		if(searchPanel.getComponentCount()>1)
+		{
+		searchPanel.remove(1);
+		}
+		searchPanel.add(p_buf);
+		searchPanel.repaint();
+		searchPanel.updateUI();
+		searchPanel.revalidate();
 		
 	}
 	
@@ -202,7 +394,7 @@ public class Store {
 		
 		//商品名
 		JLabel productNameLabel = new JLabel(details[0]);
-		productNameLabel.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 20));
+		productNameLabel.setFont(new Font("Microsoft YaHei UI", Font.BOLD, 30));
 		info.add(productNameLabel);
 		info.add(new JLabel());
 		
@@ -258,7 +450,8 @@ public class Store {
 		JLabel productImageLabel = new JLabel("");
 		productImageLabel.setIcon(new ImageIcon(details[1]));
 		productImageLabel.setBounds(91, 42, 180, 240);
-		
+		productDetailPanel.add(new JLabel(""));
+		productDetailPanel.add(new JLabel(""));
 		productDetailPanel.add(info);
 		productDetailPanel.add(productImageLabel);
 		
@@ -308,6 +501,7 @@ public class Store {
 					 shoppingCart();
 				 }else{
 					 shoppingCart();
+					 
 					 mainPanel.setSelectedIndex(1);
 				 }
 			 }			
@@ -343,7 +537,7 @@ public class Store {
 		shoppingCartPanel.add(panel);
 	
 		//表头
-		String[] headName = {"商品名称","单价","数量","总价"};
+		
 
 		table = new JTable(shopCart,headName);
 		table.setPreferredScrollableViewportSize(new Dimension(831, 300));
@@ -359,9 +553,14 @@ public class Store {
 //		TotalBar.setBounds(8, 321, 817, 95);
 		
 //		TotalBar.setLayout(null);
-		
-		JButton btnSettle = new JButton("结账");
-		TotalBar.add(btnSettle);
+		checkAll=new JCheckBox("全部选择");
+		JButton btnbuy=new JButton("购买选中商品");
+		//JButton btnSettle = new JButton("购买全部");
+		JButton btnDelete=new JButton("删除选中商品");
+		TotalBar.add(checkAll);
+		TotalBar.add(btnbuy);
+		//TotalBar.add(btnSettle);
+		TotalBar.add(btnDelete);
 		//全选和删除暂时不写哈，只有结算的功能
 		/*JCheckBox chckbxSelectAll = new JCheckBox("Select All");
 		chckbxSelectAll.setBounds(53, 34, 128, 23);
@@ -371,15 +570,19 @@ public class Store {
 		btnDelete.setBounds(185, 30, 80, 30);
 		TotalBar.add(btnDelete);*/
 		
-		JLabel lblTotal = new JLabel("总价：");
+		JLabel lblTotal = new JLabel("选中商品总价：");
 //		lblTotal.setBounds(490, 29, 88, 37);
 		TotalBar.add(lblTotal);
 		
 		TotalPriceLabel = new JLabel("¥0.00");
+		TotalPriceLabel.setPreferredSize(new Dimension(70,30));
 		TotalPriceLabel.setForeground(Color.RED);
 		TotalPriceLabel.setFont(new Font("Microsoft YaHei UI", Font.PLAIN, 16));
+//		TotalPriceLabel.setBounds(561, 30, 88, 37);
 		TotalBar.add(TotalPriceLabel);
 
+		
+        count = new int[table.getRowCount()];
 		
 		table.addMouseListener(new MouseListener()
 		{
@@ -424,9 +627,41 @@ public class Store {
 		table.addMouseListener(calListener);
 		calListener.mouseClicked(null);	
 		//购物车一块购买
-		btnSettle.addActionListener(new BuyAllLister());
+		checkAll.addChangeListener(new CheckListener());
+	    //btnSettle.addActionListener(new BuyAllLister());
+		//选择性支付
+		btnbuy.addActionListener(new BuySelectedLister());
+		btnDelete.addActionListener(new DeleteSltListener());
 		mainPanel.setSelectedIndex(0);
 	}
+	
+	
+   class CheckListener implements ChangeListener
+   {
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		// TODO Auto-generated method stub
+		
+		if(checkAll.isSelected())
+		{
+			table.selectAll();
+					
+		}
+		else if(!checkAll.isSelected())
+		{
+						
+			table.clearSelection();		
+		}
+		
+		new calculatePriceLister().mouseClicked(null);
+	}
+  
+	   
+   }
+
+	
+	
 	
 	class SearchLister implements ActionListener
 	{
@@ -447,14 +682,22 @@ public class Store {
 				e.printStackTrace();
 			}
 			size = getDetial.size();
-			String productName[] = new String[size];
-			String productIcon[] = file_path;
+			productName = new String[size];
+			productPrice=new String[size];
+			productIcon = file_path;
 			for(int i=0;i<size;i++) {
 				productName[i] = getDetial.get(i).get("item_name");
+				productPrice[i]=getDetial.get(i).get("item_price");
 			}	
 			//从数据库那里得到商品名字及商品图片的字符串数组及数组们的大小，将其作为参数
 			//传到搜索结果界面的构造函数中
-			searchResult(productName,productIcon,size);
+			searchResult(productName,productIcon,productPrice,size);
+			
+			if(flagAll==false)
+			{
+			typelist.clearSelection();
+			}
+			typelist.setSelectedIndex(0);
 			
 		}
 		
@@ -469,7 +712,7 @@ public class Store {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			//商品详情字符串数组，里面的内容参照productDetails()
-			details= new String[5];
+			details= new String[6];
 			details[0] = getDetial.get(index).get("item_name");
 			System.out.println("点击的商品名.." +getDetial.get(index).get("item_name")); 
 			details[1] = file_path[index];
@@ -479,6 +722,7 @@ public class Store {
 			System.out.println("点击的销售量.." + getDetial.get(index).get("item_purchased_number"));
 			details[4] = getDetial.get(index).get("item_stock");
 			System.out.println("点击的库存数.." +getDetial.get(index).get("item_stock"));
+			
 			
 			//把详情传到details里，将details作为参数传递到商品详情界面
 			productDetail();
@@ -498,9 +742,11 @@ public class Store {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			Double totalPrice=0.0;
-			for(int i = 0;i<table.getRowCount();i++)
+			int[] index=table.getSelectedRows();
+			int indexCount=table.getSelectedRowCount();
+			for(int i = 0;i<indexCount;i++)
 			{
-				totalPrice += Double.parseDouble((String)table.getValueAt(i,3));
+				totalPrice += Double.parseDouble((String)table.getValueAt(index[i],3));
 				
 			}
 			TotalPriceLabel.setText("¥"+totalPrice);
@@ -539,6 +785,71 @@ public class Store {
 					{
 						shoppingCartArray.remove(0);					
 						//库存量和银行卡余额相应的减少
+						//table.removeAll();
+					}else {
+						
+						flag =false;
+						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
+						break;
+					}
+				
+					//若银行卡余额不足，提醒他账户余额不够，请尽快充值
+					//JOptionPane.showMessageDialog(null,"账户余额不足，请尽快充值！",
+					//		"购买失败！",JOptionPane.WARNING_MESSAGE);
+				}
+				if(flag) {
+					JOptionPane.showMessageDialog(null,"购买成功");	
+					//把跳转到购买页面注释了
+					//mainPanel.setSelectedIndex(1);
+					shoppingCart();
+				}else {
+					
+					shoppingCart();
+				}			
+	
+			}					
+		}
+	}
+	
+	 class BuySelectedLister implements ActionListener
+	 {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+			boolean flag =true;
+			int result = JOptionPane.showConfirmDialog(null, "总价为"+TotalPriceLabel.getText()+",确认购买？");
+			int index[]=table.getSelectedRows();
+			int index_remove[]=table.getSelectedRows();
+			int indexCount=table.getSelectedRowCount();
+			//若银行卡余额充足并且确认购买，则显示购买成功
+			
+			if(result == 0) {						
+				for(int i=0;i<indexCount;i++) {
+					System.out.println(index[i]);
+					HashMap<String, String> hm=new HashMap<String, String>();
+					hm.put("op", "buy");
+					hm.put("card_id", ClientInfo.getCi());
+					hm.put("cost",(String) table.getValueAt(index[i], 3));
+					hm.put("item_name", (String) table.getValueAt(index[i], 0));
+					hm.put("quantity", (String) table.getValueAt(index[i], 2));
+					hm=GUI.getOne(hm);
+					if(hm.get("result").equals("success"))
+					{
+						for(int j=0;j<indexCount;j++)
+						{
+							if(index_remove[j]>index_remove[i])
+							{
+								index_remove[j]=index_remove[j]-1;
+							}
+						}
+						
+						
+						shoppingCartArray.remove(index_remove[i]);	
+						
+						//库存量和银行卡余额相应的减少
+						//table.removeAll();
 					}else {
 						flag =false;
 						JOptionPane.showMessageDialog(null, hm.get("item_name") + "购买失败！" + hm.get("reason"));
@@ -550,23 +861,55 @@ public class Store {
 					//		"购买失败！",JOptionPane.WARNING_MESSAGE);
 				}
 				if(flag) {
-					JOptionPane.showMessageDialog(null,"购买成功");
-					mainPanel.setSelectedIndex(1);
+					JOptionPane.showMessageDialog(null,"购买成功");	
+					//把跳转到购买页面注释了
+					//mainPanel.setSelectedIndex(1);
+					shoppingCart();
 				}else {
-					String[] headName = {"商品名","单价","数量","总价"};
-					String[][] newTable = new String[table.getRowCount()-i][4];
-					for(int x=i;x<table.getRowCount();x++) {
-						for(int y=0;y<4;y++) {
-							newTable[x][y] = (String) table.getValueAt(x, y);
-						}
-						
-					}
-					table.setModel(new DefaultTableModel(newTable,headName));
+					
+					shoppingCart();
 				}			
 	
 			}					
+			
+			
+			
 		}
-	}
+
+	 }
+	
+	 
+	 class DeleteSltListener implements ActionListener
+	 {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+			int index[]=table.getSelectedRows();
+			int indexCount=table.getSelectedRowCount();
+			
+			for(int i=0;i<indexCount;i++) {
+						
+					for(int j=0;j<indexCount;j++)
+					{
+						if(index[j]>index[i])
+						{
+							index[j]=index[j]-1;
+						}
+					}
+					
+					
+			    shoppingCartArray.remove(index[i]);	
+						
+			
+		}
+			shoppingCart();
+
+		 
+	 }
+	 }
+	 
 	class InitDetailsListener implements MouseListener{
 		int i;
 		public InitDetailsListener(int i) {

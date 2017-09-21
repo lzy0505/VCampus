@@ -10,16 +10,19 @@ import java.io.File;
 
 import com.sun.swing.internal.plaf.basic.resources.basic;
 
-import utils.*;
-
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.io.File;
-/*
- * <p>MyClient</p >
- * 客户端，用于与服务端连接并接发数据
- * @author
+/**
+ *
+ *<p>Client</p >
+ * <p>客户端类，该类与服务器建立连接<br>
+ * 同时提供接发信息、传送图片等方法供其他类使用
+ * </p>
+ * @author 李子厚
+ * @see java.awt;
+ * @since 1.8
  */
 public class Client{
 	private ObjectInputStream cin;//对象输入流
@@ -32,7 +35,13 @@ public class Client{
 	public Client()throws IOException {
 		clientSocket =new Socket(host, port);
 	}
-	
+	/**
+	 * <p>发送信息函数<br>
+	 * 将HashMap发送给服务器
+	 * </p>
+	 * @return 没有返回值
+	 * @param sendmes 需要发送给服务端的信息
+	 */
 	//发送数据包
 	public void sendMessage(HashMap<String,String> sendmes) throws IOException 
 	{	 
@@ -41,7 +50,13 @@ public class Client{
 		cout=new ObjectOutputStream(os);
 		cout.writeObject(sendmes);
 	}
-	
+	/**
+	 * <p>接受单个HashMap函数<br>
+	 * 接受服务器发送的信息
+	 * </p>
+	 * @return getmes 是一个HashMap
+	 * 
+	 */
 	//获取数据包
 	public HashMap<String,String> getMessage()throws IOException 
 	{		
@@ -56,6 +71,13 @@ public class Client{
 		}
 		return getmes;
 	}
+	/**
+	 * <p>接受多个HashMap函数<br>
+	 * 接受服务器发送的信息
+	 * </p>
+	 * @return getmes 是一个HashMap的ArrayList
+	 * 
+	 */
 	public ArrayList<HashMap<String,String>> getMessages()throws IOException 
 	{		
 		InputStream is=clientSocket.getInputStream();
@@ -69,7 +91,14 @@ public class Client{
 		}
 		return getmes;
 	}
-	//给一个HashMap装商品的路径、名字、数量、单价、类型
+	/**
+	 * 上传图片和发送商品详情的方法
+	 * <p>上传图片和相关信息的类<br>
+	 * </p>
+	 * @param hm 给一个HashMap装商品的图片路径、名字、数量、单价、类型
+	 * @return getmes 是一个HashMap，返回是否成功和失败的原因
+	 * 
+	 */
 	public HashMap<String, String> upLoad(HashMap<String, String> hm)throws IOException {
 		/*分三步，第一步：传给服务器要传的新商品的名字，如果已经有了该商品就返回失败。否则先录入信息，
 		 * 注：先将路径设为空；hm里面的路径是客户端处的
@@ -119,7 +148,15 @@ public class Client{
 		}
 		return getfile;
 	}
-	//给这个函数一个HashMap，里面装有操作和key，能给你返回服务器传到客户端的文件的路径数组。明明白白
+	/**
+	 * 接受服务器发送的图片和商品详情
+	 * 给这个函数一个HashMap，里面装有操作和key，能给你返回服务器传到客户端的文件的路径数组。明明白白
+	 * <p>接受服务器发送的图片和商品详情的类<br>
+	 * </p>
+	 * @param sendmes 含有发送操作以及商品名称
+	 * @return getmes 是一个HashMap，返回服务器传到客户端的文件的路径数组
+	 * 
+	 */
 	public String[] getIcon(HashMap<String,String> sendmes)throws IOException{
 			byte[] inputByte = null;  
 	        int length = 0;  

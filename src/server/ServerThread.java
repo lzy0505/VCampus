@@ -20,8 +20,6 @@ import com.sun.crypto.provider.HmacMD5;
 
 import java.util.Date;
 
-import utils.User;
-
 
 /**
  * @author storm

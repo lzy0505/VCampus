@@ -1,5 +1,11 @@
 package client;
-
+/**
+*<p>HSAdmin</p>
+* <p>管理员主界面类<br>
+* 绘制管理员主界面
+* </p>
+* @author 赵千锋
+*/
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -43,7 +49,11 @@ public class HSAdmin {
 	public HSAdmin()
 	{
 	}
- 
+	/**
+	* <p初始化方法<br>
+	* 绘制管理员主界面
+	* </p>
+	*/
 	public void init(String identity)
 	{
 		ci=ClientInfo.getCi();
@@ -132,6 +142,11 @@ public class HSAdmin {
 
 
 	//各种消息映射类
+	/**
+	* <p修改费用<br>
+	* 费用管理员可以修改学生需要缴纳的学杂费
+	* </p>
+	*/
 	class ActLis_fee_modify implements ActionListener
 	{
 
@@ -179,6 +194,11 @@ public class HSAdmin {
 
 		
 	}
+	/**
+	* <p费用查询响应<br>
+	* 根据学号或者姓名查询学生需要缴纳的费用
+	* </p>
+	*/
 	class ActLis_fee_query implements ActionListener
 	{
 

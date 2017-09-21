@@ -15,7 +15,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-
+/**
+*<p>GUI</p >
+* <p>GUI类<br>
+* 该类有注册、登录功能，并绘制了该界面
+* </p>
+* @author 叶鑫、刘宗源、赵千锋、李子厚
+*/
 //implements ActionListener
 public class GUI extends JFrame 
 {
@@ -58,7 +64,10 @@ public class GUI extends JFrame
 
  	HomeScreen homeScreen;
  	HSAdmin hsAdmin;
-	
+ 	/**
+ 	* <p>初始化方法<br>
+ 	* </p>
+ 	*/
 	public void init(){
 		
 		try {
@@ -69,6 +78,12 @@ public class GUI extends JFrame
 		}
 	}
 	//send message 可乐
+	/**
+ 	* <p>发送信息方法<br>
+ 	* </p>
+ 	* @param sendmes 发送的信息
+ 	* @return 没有返回值
+ 	*/
 	public static void send(HashMap<String,String> sendmes){
 		try {
 			Client client = new Client();
@@ -81,7 +96,12 @@ public class GUI extends JFrame
 			e.printStackTrace();
 		}
 	}
-
+	/**
+ 	* <p>得到信息方法<br>
+ 	* </p>
+ 	* @param sendmes 发送的信息
+ 	* @return getmes 得到的信息
+ 	*/
 	//send and get message
 	public static HashMap<String, String> getOne(HashMap<String,String> sendmes){
 		HashMap<String, String> getmes=null;
@@ -97,6 +117,12 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
+	/**
+ 	* <p>得到批量信息方法<br>
+ 	* </p>
+ 	* @param sendmes 发送的信息
+ 	* @return getmes 得到的批量信息
+ 	*/
 	public static ArrayList<HashMap<String,String>> getList(HashMap<String,String> sendmes){
 		ArrayList<HashMap<String,String>> getmes=null;
 		try {
@@ -110,8 +136,13 @@ public class GUI extends JFrame
 		}
 		return getmes;
 	}
-
-	//给新商品的名字、数量、路径、价格。返回一个HashMap，如果成功返回success，失败返回false和相应的原因。
+	/**
+	* 给新商品的名字、数量、路径、价格。返回一个HashMap，如果成功返回success，失败返回false和相应的原因。
+ 	* <p>上传新商品方法<br>
+ 	* </p>
+ 	* @param hm 发送的信息，包含新商品的名字、数量、路径、价格
+ 	* @return getmes 得到的结果信息，失败返回理由
+ 	*/
 	public static HashMap<String, String> upLoad(HashMap<String, String> hm) {
 		HashMap<String, String> getmes=null;
 		try {
@@ -126,6 +157,12 @@ public class GUI extends JFrame
 		return getmes;
 	}
 	//给这个函数一个HashMap，里面装有操作和key，能给你返回服务器传到客户端的文件的路径数组。明明白白
+	/**
+ 	* <p>获取图片方法<br>
+ 	* </p>
+ 	* @param sendmes 发送的操作信息
+ 	* @return getmes 得到的图片路径
+ 	*/
 	public static String[] getImage(HashMap<String,String> sendmes)throws IOException{
 	
 			Client client = new Client();
@@ -133,18 +170,31 @@ public class GUI extends JFrame
 			 return filename;
 	}
 	
-	
+	/**
+ 	* <p>获取宽度<br>
+ 	* </p>
+ 	* @param frameWidth 宽度
+ 	* @return 无返回值
+ 	*/
 	public static int getWidth(int frameWidth)
 	{
 		return(Toolkit.getDefaultToolkit().getScreenSize().width - frameWidth) / 2;
 	}
-	
+	/**
+ 	* <p>获取高度<br>
+ 	* </p>
+ 	* @param frameHeight 高度
+ 	* @return 无返回值
+ 	*/
 	public static int getHeight(int frameHeight)
 	{
 		return(Toolkit.getDefaultToolkit().getScreenSize().height - frameHeight) / 2;
 	}
 	
-	
+	/**
+ 	* <p>绘制登录、注册界面<br>
+ 	* </p>
+ 	*/
 	public GUI(String title1,String title2,String title3)
 	{
 		//the part of G1
@@ -318,7 +368,11 @@ public class GUI extends JFrame
 		
 		pro1.addItemListener(new MyItemLister1());
 	}
-	
+	/**
+ 	* <p>main函数，启动整个程序<br>
+ 	* </p>
+ 	* @return 无返回值
+ 	*/
 	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException 
 	{  try{//定义界面风格
 //		UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
@@ -372,6 +426,13 @@ public class GUI extends JFrame
 		
 	}
 	//注册界面
+	/**
+	 * 注册界面
+ 	* <p>注册按钮响应函数<br>
+ 	* 提供注册、非法输入判断功能
+ 	* </p>
+ 	* @return 无返回值
+ 	*/
 	class MyActLister2 implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
@@ -441,6 +502,13 @@ public class GUI extends JFrame
 		}
 		
 	}
+	/**
+	 * 登录
+ 	* <p>登录按钮响应函数<br>
+ 	* 提供登录验证功能
+ 	* </p>
+ 	* @return 无返回值
+ 	*/
 	//点击登录按钮, sign in
 	class MyActLister5 implements ActionListener
 	{

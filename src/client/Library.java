@@ -22,7 +22,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
+/**
+*<p>Library</p>
+* <p>图书馆类<br>
+* 绘制图书馆界面，提供查询、借阅、续借、还书等功能，与服务器交换信息
+* </p>
+* @author 叶鑫、赵千锋、李子厚、刘宗源
+*/
 
 public class Library {
 	
@@ -61,12 +67,24 @@ public class Library {
 	    JScrollPane sp_return;
 	    JButton b_return;//还书按钮
 	    JButton b_reborrow;
-	    
+    /**
+    *<p>构造函数</p>
+    * <p>传入主界面对象<br>
+    * 从主界面获取card_id
+    * </p>
+    * @param hs 主界面对象
+    */
 	public Library(HomeScreen hs)
 	{
 		homeScreen=hs;
 		ci=ClientInfo.getCi();
 	}
+    /**
+    *<p>初始化函数</p>
+    * <p>绘制图书馆主界面<br>
+    * </p>
+    * @return 无返回值
+    */
 	void init()
 	{  	
 		
@@ -158,6 +176,13 @@ public class Library {
 	
 
 	//各种消息响应函数及中间函数
+	/**
+    *<p>还书响应</p>
+    * <p>点击还书按钮后的响应<br>
+    * 学生还书，在数据库更改响应数据
+    * </p>
+    * @return 无返回值
+    */
 	class ActionLis_Return implements ActionListener
 	{
 
@@ -199,7 +224,13 @@ public class Library {
 		
 
 	}
-	
+		/**
+	    *<p>续借响应</p>
+	    * <p>点击续借按钮后的响应<br>
+	    *续借，在数据库更改响应数据
+	    * </p>
+	    * @return 无返回值
+	    */
 	class ActionLis_ReBorrow implements ActionListener
 	{
 
@@ -239,7 +270,12 @@ public class Library {
 		
 
 	}
-	
+	/**
+	    *<p>切换响应</p>
+	    * <p>方便切换时直接显示待还书信息<br>
+	    *从数据库查询借书信息，并显示
+	    * </p>
+	    */
 	class ChangeLis_Tab implements ChangeListener
 	{
 		@Override
@@ -335,7 +371,12 @@ public class Library {
 		}
 
 	}
-	
+	/**
+	    *<p>查询响应</p>
+	    * <p>通过作者或者书名向数据库查询书籍信息<br>
+	    *从数据库查询信息，并显示
+	    * </p>
+	    */
 	class ActionLis_Query implements ActionListener
 	{
 		@Override
@@ -374,8 +415,7 @@ public class Library {
 			}
 				
 			rowData_Borrow=new String[amount][4];
-			if(alist.size()>=1)
-			{ 
+			
 				for(int i=0;i<amount;i++)
 				{
 					rowData_Borrow[i][0]=bookName[i];
@@ -400,7 +440,8 @@ public class Library {
 				borrow_p[2].revalidate();
                 b_borrow.setVisible(true);
                 borrow_p[3].repaint();
-		
+             if(alist.size()>=1)
+    		{ 
 			}//if the first book is not a null,then show all the message of this book
 			else 
 			{
@@ -412,7 +453,12 @@ public class Library {
 		}
 		
 	}
-
+	/**
+	    *<p>借书响应</p>
+	    * <p>借书按钮消息映射<br>
+	    *修改数据库信息，返回响应结果以及失败原因，当一卡通挂失时不能借书
+	    * </p>
+	    */
 		class ActionLis_Borrow implements ActionListener
 		{
 			public void actionPerformed(ActionEvent arg0)
@@ -453,6 +499,11 @@ public class Library {
 		}
 		
 		//判断数组里是否包含数字a
+		/**
+		    *<p>判断函数</p>
+		    * <p>判断数组里是否包含数字a<br>
+		    * </p>
+		    */
 	  boolean has(int[] Array,int count,int a)
 		{
 			for(int i=0;i<count;i++)

@@ -20,8 +20,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.RootPaneUI;
 
-//----------------------------------------
-//@主界面类--------------------------------
+/**
+*<p>HomeScreen</p>
+* <p>HomeScreen<br>
+* 主界面类，绘制主界面
+* </p>
+* @author 赵千锋、刘宗源
+*/
 class HomeScreen
 {
 	final static private double RATIO=0.75;
@@ -45,7 +50,12 @@ class HomeScreen
 
 	 	 
 	//传参并且启用监听函数
-
+	/**
+ 	* <p>绘制主界面方法<br>
+ 	* </p>
+ 	* @param identity 身份，有学生、教师和管理员三种身份
+ 	* @return 没有返回值
+ 	*/
 	 void update(String identity)
 	 {	
 		 	G5 = new  JFrame();
@@ -85,6 +95,13 @@ class HomeScreen
 				p_HomeScreen.addChangeListener(new ChangeListener() {
 
 					@Override
+					/**
+				 	* <p>登出方法<br>
+				 	* 提供登出功能
+				 	* </p>
+				 	* 
+				 	* @return 没有返回值
+				 	*/
 					public void stateChanged(ChangeEvent arg0) {
 						if(p_HomeScreen.getSelectedIndex()==5)
 							return;
@@ -119,6 +136,12 @@ class HomeScreen
 								p_HomeScreen.setSelectedIndex(preSecTab);
 							}
 						}else {
+							if(p_HomeScreen.getSelectedIndex()==2)
+							{
+								store.setTimer();
+							}
+							
+							
 							preSecTab=p_HomeScreen.getSelectedIndex();
 						}
 					}

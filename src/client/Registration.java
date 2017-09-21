@@ -25,7 +25,13 @@ import table_component.SpringUtilities;
 
 import java.awt.Font;
 import java.awt.GridLayout;
-
+/**
+ *<p>Registration</p>
+ * <p>教师管理学生的信息类<br>
+ * 可以修改学生学号，专业等信息，还有录入考试时间成绩功能
+ * </p>
+ * @author 魏好、李子厚、刘宗源
+ */
 public class Registration {
 	public JTabbedPane tabbedPane=null;
 	
@@ -62,7 +68,12 @@ public class Registration {
 		initialize(data);
 		
 	}
-
+	/**
+	 * <p>初始化函数<br>
+	 *绘制管理学生界面
+	 * </p>
+	 * @param data 学生信息数组
+	 */
 	private void initialize(String data[][]) {
 
 		
@@ -220,6 +231,11 @@ public class Registration {
  		homeScreen.G5.getContentPane().revalidate();
 	}
 	//查找学生功能
+	/**
+	 * <p>查找学生响应<br>
+	 *通过学号或者姓名查找学生，从服务器查找学生信息
+	 * </p>
+	 */
 	class SearchLister implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
@@ -354,7 +370,11 @@ public class Registration {
 //	}
 	//导入学生信息
 	//submit function in "information import"
-	
+	/**
+	 * <p>编辑学生信息<br>
+	 *编辑学生信息上传至服务器
+	 * </p>
+	 */
 	class InformationQueryButtonEditor extends ButtonEditor{
 		int row;
 		public InformationQueryButtonEditor(JCheckBox checkBox) {
@@ -421,8 +441,11 @@ public class Registration {
 			textExamPlace.setText(courseList.get(chooseSubjectForExam.getSelectedIndex()).get("course_exam_place"));		
 		}
 	}
-	
-	
+	/**
+	 * <p>上传确认按钮<br>
+	 *教师给学生录成绩
+	 * </p>
+	 */
 	class ScoreSubmitActionListener implements ActionListener
 	{
 		@Override
@@ -446,8 +469,11 @@ public class Registration {
 				JOptionPane.showMessageDialog(null, "上传成功！","上传成功",JOptionPane.PLAIN_MESSAGE);	
 			}	
 		}
-	}
-	
+	}/**
+	 * <p>上传确认按钮<br>
+	 *教师安排考试
+	 * </p>
+	 */
 	class ExamSubmitActionListener implements ActionListener
 	{
 		@Override
