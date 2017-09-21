@@ -327,6 +327,23 @@ public class StoreManage {
 	{
      	@Override
 		public void actionPerformed(ActionEvent e) {
+     		//判断是否为数字或者点
+			String str = t_amount.getText();
+			String pricestr =  t_price.getText();
+			String reg = "^[0-9]+(.[0-9]+)?$"; 
+			if(!(str.matches(reg))&&pricestr.matches(reg)){
+				JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+						"上传失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			//判断是否大于零
+			if(Double.parseDouble(pricestr)<=0||Double.parseDouble(str)<=0){
+				JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+						"上传失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+     		
 			//传递商品名 t_goodsName.getText()，数量t_amount.getText()，单价t_price.getText()
      		//和图片,图片就是ImageIcon型变量imageIcon_pass，大小96*96
      		HashMap<String, String> up_load = new HashMap<>();
@@ -366,6 +383,23 @@ public class StoreManage {
 				JOptionPane.showMessageDialog(null,"请选择需要修改的商品","操作提示",JOptionPane.WARNING_MESSAGE);
 				return;
 			}
+			//判断是否为数字或者点
+			String str = rowData_revise[selectedRow][2];
+			String reg = "^[0-9]+(.[0-9]+)?$"; 
+				if(!str.matches(reg)){
+					JOptionPane.showMessageDialog(null,"请输入数字！",
+							"修改失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			
+			//判断是否大于零
+			System.out.println("修改的价格为：" +Double.parseDouble(rowData_revise[selectedRow][2]));
+			if(Double.parseDouble(rowData_revise[selectedRow][2])<=0){
+				JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+						"修改失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
 			
 			HashMap<String,String> hm=new HashMap<String,String>();
 			hm.put("item_name", rowData_revise[selectedRow][0]);//传递修改商品的item_name
@@ -388,7 +422,6 @@ public class StoreManage {
 			{
 				//如果成功修改，刷新表格
 				new ActionLis_queryRevise().actionPerformed(null);
-				
 				
 			}
 			

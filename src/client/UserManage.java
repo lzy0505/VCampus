@@ -204,6 +204,17 @@ public class UserManage {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//判断输入的数量是否合法
+			String str = newPwdText.getText();			
+			for(int i =str.length();--i>=0;){
+				if(!(Character.isDigit(str.charAt(i))||Character.isAlphabetic(str.charAt(i)))){
+					JOptionPane.showMessageDialog(null,"密码应为数字和字母！",
+							"修改密码失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+			
+				 
 			if(!newPwdText.getText().equals(confirmNewPwdText.getText())) {
 				JOptionPane.showMessageDialog(null, "新密码不一致","操作错误",JOptionPane.ERROR_MESSAGE);
 				return;
@@ -229,7 +240,39 @@ public class UserManage {
 	{
 
 		public void actionPerformed(ActionEvent e) {
-			//TODO 这里需要判断一下是不是合法内容，是否上传成功
+			String str = textStudentNo.getText();		
+			for(int i =str.length();--i>=0;){
+				if(!(Character.isDigit(str.charAt(i)))){
+					JOptionPane.showMessageDialog(null,"学号应为数字！",
+							"信息录入失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+			if(str.length()!=8) {
+				JOptionPane.showMessageDialog(null,"请输入8位学号！",
+						"信息录入失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			String gradestr =  textEnrollTime.getText();		
+			for(int i =gradestr.length();--i>=0;){
+				if(!(Character.isDigit(gradestr.charAt(i)))){
+					JOptionPane.showMessageDialog(null,"入学时间应为数字！",
+							"信息录入失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+			
+			if(str.length()!=4) {
+				JOptionPane.showMessageDialog(null,"请输入4位入学日期！",
+						"信息录入失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			if(Integer.parseInt(gradestr)<2000||Integer.parseInt(gradestr)>2017) {
+				JOptionPane.showMessageDialog(null,"不合法的入学日期！（应为2000-2017）",
+						"信息录入失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			HashMap<String,String> hm = new HashMap<String,String>();
 			hm.put("op","import_student");
 			hm.put("nname", "\'"+textStudentName.getText()+"\'");

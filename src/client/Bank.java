@@ -352,6 +352,19 @@ class Bank
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//判断金额是否是数字且大于零
+			String str = money_recharge.getText();
+			String reg = "^[0-9]+(.[0-9]+)?$"; 
+				if(!(str.matches(reg))){
+					JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+							"充值失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			if(Double.parseDouble(str)<=0){
+				JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+						"充值失败",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
 			//发送包含密码和充值金额的HashMap
 			HashMap<String,String> hm=new HashMap<String,String>();

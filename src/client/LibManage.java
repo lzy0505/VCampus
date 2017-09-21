@@ -257,6 +257,15 @@ public class LibManage {
 	 class ActionLis_Add_Ok implements ActionListener
 	 {
 		 public void actionPerformed(ActionEvent e) {
+			 //判断输入的数量是否合法
+			String str = add_quantity.getText();
+			String reg = "^[0-9]+(.[0-9]+)?$"; 
+				if(!(str.matches(reg)&&Double.parseDouble(str)>0)){
+					JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+							"上传失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			 
 			 System.out.println("Add ok");
 			 if(!book_name.getText().equals("")&&!author_name.getText().equals("")&&!publish_name.getText().equals("")&&!add_quantity.getText().equals("")) {
 				 HashMap<String,String> hmbook=new HashMap<String,String>();

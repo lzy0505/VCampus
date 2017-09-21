@@ -141,6 +141,23 @@ public class HSAdmin {
 				JOptionPane.showMessageDialog(null,"未输入一卡通号","操作结果",JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
+			//判断输入是否合法
+			for(int i=0;i<rowCount;i++) {
+				String str = rowData[i][1];
+				String reg = "^[0-9]+(.[0-9]+)?$"; 
+				if(!str.matches(reg)){
+					JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+							"修改失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}			
+				//判断是否大于零
+				if(Double.parseDouble(str)<=0){
+					JOptionPane.showMessageDialog(null,"请输入大于零的数！",
+							"修改失败",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+			
 			HashMap<String,String> hm=new HashMap<String,String>();
 			hm.put("op","fee_modify");
 			//hm.put("card_id", t_studentCi.getText());

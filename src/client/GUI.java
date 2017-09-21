@@ -386,7 +386,7 @@ public class GUI extends JFrame
 			String passstr =pass2.getText();
 			for(int i =passstr.length();--i>=0;){
 				if(!(Character.isDigit(passstr.charAt(i))||Character.isAlphabetic(passstr.charAt(i)))){
-					JOptionPane.showMessageDialog(G1,"密码只能为数字和字母！",
+					JOptionPane.showMessageDialog(G1,"密码应为数字和字母！",
 							"注册失败",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
