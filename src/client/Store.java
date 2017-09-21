@@ -220,7 +220,6 @@ public class Store {
 
 	}
 	/**
-	 *<p>Store</p>
 	 * <p>点击商店响应<br>
 	 * 绘制商店界面
 	 * </p>
@@ -304,10 +303,13 @@ public class Store {
 	
 	
 	/**
-	 *<p>Store</p>
 	 * <p>搜索响应<br>
 	 * 绘制搜索结果的函数
 	 * </p>
+	 *@param productName 商品名字
+	 *@param productIcon 商品图片路径
+	 *@param productPrice 商品价格
+	 *@param size 搜索到的商品数量
 	 */
 	public void searchResult(String productName[],String productIcon[],String productPrice[],int size)
 	{
@@ -395,7 +397,12 @@ public class Store {
 		searchPanel.revalidate();
 		
 	}
-	
+	/**
+	 * <p>商品详情显示<br>
+	 *	点击商品后显示具体信息
+	 * </p>
+	 * 
+	 */
 	//商品详情显示页面
 	public void productDetail()
 	{
@@ -485,6 +492,11 @@ public class Store {
 		//立即购买，响应如下
 		btnBuyNow.addActionListener(new BuyNowListener());
 		//添加至购物车
+		/**
+		 * <p>添加至购物车响应<br>
+		 * 将选择的商品添加至购物车，可以在购物车中结算或更改商品数量
+		 * </p>
+		 */
 		btnAddToShoppingCart.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e)
 			{
@@ -529,7 +541,11 @@ public class Store {
 		});
 		mainPanel.setSelectedIndex(2);
 	}
-	
+	/**
+	 * <p>购物车页面<br>
+	 * 显示物品的数量、总价、名称
+	 * </p>
+	 */
 	public void shoppingCart()
 	{
 		JPanel shoppingCartPanel=(JPanel)mainPanel.getComponentAt(0);
@@ -683,7 +699,11 @@ public class Store {
 
 	
 	
-	
+	/**
+	 * <p>查询商品响应<br>
+	 * 通过商品名字查找商品细节
+	 * </p>
+	 */
 	class SearchLister implements ActionListener
 	{
 		public void actionPerformed(ActionEvent arg0) {
@@ -723,6 +743,11 @@ public class Store {
 		}
 		
 	}
+	/**
+	 * <p>查询结果响应<br>
+	 * 显示详细商品信息
+	 * </p>
+	 */
 	class searchResultLister implements MouseListener
 	{
 		int index=0;
@@ -757,7 +782,11 @@ public class Store {
 		@Override
 		public void mouseReleased(MouseEvent arg0) {}
 	}
-	
+	/**
+	 * <p>计算总价<br>
+	 * 计算购物车商品总价
+	 * </p>
+	 */
 
 	class calculatePriceLister implements MouseListener{
 		@Override
@@ -784,7 +813,11 @@ public class Store {
 	}
 	
 	
-	
+	/**
+	 * <p>全部购买响应<br>
+	 * 点击后数据库扣钱或者返回购买失败原因（余额不足或者卡已挂失）
+	 * </p>
+	 */
 	class BuyAllLister implements ActionListener{
 
 		@Override
@@ -831,7 +864,11 @@ public class Store {
 			}					
 		}
 	}
-	
+	/**
+	 * <p>购买选择物品响应<br>
+	 * 点击后数据库扣钱或者返回购买失败原因（余额不足或者卡已挂失）
+	 * </p>
+	 */
 	 class BuySelectedLister implements ActionListener
 	 {
 
@@ -930,7 +967,11 @@ public class Store {
 		 
 	 }
 	 }
-	 
+		/**
+		 * <p>初始化详细信息响应<br>
+		 * 将商品详细信息传入productDetails
+		 * </p>
+		 */
 	class InitDetailsListener implements MouseListener{
 		int i;
 		public InitDetailsListener(int i) {
@@ -961,6 +1002,11 @@ public class Store {
 		public void mouseReleased(MouseEvent arg0) {}
 
 	}
+	/**
+	 * <p>立即购买响应<br>
+	 * 成功则扣钱，失败则返回原因
+	 * </p>
+	 */
 	class BuyNowListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			double price = Double.parseDouble(details[2]);

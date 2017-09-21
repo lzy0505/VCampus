@@ -1,5 +1,7 @@
 package client;
 import java.awt.Component;
+
+
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
@@ -12,6 +14,14 @@ import java.util.HashMap;
 import javax.swing.*;
 
 import com.sun.crypto.provider.HmacMD5;
+
+/**
+ *<p>StoreManage</p>
+ * <p>商店管理类<br>
+ * 绘制商店管理界面，有上传商品、删除商品、修改库存功能
+ * </p>
+ * @author 赵千锋、李子厚
+ */
 public class StoreManage {
 
 	//需要传进来父窗口的JFrame
@@ -74,6 +84,12 @@ public class StoreManage {
 	
 
 	//初始化函数
+    /**
+     * <p>初始化函数<br>
+     * 绘制商店管理界面
+     * </p>
+     * @author 赵千锋、李子厚
+     */
 	void init()
 	{
 		
@@ -222,7 +238,13 @@ public class StoreManage {
 	{
 		f=frame;
 	}
-	//添加消息映射函数
+	//添加消息映射函数    
+	/**
+    * <p>消息映射函数 <br>
+    * 
+    * </p>
+    * @author 赵千锋、李子厚
+    */
 	void addLis()
 	{
 		
@@ -238,6 +260,12 @@ public class StoreManage {
 	//各种消息映射函数
 	
 	//确认删除按钮的响应
+	/**
+    * <p>删除确认响应函数 <br>
+    * 删除，与数据库交流数据
+    * </p>
+    * @author 赵千锋、李子厚
+    */
 	class ActionLis_confirmDelete implements ActionListener
 	{
 
@@ -277,6 +305,12 @@ public class StoreManage {
 	
 	
 	//删除商品界面的查询按钮
+	/**
+	    * <p>删除商品需要的查询按钮 <br>
+	    * 
+	    * </p>
+	    * @author 赵千锋、李子厚
+	    */
 	class ActionLis_queryDelete implements ActionListener
 	{
 
